@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Trader</string>
+    <string name="action_settings">Настройки</string>
+    <string name="manager">Менеджер:</string>
+    <string name="client">Клиент:</string>
+    <string name="btnNewClient">Добавить</string>
+    <string name="client_txt">Клиент</string>
+    <string name="connecting">Подключение к базе данных&#8230;</string>
+    <string name="loadManagers">Загрузка списка менеджеров&#8230;</string>
+    <string name="addPosition">Добавить позицию</string>
+    <string name="upload">Выгрузить в 1С</string>
+	<string name="search">Найти</string>
+	<string name="dataloading">Загрузка информации из базы данных&#8230;</string>
+	<string name="searching">Поиск&#8230;</string>
+	<string name="selectClient">Выбор клиента</string>
+	<string name="cancel">Отмена</string>
+	
+</resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Trader</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="manager">Current manager:</string>
+    <string name="client">Current client:</string>
+    <string name="btnNewClient">Create new</string>
+    <string name="client_txt">Client</string>
+    <string name="connecting">Connecting to database&#8230;</string>
+    <string name="loadManagers">Loading managers&#8230;</string>
+    <string name="loadOrganizations">Loading organizations&#8230;</string>
+    <string name="addPosition">Add position</string>
+    <string name="upload">Upload to 1C</string>
+    <string name="search">Search</string>
+    <string name="dataloading">Reading information from database&#8230;</string>
+    <string name="searching">Searching&#8230;</string>
+    <string name="selectClient">Select client</string>
+    <string name="cancel">Cancel</string>
+
+</resources>

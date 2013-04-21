@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><classpath>
+<classpathentry kind="src" path="src"/>
+<classpathentry kind="src" path="gen"/>
+<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+<classpathentry kind="output" path="bin/classes"/>
+<classpathentry kind="lib" path="/storage/emulated/0/AppProjects/Trader/libs/android-support-v4.jar"/>
+<classpathentry kind="lib" path="/storage/emulated/0/AppProjects/Trader/libs/annotations-8d4220aec3a15ece420a41f823d400f3.jar"/>
+<classpathentry kind="lib" path="/storage/emulated/0/AppProjects/Trader/libs/jtds-1.2.5-139bcfb21f8d1a3176c46e83eea76eac.jar"/>
+<classpathentry exported="true" kind="lib" path="/sdcard/Download/jtds-1.2.5.jar"/>
+</classpath>

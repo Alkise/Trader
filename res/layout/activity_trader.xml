@@ -1,0 +1,92 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".TraderActivity" >
+
+    <Button
+        android:id="@+id/btnAddPosition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="@string/addPosition" />
+
+    <Button
+        android:id="@+id/btnUpload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/btnAddPosition"
+        android:text="@string/upload" />
+
+    <EditText
+        android:id="@+id/clientField"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/organizationSpinner"
+        android:layout_toLeftOf="@+id/findClientsBtn"
+        android:ems="10"
+        android:inputType="none"
+        android:text="@string/client_txt" >
+
+    </EditText>
+
+    <Button
+        android:id="@+id/newClientBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/clientField"
+        android:layout_alignParentRight="true"
+        android:text="@string/btnNewClient" />
+
+    <Spinner
+        android:id="@+id/organizationSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/btnAddPosition"
+        android:gravity="center"
+        android:padding="0dip"
+        android:paddingLeft="0dip"
+        android:paddingRight="0dip" />
+
+    <Spinner
+        android:id="@+id/managerSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/organizationSpinner"
+        android:layout_toRightOf="@+id/organizationSpinner"
+        android:gravity="center"
+        android:prompt="@string/manager"
+        android:padding="0dip"
+        android:splitMotionEvents="true" >
+
+        <requestFocus />
+    </Spinner>
+
+    <Button
+        android:id="@+id/findClientsBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/clientField"
+        android:layout_toLeftOf="@+id/newClientBtn"
+        android:onClick="findClients"
+        android:text="@string/search" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="Наличие товара"
+		android:onClick="showOrder"/>
+
+</RelativeLayout>
