@@ -10,12 +10,13 @@
 			android:id="@+id/paramView"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Searching parameters"/>
+			android:text="@string/search_param"/>
 		
 		<EditText
-			android:id="@+id/requiredEdit"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
+		    android:id="@+id/requiredEdit"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:inputType="none" >
 			
 			<requestFocus />
 			
@@ -31,14 +32,14 @@
 				android:id="@+id/radioByCode"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="by code"
+				android:text="@string/by_code_param"
 				android:checked="true"/>
 				
 			<RadioButton
 				android:id="@+id/radioByName"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="by name"
+				android:text="@string/by_name_param"
 				/>
 		</RadioGroup>
 	</LinearLayout>

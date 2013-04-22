@@ -53,6 +53,8 @@ public final class R {
         public static final int addPosition=0x7f05000a;
         public static final int app_name=0x7f050000;
         public static final int btnNewClient=0x7f050005;
+        public static final int by_code_param=0x7f050013;
+        public static final int by_name_param=0x7f050014;
         public static final int cancel=0x7f050010;
         public static final int client=0x7f050004;
         public static final int client_txt=0x7f050006;
@@ -62,7 +64,9 @@ public final class R {
         public static final int loadManagers=0x7f050008;
         public static final int loadOrganizations=0x7f050009;
         public static final int manager=0x7f050003;
+        public static final int order=0x7f050011;
         public static final int search=0x7f05000c;
+        public static final int search_param=0x7f050012;
         public static final int searching=0x7f05000e;
         public static final int selectClient=0x7f05000f;
         public static final int upload=0x7f05000b;

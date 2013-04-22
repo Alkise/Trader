@@ -87,7 +87,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:text="Наличие товара"
+        android:text="@string/order"
 		android:onClick="showOrder"/>
 
 </RelativeLayout>

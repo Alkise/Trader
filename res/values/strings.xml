@@ -18,5 +18,9 @@
     <string name="searching">Searching&#8230;</string>
     <string name="selectClient">Select client</string>
     <string name="cancel">Cancel</string>
+    <string name="order">Order</string>
+    <string name="search_param">Searching parameters</string>
+    <string name="by_code_param">by code</string>
+    <string name="by_name_param">by name</string>
 
 </resources>

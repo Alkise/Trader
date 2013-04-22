@@ -6,7 +6,7 @@ import android.util.*;
 import android.app.*;
 import ru.alkise.trader.*;
 
-class ConnectionTask extends AsyncTask<Object, Object, Object> {
+public class ConnectionTask extends AsyncTask<Object, Object, Object> {
 	private Connection connection;
 	private ProgressDialog loadingDialog;
 	private Activity parentActivity;

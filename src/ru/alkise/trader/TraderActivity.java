@@ -11,6 +11,7 @@ import ru.alkise.trader.model.Manager;
 import ru.alkise.trader.model.Organization;
 import ru.alkise.trader.sql.SQLConnection;
 import ru.alkise.trader.task.SearchClientsTask;
+import ru.alkise.trader.task.ConnectionTask;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Color;
@@ -31,7 +32,6 @@ import android.view.*;
 import android.text.*;
 import android.app.*;
 import android.content.*;
-import ru.alkise.trader.task.ConnectionTask;
 
 public class TraderActivity extends Activity {
 	private ConnectionTask connectionTask;
@@ -73,16 +73,15 @@ public class TraderActivity extends Activity {
 		uploadTo1CBtn = (Button) findViewById(R.id.btnUpload);
 
 		clientField = (EditText) findViewById(R.id.clientField);
-		clientField.addTextChangedListener(new TextWatcher(){
+		clientField.addTextChangedListener(new TextWatcher() {
 			private int currentLength;
-			
-			public void beforeTextChanged(CharSequence p1, int p2, int p3, int p4)
-			{
+
+			public void beforeTextChanged(CharSequence p1, int p2, int p3,
+					int p4) {
 				currentLength = p1.length();
 			}
 
-			public void onTextChanged(CharSequence p1, int p2, int p3, int p4)
-			{
+			public void onTextChanged(CharSequence p1, int p2, int p3, int p4) {
 				if ((p1.length() == 3) && (currentLength == 2)) {
 					findClientsBtn.setEnabled(true);
 				} else if ((p1.length() == 2) && (currentLength == 3)) {
@@ -90,10 +89,9 @@ public class TraderActivity extends Activity {
 				}
 			}
 
-			public void afterTextChanged(Editable p1)
-			{
+			public void afterTextChanged(Editable p1) {
 				// TODO: Implement this method
-			}			
+			}
 		});
 
 		uploadTo1CBtn.setEnabled(false);
@@ -106,7 +104,7 @@ public class TraderActivity extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		
+
 	}
 
 	@Override
@@ -119,35 +117,36 @@ public class TraderActivity extends Activity {
 		super.onStop();
 	}
 
-//	protected class ConnectionTask extends AsyncTask<String, Object, Object> {
-//		private Connection connection;
-//
-//		@Override
-//		protected Connection doInBackground(String... args) {
-//			try {
-//				SQLConnection.INSTANCE.createConnection(args[0], args[1],
-//						args[2], args[3], args[4]);
-//				connection = SQLConnection.INSTANCE.getConnection();
-//
-//			} catch (Exception e) {
-//				Log.e("Connection Task", e.getMessage());
-//			}
-//			return connection;
-//		}
-//
-//		@Override
-//		protected void onPostExecute(Object result) {
-//			loadingDialog.setMessage(getString(R.string.dataloading));
-//
-//			super.onPostExecute(result);
-//		}
-//
-//		@Override
-//		protected void onPreExecute() {
-//			loadingDialog.show();
-//		}
-//	}
-//
+	// protected class ConnectionTask extends AsyncTask<String, Object, Object>
+	// {
+	// private Connection connection;
+	//
+	// @Override
+	// protected Connection doInBackground(String... args) {
+	// try {
+	// SQLConnection.INSTANCE.createConnection(args[0], args[1],
+	// args[2], args[3], args[4]);
+	// connection = SQLConnection.INSTANCE.getConnection();
+	//
+	// } catch (Exception e) {
+	// Log.e("Connection Task", e.getMessage());
+	// }
+	// return connection;
+	// }
+	//
+	// @Override
+	// protected void onPostExecute(Object result) {
+	// loadingDialog.setMessage(getString(R.string.dataloading));
+	//
+	// super.onPostExecute(result);
+	// }
+	//
+	// @Override
+	// protected void onPreExecute() {
+	// loadingDialog.show();
+	// }
+	// }
+	//
 	protected class DataLoaderTask extends AsyncTask<Object, Object, Object> {
 		private List<Organization> organizations;
 		private ArrayAdapter<Organization> organizationAdapter;
@@ -164,7 +163,8 @@ public class TraderActivity extends Activity {
 				connection = (Connection) connectionTask.get();
 				Statement stmt = connection.createStatement();
 
-				ResultSet rs = stmt.executeQuery("SELECT ID, CODE, DESCR FROM SC308");
+				ResultSet rs = stmt
+						.executeQuery("SELECT ID, CODE, DESCR FROM SC308");
 
 				organizations = new ArrayList<Organization>();
 				while (rs.next()) {
@@ -245,41 +245,46 @@ public class TraderActivity extends Activity {
 		@Override
 		protected void onPostExecute(Object result) {
 			organizationSpinner.setAdapter(organizationAdapter);
-			organizationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			organizationSpinner
+					.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-				@Override
-				public void onItemSelected(AdapterView<?> adapter, View arg1,
-											   int selectedPosition, long arg3) {
-					Order.INSTANCE.setOrganization((Organization)adapter.getSelectedItem());
-				}
+						@Override
+						public void onItemSelected(AdapterView<?> adapter,
+								View arg1, int selectedPosition, long arg3) {
+							Order.INSTANCE
+									.setOrganization((Organization) adapter
+											.getSelectedItem());
+						}
 
-				@Override
-				public void onNothingSelected(AdapterView<?> arg0) {
-					// TODO Auto-generated method stub
+						@Override
+						public void onNothingSelected(AdapterView<?> arg0) {
+							// TODO Auto-generated method stub
 
-				}
-			});
-			
+						}
+					});
+
 			managerSpinner.setAdapter(managerAdapter);
-			managerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			managerSpinner
+					.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-				@Override
-				public void onItemSelected(AdapterView<?> adapter, View arg1,
-						int selectedPosition, long arg3) {
-					Order.INSTANCE.setManager((Manager)adapter.getSelectedItem());
-				}
+						@Override
+						public void onItemSelected(AdapterView<?> adapter,
+								View arg1, int selectedPosition, long arg3) {
+							Order.INSTANCE.setManager((Manager) adapter
+									.getSelectedItem());
+						}
 
-				@Override
-				public void onNothingSelected(AdapterView<?> arg0) {
-					// TODO Auto-generated method stub
-					
-				}
-			});
+						@Override
+						public void onNothingSelected(AdapterView<?> arg0) {
+							// TODO Auto-generated method stub
+
+						}
+					});
 			loadingDialog.dismiss();
 			super.onPostExecute(result);
 		}
 	}
-	
+
 	public void showOrder(View view) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(Order.INSTANCE.getOrganization().toString());
@@ -287,38 +292,42 @@ public class TraderActivity extends Activity {
 		sb.append(Order.INSTANCE.getManager().toString());
 		sb.append('\n');
 		sb.append(Order.INSTANCE.getClient().toString());
-		
-		Toast.makeText(getApplication(), sb.toString(), Toast.LENGTH_LONG).show();
+
+		Toast.makeText(getApplication(), sb.toString(), Toast.LENGTH_LONG)
+				.show();
 	}
-	
+
+	// Add postion button
 	public void searchRemains(View view) {
 		LayoutInflater layoutInflater = LayoutInflater.from(this);
 		View remainsView = layoutInflater.inflate(R.layout.remains, null);
-		
+
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 		alertDialogBuilder.setView(remainsView);
-		alertDialogBuilder.setPositiveButton("Search", new DialogInterface.OnClickListener() {
+		alertDialogBuilder
+				.setNegativeButton(getString(R.string.cancel),
+						new DialogInterface.OnClickListener() {
 
-				public void onClick(DialogInterface p1, int p2)
-				{
-					// TODO: Implement this method
-				}
+							public void onClick(DialogInterface p1, int p2) {
+								p1.cancel();
+							}
 
-			
-			}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+						})
+				.setPositiveButton(getString(R.string.search),
+						new DialogInterface.OnClickListener() {
 
-				public void onClick(DialogInterface p1, int p2)
-				{
-					p1.cancel();
-				}
+							public void onClick(DialogInterface p1, int p2) {
+								// TODO: Implement this method
+							}
 
-		}).setCancelable(false);
-		
+						}).setCancelable(false);
+
 		AlertDialog remainsDialog = alertDialogBuilder.create();
-		
+
 		remainsDialog.show();
 	}
 
+	// Searching client button
 	public void findClients(View v) {
 		searchClientTask = new SearchClientsTask();
 		searchingDialog.show();
