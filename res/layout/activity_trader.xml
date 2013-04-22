@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:text="@string/addPosition" />
+        android:text="@string/addPosition" 
+		android:onClick="searchRemains"/>
 
     <Button
         android:id="@+id/btnUpload"
@@ -81,7 +82,7 @@
         android:text="@string/search" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/remainsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
