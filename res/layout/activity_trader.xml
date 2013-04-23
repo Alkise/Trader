@@ -88,6 +88,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:text="@string/order"
-		android:onClick="showOrder"/>
+		android:onClick="showWarehouses"/>
 
 </RelativeLayout>

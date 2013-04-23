@@ -12,6 +12,7 @@ import ru.alkise.trader.model.Organization;
 import ru.alkise.trader.sql.SQLConnection;
 import ru.alkise.trader.task.SearchClientsTask;
 import ru.alkise.trader.task.ConnectionTask;
+import ru.alkise.trader.task.SearchRemainsTask;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Color;
@@ -37,19 +38,25 @@ public class TraderActivity extends Activity {
 	private ConnectionTask connectionTask;
 	private DataLoaderTask dataLoaderTask;
 	private SearchClientsTask searchClientTask;
+	private SearchRemainsTask searchRemainsTask;
 	private ProgressDialog loadingDialog;
 	private ProgressDialog searchingDialog;
+	private ProgressDialog searchingRemainsDialog;
 	private Spinner organizationSpinner;
 	private Spinner managerSpinner;
 	private Button findClientsBtn;
 	private Button addPositionBtn;
 	private Button uploadTo1CBtn;
 	private EditText clientField;
+	private EditText requiredEdit;
+	private static Activity activity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_trader);
+		
+		activity = this;
 
 		organizationSpinner = (Spinner) findViewById(R.id.organizationSpinner);
 		managerSpinner = (Spinner) findViewById(R.id.managerSpinner);
@@ -64,6 +71,11 @@ public class TraderActivity extends Activity {
 		searchingDialog.setCancelable(true);
 		searchingDialog.setMessage(getString(R.string.searching));
 
+		searchingRemainsDialog = new ProgressDialog(this);
+		searchingRemainsDialog.setIndeterminate(true);
+		searchingRemainsDialog.setCancelable(true);
+		searchingRemainsDialog.setMessage(getString(R.string.searching));
+
 		connectionTask = new ConnectionTask();
 		dataLoaderTask = new DataLoaderTask();
 
@@ -73,6 +85,7 @@ public class TraderActivity extends Activity {
 		uploadTo1CBtn = (Button) findViewById(R.id.btnUpload);
 
 		clientField = (EditText) findViewById(R.id.clientField);
+		
 		clientField.addTextChangedListener(new TextWatcher() {
 			private int currentLength;
 
@@ -117,36 +130,6 @@ public class TraderActivity extends Activity {
 		super.onStop();
 	}
 
-	// protected class ConnectionTask extends AsyncTask<String, Object, Object>
-	// {
-	// private Connection connection;
-	//
-	// @Override
-	// protected Connection doInBackground(String... args) {
-	// try {
-	// SQLConnection.INSTANCE.createConnection(args[0], args[1],
-	// args[2], args[3], args[4]);
-	// connection = SQLConnection.INSTANCE.getConnection();
-	//
-	// } catch (Exception e) {
-	// Log.e("Connection Task", e.getMessage());
-	// }
-	// return connection;
-	// }
-	//
-	// @Override
-	// protected void onPostExecute(Object result) {
-	// loadingDialog.setMessage(getString(R.string.dataloading));
-	//
-	// super.onPostExecute(result);
-	// }
-	//
-	// @Override
-	// protected void onPreExecute() {
-	// loadingDialog.show();
-	// }
-	// }
-	//
 	protected class DataLoaderTask extends AsyncTask<Object, Object, Object> {
 		private List<Organization> organizations;
 		private ArrayAdapter<Organization> organizationAdapter;
@@ -237,6 +220,20 @@ public class TraderActivity extends Activity {
 					}
 
 				};
+
+				// Loading warehouses
+				pstmt = connection
+						.prepareStatement("SELECT ID, CODE, DESCR FROM SC12 WHERE SP2505 = ? AND ISFOLDER = ? ORDER BY DESCR ");
+				pstmt.setInt(1, 0);
+				pstmt.setInt(2, 2);
+
+				rs = pstmt.executeQuery();
+
+				while (rs.next()) {
+					Warehouses.INSTANCE.addWarehouse(new Warehouse(rs
+							.getString(1), rs.getInt(2), rs.getString(3)));
+				}
+
 			} catch (Exception e) {
 			}
 			return null;
@@ -281,8 +278,21 @@ public class TraderActivity extends Activity {
 						}
 					});
 			loadingDialog.dismiss();
+			Toast.makeText(getApplication(),
+					Warehouses.INSTANCE.printWarehouses(), Toast.LENGTH_LONG)
+					.show();
 			super.onPostExecute(result);
 		}
+	}
+	
+	public void showMessage(String message) {
+		Toast.makeText(this, message,
+				Toast.LENGTH_LONG).show();
+	}
+
+	public void showWarehouses(View view) {
+		Toast.makeText(getApplication(), Warehouses.INSTANCE.printWarehouses(),
+				Toast.LENGTH_LONG).show();
 	}
 
 	public void showOrder(View view) {
@@ -300,7 +310,7 @@ public class TraderActivity extends Activity {
 	// Add postion button
 	public void searchRemains(View view) {
 		LayoutInflater layoutInflater = LayoutInflater.from(this);
-		View remainsView = layoutInflater.inflate(R.layout.remains, null);
+		final View remainsView = layoutInflater.inflate(R.layout.remains, null);
 
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 		alertDialogBuilder.setView(remainsView);
@@ -317,7 +327,17 @@ public class TraderActivity extends Activity {
 						new DialogInterface.OnClickListener() {
 
 							public void onClick(DialogInterface p1, int p2) {
-								// TODO: Implement this method
+								searchRemainsTask = new SearchRemainsTask();
+								searchingRemainsDialog.show();
+								
+								try {
+									searchRemainsTask.execute(
+											connectionTask.get(),
+											((EditText)remainsView.findViewById(R.id.requiredEdit)).getText(),
+											searchingRemainsDialog, activity);
+								} catch (Exception e) {
+									Log.e("Searching", e.getMessage());
+								}
 							}
 
 						}).setCancelable(false);
@@ -333,7 +353,7 @@ public class TraderActivity extends Activity {
 		searchingDialog.show();
 		try {
 			searchClientTask.execute(connectionTask.get(),
-					clientField.getText(), searchingDialog, this);
+					clientField.getText(), searchingDialog, activity);
 		} catch (Exception e) {
 			Log.e("findClients", e.getMessage());
 		}
