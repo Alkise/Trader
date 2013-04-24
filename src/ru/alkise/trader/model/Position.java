@@ -1,70 +1,65 @@
 package ru.alkise.trader.model;
 
-public class Position
-{
-	private String code;
-	private String name;
-	private String quantity;
-	private String warehouseCode;
-	private String warehouseName;
-	private String fromWarehouseCode;
-	private String fromWarehouseName;
+public class Position {
+	private Goods goods;
+	private double count;
+	private Warehouse whFrom;
+	private Warehouse whTo;
 
-	public void setFromWarehouseName(String fromWarehouseName) {
-		this.fromWarehouseName = fromWarehouseName;
+	public Position(Goods goods, double count, Warehouse whFrom, Warehouse whTo) {
+		this(goods, count, whFrom);
+		this.whTo = whTo;
 	}
 
-	public String getFromWarehouseName() {
-		return fromWarehouseName;
+	public Position(Goods goods, double count, Warehouse whFrom) {
+		this.goods = goods;
+		this.count = count;
+		this.whFrom = whFrom;
 	}
 
-	public void setFromWarehouseCode(String fromWarehouseCode) {
-		this.fromWarehouseCode = fromWarehouseCode;
-	}
-
-	public String getFromWarehouseCode() {
-		return fromWarehouseCode;
-	}
-
-	public void setWarehouseName(String warehouseName) {
-		this.warehouseName = warehouseName;
-	}
-
-	public String getWarehouseName() {
-		return warehouseName;
-	}
-
-	public void setWarehouseCode(String warehouseCode) {
-		this.warehouseCode = warehouseCode;
-	}
-
-	public String getWarehouseCode() {
-		return warehouseCode;
-	}
-
-	public void setQuantity(String quantity) {
-		this.quantity = quantity;
-	}
-
-	public String getQuantity() {
-		return quantity;
+	public long getId() {
+		return whFrom.getCode() + goods.getCode();
 	}
 	
-	public void setCode(String code) {
-		this.code = code;
+	public Goods getGoods() {
+		return goods;
 	}
-	
-	public String getCode() {
-		return code;
+
+	public void setGoods(Goods goods) {
+		this.goods = goods;
 	}
-	
-	public void setName(String name) {
-		this.name = name;
-	} 
-	
-	public String getName() {
-		return name;
+
+	public double getCount() {
+		return count;
 	}
-	
-	
+
+	public void setCount(double count) {
+		this.count = count;
+	}
+
+	public Warehouse getWhFrom() {
+		return whFrom;
+	}
+
+	public void setWhFrom(Warehouse whFrom) {
+		this.whFrom = whFrom;
+	}
+
+	public Warehouse getWhTo() {
+		return whTo;
+	}
+
+	public void setWhTo(Warehouse whTo) {
+		this.whTo = whTo;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder(goods.getDescr());
+		sb.append(' ');
+		sb.append(whFrom.getDescr());
+		sb.append(' ');
+		sb.append(count);
+		return sb.toString();
+	}
 }

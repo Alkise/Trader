@@ -14,8 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:text="@string/addPosition" 
-		android:onClick="searchRemains"/>
+        android:onClick="searchRemains"
+        android:text="@string/addPosition" />
 
     <Button
         android:id="@+id/btnUpload"
@@ -34,7 +34,6 @@
         android:ems="10"
         android:inputType="none"
         android:text="@string/client_txt" >
-
     </EditText>
 
     <Button
@@ -65,11 +64,12 @@
         android:layout_alignTop="@+id/organizationSpinner"
         android:layout_toRightOf="@+id/organizationSpinner"
         android:gravity="center"
-        android:prompt="@string/manager"
         android:padding="0dip"
+        android:prompt="@string/manager"
         android:splitMotionEvents="true" >
 
-        <requestFocus />
+        <requestFocus android:layout_width="match_parent" />
+
     </Spinner>
 
     <Button
@@ -81,13 +81,24 @@
         android:onClick="findClients"
         android:text="@string/search" />
 
+    <ListView
+        android:id="@+id/positionList"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btnAddPosition"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/clientField" >
+
+    </ListView>
+
     <Button
         android:id="@+id/remainsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:text="@string/order"
-		android:onClick="showWarehouses"/>
+        android:onClick="showOrder"
+        android:text="@string/order" />
 
 </RelativeLayout>

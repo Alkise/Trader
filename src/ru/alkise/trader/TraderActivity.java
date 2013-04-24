@@ -7,59 +7,72 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.alkise.trader.adapter.PositionAdapter;
 import ru.alkise.trader.model.Manager;
+import ru.alkise.trader.model.Order;
 import ru.alkise.trader.model.Organization;
+import ru.alkise.trader.model.Position;
+import ru.alkise.trader.model.Warehouse;
+import ru.alkise.trader.model.Warehouses;
 import ru.alkise.trader.sql.SQLConnection;
-import ru.alkise.trader.task.SearchClientsTask;
 import ru.alkise.trader.task.ConnectionTask;
+import ru.alkise.trader.task.SearchClientsTask;
+import ru.alkise.trader.task.SearchGoodsTask;
 import ru.alkise.trader.task.SearchRemainsTask;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
-import ru.alkise.trader.model.*;
-import android.widget.*;
-import android.view.*;
-import android.text.*;
-import android.app.*;
-import android.content.*;
+import android.widget.Toast;
 
 public class TraderActivity extends Activity {
 	private ConnectionTask connectionTask;
 	private DataLoaderTask dataLoaderTask;
 	private SearchClientsTask searchClientTask;
 	private SearchRemainsTask searchRemainsTask;
+	private SearchGoodsTask searchGoodsTask;
 	private ProgressDialog loadingDialog;
 	private ProgressDialog searchingDialog;
 	private ProgressDialog searchingRemainsDialog;
 	private Spinner organizationSpinner;
 	private Spinner managerSpinner;
+	private ListView positionsList;
 	private Button findClientsBtn;
-	private Button addPositionBtn;
 	private Button uploadTo1CBtn;
 	private EditText clientField;
-	private EditText requiredEdit;
 	private static Activity activity;
+	private PositionAdapter positionsAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_trader);
-		
 		activity = this;
 
 		organizationSpinner = (Spinner) findViewById(R.id.organizationSpinner);
 		managerSpinner = (Spinner) findViewById(R.id.managerSpinner);
+
+		positionsList = (ListView) findViewById(R.id.positionList);
 
 		loadingDialog = new ProgressDialog(this);
 		loadingDialog.setIndeterminate(true);
@@ -81,11 +94,10 @@ public class TraderActivity extends Activity {
 
 		findClientsBtn = (Button) findViewById(R.id.findClientsBtn);
 
-		addPositionBtn = (Button) findViewById(R.id.btnAddPosition);
 		uploadTo1CBtn = (Button) findViewById(R.id.btnUpload);
 
 		clientField = (EditText) findViewById(R.id.clientField);
-		
+
 		clientField.addTextChangedListener(new TextWatcher() {
 			private int currentLength;
 
@@ -277,17 +289,17 @@ public class TraderActivity extends Activity {
 
 						}
 					});
+
+			positionsAdapter = new PositionAdapter(activity);
+			positionsList.setAdapter(positionsAdapter);
+			
 			loadingDialog.dismiss();
-			Toast.makeText(getApplication(),
-					Warehouses.INSTANCE.printWarehouses(), Toast.LENGTH_LONG)
-					.show();
 			super.onPostExecute(result);
 		}
 	}
-	
+
 	public void showMessage(String message) {
-		Toast.makeText(this, message,
-				Toast.LENGTH_LONG).show();
+		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 	}
 
 	public void showWarehouses(View view) {
@@ -296,15 +308,8 @@ public class TraderActivity extends Activity {
 	}
 
 	public void showOrder(View view) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(Order.INSTANCE.getOrganization().toString());
-		sb.append('\n');
-		sb.append(Order.INSTANCE.getManager().toString());
-		sb.append('\n');
-		sb.append(Order.INSTANCE.getClient().toString());
-
-		Toast.makeText(getApplication(), sb.toString(), Toast.LENGTH_LONG)
-				.show();
+		Toast.makeText(getApplication(), Order.INSTANCE.displayOrder(),
+				Toast.LENGTH_LONG).show();
 	}
 
 	// Add postion button
@@ -314,33 +319,50 @@ public class TraderActivity extends Activity {
 
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 		alertDialogBuilder.setView(remainsView);
-		alertDialogBuilder
-				.setNegativeButton(getString(R.string.cancel),
-						new DialogInterface.OnClickListener() {
+		alertDialogBuilder.setNegativeButton(getString(R.string.cancel),
+				new DialogInterface.OnClickListener() {
 
-							public void onClick(DialogInterface p1, int p2) {
-								p1.cancel();
-							}
+					public void onClick(DialogInterface p1, int p2) {
+						p1.cancel();
+					}
 
-						})
-				.setPositiveButton(getString(R.string.search),
-						new DialogInterface.OnClickListener() {
+				}).setPositiveButton(getString(R.string.search),
+				new DialogInterface.OnClickListener() {
 
-							public void onClick(DialogInterface p1, int p2) {
+					public void onClick(DialogInterface p1, int p2) {
+
+						searchingRemainsDialog.show();
+
+						try {
+							if ((((RadioButton) remainsView
+									.findViewById(((RadioGroup) remainsView
+											.findViewById(R.id.paramGroup))
+											.getCheckedRadioButtonId()))
+									.getText().equals(activity
+									.getString(R.string.by_code_param)))) {
+
 								searchRemainsTask = new SearchRemainsTask();
-								searchingRemainsDialog.show();
-								
-								try {
-									searchRemainsTask.execute(
-											connectionTask.get(),
-											((EditText)remainsView.findViewById(R.id.requiredEdit)).getText(),
-											searchingRemainsDialog, activity);
-								} catch (Exception e) {
-									Log.e("Searching", e.getMessage());
-								}
+								searchRemainsTask.execute(
+										connectionTask.get(),
+										((EditText) remainsView
+												.findViewById(R.id.requiredEdit))
+												.getText(),
+										searchingRemainsDialog, activity, positionsAdapter);
+							} else {
+								searchGoodsTask = new SearchGoodsTask();
+								searchGoodsTask.execute(
+										connectionTask.get(),
+										((EditText) remainsView
+												.findViewById(R.id.requiredEdit))
+												.getText(),
+										searchingRemainsDialog, activity, positionsAdapter);
 							}
+						} catch (Exception e) {
+							Log.e("Searching", e.getMessage());
+						}
+					}
 
-						}).setCancelable(false);
+				});
 
 		AlertDialog remainsDialog = alertDialogBuilder.create();
 
@@ -358,4 +380,5 @@ public class TraderActivity extends Activity {
 			Log.e("findClients", e.getMessage());
 		}
 	}
+
 }

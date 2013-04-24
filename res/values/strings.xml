@@ -14,9 +14,11 @@
     <string name="addPosition">Add position</string>
     <string name="upload">Upload to 1C</string>
     <string name="search">Search</string>
+    <string name="select">Select</string>
     <string name="dataloading">Reading information from database&#8230;</string>
     <string name="searching">Searching&#8230;</string>
     <string name="selectClient">Select client</string>
+    <string name="selectNomeclature">Choose the nomenclature</string>
     <string name="cancel">Cancel</string>
     <string name="order">Order</string>
     <string name="search_param">Searching parameters</string>
