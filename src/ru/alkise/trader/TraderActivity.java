@@ -11,7 +11,6 @@ import ru.alkise.trader.adapter.PositionAdapter;
 import ru.alkise.trader.model.Manager;
 import ru.alkise.trader.model.Order;
 import ru.alkise.trader.model.Organization;
-import ru.alkise.trader.model.Position;
 import ru.alkise.trader.model.Warehouse;
 import ru.alkise.trader.model.Warehouses;
 import ru.alkise.trader.sql.SQLConnection;
@@ -22,7 +21,6 @@ import ru.alkise.trader.task.SearchRemainsTask;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -35,7 +33,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -73,6 +70,7 @@ public class TraderActivity extends Activity {
 		managerSpinner = (Spinner) findViewById(R.id.managerSpinner);
 
 		positionsList = (ListView) findViewById(R.id.positionList);
+		positionsList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
 		loadingDialog = new ProgressDialog(this);
 		loadingDialog.setIndeterminate(true);
@@ -95,6 +93,7 @@ public class TraderActivity extends Activity {
 		findClientsBtn = (Button) findViewById(R.id.findClientsBtn);
 
 		uploadTo1CBtn = (Button) findViewById(R.id.btnUpload);
+		uploadTo1CBtn.setEnabled(false);
 
 		clientField = (EditText) findViewById(R.id.clientField);
 
@@ -119,7 +118,7 @@ public class TraderActivity extends Activity {
 			}
 		});
 
-		uploadTo1CBtn.setEnabled(false);
+		
 		loadingDialog.show();
 		connectionTask.execute("192.168.0.202", "1433", "trade2005", "test",
 				"test", this, loadingDialog);
@@ -291,6 +290,7 @@ public class TraderActivity extends Activity {
 					});
 
 			positionsAdapter = new PositionAdapter(activity);
+			Order.INSTANCE.addObserver(positionsAdapter);
 			positionsList.setAdapter(positionsAdapter);
 			
 			loadingDialog.dismiss();
@@ -347,7 +347,7 @@ public class TraderActivity extends Activity {
 										((EditText) remainsView
 												.findViewById(R.id.requiredEdit))
 												.getText(),
-										searchingRemainsDialog, activity, positionsAdapter);
+										searchingRemainsDialog, activity);
 							} else {
 								searchGoodsTask = new SearchGoodsTask();
 								searchGoodsTask.execute(
@@ -355,7 +355,7 @@ public class TraderActivity extends Activity {
 										((EditText) remainsView
 												.findViewById(R.id.requiredEdit))
 												.getText(),
-										searchingRemainsDialog, activity, positionsAdapter);
+										searchingRemainsDialog, activity);
 							}
 						} catch (Exception e) {
 							Log.e("Searching", e.getMessage());

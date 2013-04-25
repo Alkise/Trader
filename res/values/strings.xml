@@ -6,8 +6,10 @@
     <string name="hello_world">Hello world!</string>
     <string name="manager">Current manager:</string>
     <string name="client">Current client:</string>
+    <string name="nomenclature">Nomenclature</string>
+    <string name="warehouse">Warehouse</string>
     <string name="btnNewClient">Create new</string>
-    <string name="client_txt">Client</string>
+    <string name="client_not_selected">Client not selected</string>
     <string name="connecting">Connecting to database&#8230;</string>
     <string name="loadManagers">Loading managers&#8230;</string>
     <string name="loadOrganizations">Loading organizations&#8230;</string>

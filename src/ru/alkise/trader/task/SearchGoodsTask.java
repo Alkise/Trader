@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.alkise.trader.R;
-import ru.alkise.trader.adapter.PositionAdapter;
 import ru.alkise.trader.model.Goods;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -28,7 +27,6 @@ public class SearchGoodsTask extends AsyncTask<Object, Object, Object> {
 	private List<Goods> goods;
 	private Activity activity;
 	private static ArrayAdapter<Goods> goodsAdapter;
-	private PositionAdapter positionAdapter;
 
 	@Override
 	protected Object doInBackground(Object... params) {
@@ -36,24 +34,25 @@ public class SearchGoodsTask extends AsyncTask<Object, Object, Object> {
 		searchingString = String.valueOf(params[1]).trim();
 
 		searchingDialog = (ProgressDialog) params[2];
+		searchingDialog.dismiss();
 
 		activity = (Activity) params[3];
-		
-		positionAdapter = (PositionAdapter) params[4];
-		
+
 		if (searchingString.length() >= 3) {
 			goods = new ArrayList<Goods>();
 
 			try {
 				PreparedStatement pstmt = connection
-						.prepareStatement("SELECT ID, CODE, DESCR FROM SC14 WHERE DESCR LIKE ? ORDER BY DESCR");
+						.prepareStatement("SELECT SC14.ID, SC14.CODE, SC14.DESCR, SUM(RG46.SP49) FROM SC14, RG46 WHERE RG46.PERIOD = (SELECT MAX(PERIOD) FROM RG46) AND SC14.ID = RG46.SP48 AND DESCR LIKE ? GROUP BY SC14.ID, SC14.CODE,SC14.CODE, SC14.DESCR ORDER BY DESCR");
 				pstmt.setString(1, "%" + searchingString + "%");
 
 				ResultSet rs = pstmt.executeQuery();
 
 				while (rs.next()) {
-					goods.add(new Goods(rs.getString(1), rs.getString(2), rs
-							.getString(3)));
+					if (rs.getDouble(4) > 0) {
+						goods.add(new Goods(rs.getString(1), rs.getString(2),
+								rs.getString(3)));
+					}
 				}
 
 				goodsAdapter = new ArrayAdapter<Goods>(activity,
@@ -87,9 +86,11 @@ public class SearchGoodsTask extends AsyncTask<Object, Object, Object> {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
+						searchingDialog.show();
+						
 						SearchRemainsTask searchRemainsTask = new SearchRemainsTask();
 						searchRemainsTask.execute(connection, goods.get(which)
-								.getCode(), searchingDialog, activity, positionAdapter);
+								.getCode(), searchingDialog, activity);
 					}
 				});
 		alertDialogBuilder.setTitle(activity
@@ -105,6 +106,7 @@ public class SearchGoodsTask extends AsyncTask<Object, Object, Object> {
 				});
 		AlertDialog alertDialog = alertDialogBuilder.create();
 		alertDialog.show();
+		
 		super.onPostExecute(result);
 	}
 

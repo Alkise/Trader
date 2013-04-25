@@ -3,22 +3,20 @@ package ru.alkise.trader.model;
 public class Position {
 	private Goods goods;
 	private double count;
+	private long id;
 	private Warehouse whFrom;
 	private Warehouse whTo;
 
 	public Position(Goods goods, double count, Warehouse whFrom, Warehouse whTo) {
-		this(goods, count, whFrom);
-		this.whTo = whTo;
-	}
-
-	public Position(Goods goods, double count, Warehouse whFrom) {
 		this.goods = goods;
 		this.count = count;
 		this.whFrom = whFrom;
+		this.whTo = whTo;
+		id = whFrom.getCode() + goods.getCode() + whTo.getCode() + (int) count;
 	}
 
 	public long getId() {
-		return whFrom.getCode() + goods.getCode();
+		return id;
 	}
 	
 	public Goods getGoods() {
@@ -57,9 +55,11 @@ public class Position {
 	public String toString() {
 		StringBuilder sb = new StringBuilder(goods.getDescr());
 		sb.append(' ');
-		sb.append(whFrom.getDescr());
-		sb.append(' ');
 		sb.append(count);
+		sb.append(' ');
+		sb.append(whTo.getDescr());
+		sb.append(' ');
+		sb.append(whFrom.getDescr());
 		return sb.toString();
 	}
 }

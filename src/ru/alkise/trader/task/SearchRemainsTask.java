@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.util.List;
 
 import ru.alkise.trader.R;
-import ru.alkise.trader.adapter.PositionAdapter;
 import ru.alkise.trader.model.Goods;
 import ru.alkise.trader.model.Order;
 import ru.alkise.trader.model.Position;
@@ -32,7 +31,6 @@ public class SearchRemainsTask extends AsyncTask<Object, Object, Object> {
 	private List<SearchResult> results;
 	private ArrayAdapter<SearchResult> remainsAdapter;
 	private String searchingValue;
-	private PositionAdapter positionAdapter;
 	public static final boolean SEARCH_BY_CODE = true;
 	public static final boolean SEARCH_BY_NAME = false;
 
@@ -42,7 +40,6 @@ public class SearchRemainsTask extends AsyncTask<Object, Object, Object> {
 		searchingValue = String.valueOf(params[1]).trim();
 		loadingDialog = (ProgressDialog) params[2];
 		activity = (Activity) params[3];
-		positionAdapter = (PositionAdapter) params[4];
 		
 		if (searchingValue.length() > 0) {
 			try {
@@ -102,8 +99,9 @@ public class SearchRemainsTask extends AsyncTask<Object, Object, Object> {
 							Order.INSTANCE.addPosition(new Position(
 									SearchResults.INSTANCE.getGoods(), results
 											.get(which).getCount(), results
+											.get(which).getWarehouse(), results
 											.get(which).getWarehouse()));
-							positionAdapter.notifyDataSetChanged();
+							SearchResults.INSTANCE.clear();
 						}
 
 					});
@@ -115,6 +113,7 @@ public class SearchRemainsTask extends AsyncTask<Object, Object, Object> {
 
 						public void onClick(DialogInterface p1, int p2) {
 							p1.cancel();
+							SearchResults.INSTANCE.clear();
 						}
 
 					});
@@ -122,6 +121,7 @@ public class SearchRemainsTask extends AsyncTask<Object, Object, Object> {
 			AlertDialog remainsDialog = alertDialogBuilder.create();
 			remainsDialog.show();
 		}
+		
 		loadingDialog.dismiss();
 		super.onPostExecute(result);
 	}

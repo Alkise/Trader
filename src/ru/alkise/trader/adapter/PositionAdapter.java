@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -21,7 +22,6 @@ import android.widget.TextView;
 
 public class PositionAdapter extends BaseAdapter {
 	private LayoutInflater inflater;
-	private Activity activity;
 	private ArrayList<Warehouse> whToList;
 	private ArrayAdapter<Warehouse> whToAdapter;
 
@@ -29,7 +29,10 @@ public class PositionAdapter extends BaseAdapter {
 		inflater = (LayoutInflater) activity.getApplication().getSystemService(
 				Context.LAYOUT_INFLATER_SERVICE);
 		whToList = new ArrayList<Warehouse>(Warehouses.INSTANCE.getWarehousesList());
-		whToAdapter = new ArrayAdapter<Warehouse>(activity, android.R.layout.simple_dropdown_item_1line, whToList);
+		whToAdapter = new ArrayAdapter<Warehouse>(activity, android.R.layout.simple_dropdown_item_1line, whToList){
+			
+		};
+		whToAdapter.setDropDownViewResource(R.layout.spinner_custom_item);
 	}
 
 	@Override
@@ -48,7 +51,7 @@ public class PositionAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int pos, View view, ViewGroup parent) {
+	public View getView(final int pos, View view, ViewGroup parent) {
 		ViewHolder holder;
 		View modifiedView = view;
 		if (modifiedView == null) {
@@ -78,6 +81,22 @@ public class PositionAdapter extends BaseAdapter {
 				holder.whFromSpinner.setTextColor(Color.BLACK);
 				
 				holder.whToSpinner.setAdapter(whToAdapter);
+				holder.whToSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+					@Override
+					public void onItemSelected(AdapterView<?> adapter, View arg1,
+							int arg2, long arg3) {
+						Order.INSTANCE.getPositions().get(pos).setWhTo((Warehouse)adapter.getSelectedItem());
+					}
+
+					@Override
+					public void onNothingSelected(AdapterView<?> arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+				
+				});
+				holder.whToSpinner.setSelection(whToList.indexOf(position.getWhFrom()));
 			}
 
 		} else {

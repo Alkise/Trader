@@ -8,97 +8,118 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".TraderActivity" >
 
-    <Button
-        android:id="@+id/btnAddPosition"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:onClick="searchRemains"
-        android:text="@string/addPosition" />
-
-    <Button
-        android:id="@+id/btnUpload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/btnAddPosition"
-        android:text="@string/upload" />
-
-    <EditText
-        android:id="@+id/clientField"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/organizationSpinner"
-        android:layout_toLeftOf="@+id/findClientsBtn"
-        android:ems="10"
-        android:inputType="none"
-        android:text="@string/client_txt" >
-    </EditText>
-
-    <Button
-        android:id="@+id/newClientBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/clientField"
-        android:layout_alignParentRight="true"
-        android:text="@string/btnNewClient" />
-
-    <Spinner
-        android:id="@+id/organizationSpinner"
+    <LinearLayout
+        android:id="@+id/linearLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/btnAddPosition"
-        android:gravity="center"
-        android:padding="0dip"
-        android:paddingLeft="0dip"
-        android:paddingRight="0dip" />
-
-    <Spinner
-        android:id="@+id/managerSpinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/organizationSpinner"
-        android:layout_toRightOf="@+id/organizationSpinner"
-        android:gravity="center"
-        android:padding="0dip"
-        android:prompt="@string/manager"
-        android:splitMotionEvents="true" >
+        android:layout_alignParentTop="true" >
 
-        <requestFocus android:layout_width="match_parent" />
+        <Spinner
+            android:id="@+id/organizationSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="0dip"
+            android:paddingLeft="0dip"
+            android:paddingRight="0dip" />
 
-    </Spinner>
+        <Spinner
+            android:id="@+id/managerSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="0dip"
+            android:prompt="@string/manager"
+            android:splitMotionEvents="true" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/findClientsBtn"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/clientField"
-        android:layout_toLeftOf="@+id/newClientBtn"
-        android:onClick="findClients"
-        android:text="@string/search" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/linearLayout1" >
+
+        <EditText
+            android:id="@+id/clientField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="none"
+            android:text="@string/client_not_selected" >
+
+            <requestFocus />
+        </EditText>
+
+        <Button
+            android:id="@+id/findClientsBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="findClients"
+            android:text="@string/search" />
+
+        <Button
+            android:id="@+id/newClientBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/btnNewClient" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/linearLayout2" >
+
+        <Button
+            android:id="@+id/btnAddPosition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="searchRemains"
+            android:text="@string/addPosition" />
+
+        <Button
+            android:id="@+id/btnUpload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/upload" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <Button
+            android:id="@+id/remainsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="showOrder"
+            android:text="@string/order" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
 
     <ListView
         android:id="@+id/positionList"
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/btnAddPosition"
+        android:layout_height="fill_parent"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/clientField" >
+        android:layout_below="@+id/linearLayout3">
 
     </ListView>
-
-    <Button
-        android:id="@+id/remainsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:onClick="showOrder"
-        android:text="@string/order" />
 
 </RelativeLayout>
