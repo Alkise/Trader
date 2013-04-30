@@ -22,9 +22,13 @@
     <string name="selectClient">Select client</string>
     <string name="selectNomeclature">Choose the nomenclature</string>
     <string name="cancel">Cancel</string>
+    <string name="create">Create</string>
     <string name="order">Order</string>
     <string name="search_param">Searching parameters</string>
     <string name="by_code_param">by code</string>
     <string name="by_name_param">by name</string>
-
+	<string name="client_short_name">Short name:</string>
+	<string name="client_full_name">Full name:</string>
+	<string name="client_type">Type:</string>
+    
 </resources>

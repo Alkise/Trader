@@ -41,7 +41,7 @@ public class SearchRemainsTask extends AsyncTask<Object, Object, Object> {
 		loadingDialog = (ProgressDialog) params[2];
 		activity = (Activity) params[3];
 		
-		if (searchingValue.length() > 0) {
+		if (searchingValue.length() > 0 && connection != null) {
 			try {
 				String query = "SELECT SC14.ID, SC14.CODE, SC14.DESCR, RG46.SP47, RG46.SP49 FROM SC14, RG46 WHERE SC14.ID = RG46.SP48 AND RG46.PERIOD = (SELECT MAX(PERIOD) FROM RG46) AND SC14.CODE = ? ORDER BY SC14.DESCR";
 
@@ -88,7 +88,7 @@ public class SearchRemainsTask extends AsyncTask<Object, Object, Object> {
 
 	@Override
 	protected void onPostExecute(Object result) {
-		if (!SearchResults.IS_EMPTY) {
+		if (!SearchResults.IS_EMPTY && remainsAdapter != null) {
 			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
 					activity);
 			alertDialogBuilder.setAdapter(remainsAdapter,
@@ -102,11 +102,12 @@ public class SearchRemainsTask extends AsyncTask<Object, Object, Object> {
 											.get(which).getWarehouse(), results
 											.get(which).getWarehouse()));
 							SearchResults.INSTANCE.clear();
+							results.clear();
 						}
 
 					});
 			alertDialogBuilder.setTitle(SearchResults.INSTANCE.getGoods()
-					.getDescr());
+					.getDescr() + " : " + results.size());
 			alertDialogBuilder.setNegativeButton(
 					activity.getString(R.string.cancel),
 					new DialogInterface.OnClickListener() {
@@ -114,10 +115,11 @@ public class SearchRemainsTask extends AsyncTask<Object, Object, Object> {
 						public void onClick(DialogInterface p1, int p2) {
 							p1.cancel();
 							SearchResults.INSTANCE.clear();
+							results.clear();
 						}
 
 					});
-
+			
 			AlertDialog remainsDialog = alertDialogBuilder.create();
 			remainsDialog.show();
 		}

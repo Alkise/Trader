@@ -4,11 +4,13 @@ public class Client {
 	private String id;
 	private String code;
 	private String descr;
+	private String fullName;
 	
-	public Client(String id, String code, String descr) {
+	public Client(String id, String code, String descr, String fullName) {
 		this.id = id;
 		this.code = code;
 		this.descr = descr;
+		this.fullName = fullName;
 	}
 
 	public String getId() {
@@ -35,8 +37,16 @@ public class Client {
 		this.descr = descr;
 	}
 	
+	public String getFullName() {
+		return fullName;
+	}
+	
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+	
 	@Override
 	public String toString() {
-		return descr.trim();
+		return fullName.trim();
 	}
 }

@@ -25,12 +25,18 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int LinearLayout1=0x7f08000c;
-        public static final int action_settings=0x7f080017;
+        public static final int LinearLayout1=0x7f080012;
+        public static final int action_settings=0x7f08001d;
         public static final int btnAddPosition=0x7f080008;
         public static final int btnUpload=0x7f080009;
         public static final int clientField=0x7f080004;
-        public static final int countEdit=0x7f08000e;
+        public static final int clientFullNameEdit=0x7f08000f;
+        public static final int clientFullNameView=0x7f08000e;
+        public static final int clientShortNameEdit=0x7f08000d;
+        public static final int clientShortNameView=0x7f08000c;
+        public static final int clientTypeSpinner=0x7f080011;
+        public static final int clientTypeView=0x7f080010;
+        public static final int countEdit=0x7f080014;
         public static final int findClientsBtn=0x7f080005;
         public static final int linearLayout1=0x7f080000;
         public static final int linearLayout2=0x7f080003;
@@ -38,23 +44,24 @@ public final class R {
         public static final int managerSpinner=0x7f080002;
         public static final int newClientBtn=0x7f080006;
         public static final int organizationSpinner=0x7f080001;
-        public static final int paramGroup=0x7f080014;
-        public static final int paramView=0x7f080012;
-        public static final int posNameView=0x7f08000d;
+        public static final int paramGroup=0x7f08001a;
+        public static final int paramView=0x7f080018;
+        public static final int posNameView=0x7f080013;
         public static final int positionList=0x7f08000b;
-        public static final int radioByCode=0x7f080015;
-        public static final int radioByName=0x7f080016;
+        public static final int radioByCode=0x7f08001b;
+        public static final int radioByName=0x7f08001c;
         public static final int remainsButton=0x7f08000a;
-        public static final int remains_layout=0x7f080011;
-        public static final int requiredEdit=0x7f080013;
-        public static final int whFromView=0x7f080010;
-        public static final int whToSpinner=0x7f08000f;
+        public static final int remains_layout=0x7f080017;
+        public static final int requiredEdit=0x7f080019;
+        public static final int whFromView=0x7f080016;
+        public static final int whToSpinner=0x7f080015;
     }
     public static final class layout {
         public static final int activity_trader=0x7f030000;
-        public static final int position_layout=0x7f030001;
-        public static final int remains=0x7f030002;
-        public static final int spinner_custom_item=0x7f030003;
+        public static final int new_client_layout=0x7f030001;
+        public static final int position_layout=0x7f030002;
+        public static final int remains=0x7f030003;
+        public static final int spinner_custom_item=0x7f030004;
     }
     public static final class menu {
         public static final int trader=0x7f070000;
@@ -64,21 +71,25 @@ public final class R {
         public static final int addPosition=0x7f05000c;
         public static final int app_name=0x7f050000;
         public static final int btnNewClient=0x7f050007;
-        public static final int by_code_param=0x7f050017;
-        public static final int by_name_param=0x7f050018;
+        public static final int by_code_param=0x7f050018;
+        public static final int by_name_param=0x7f050019;
         public static final int cancel=0x7f050014;
         public static final int client=0x7f050004;
+        public static final int client_full_name=0x7f05001b;
         public static final int client_not_selected=0x7f050008;
+        public static final int client_short_name=0x7f05001a;
+        public static final int client_type=0x7f05001c;
         public static final int connecting=0x7f050009;
+        public static final int create=0x7f050015;
         public static final int dataloading=0x7f050010;
         public static final int hello_world=0x7f050002;
         public static final int loadManagers=0x7f05000a;
         public static final int loadOrganizations=0x7f05000b;
         public static final int manager=0x7f050003;
         public static final int nomenclature=0x7f050005;
-        public static final int order=0x7f050015;
+        public static final int order=0x7f050016;
         public static final int search=0x7f05000e;
-        public static final int search_param=0x7f050016;
+        public static final int search_param=0x7f050017;
         public static final int searching=0x7f050011;
         public static final int select=0x7f05000f;
         public static final int selectClient=0x7f050012;

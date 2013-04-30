@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.alkise.trader.adapter.PositionAdapter;
+import ru.alkise.trader.model.ClientType;
 import ru.alkise.trader.model.Manager;
 import ru.alkise.trader.model.Order;
 import ru.alkise.trader.model.Organization;
+import ru.alkise.trader.model.SearchResults;
 import ru.alkise.trader.model.Warehouse;
 import ru.alkise.trader.model.Warehouses;
 import ru.alkise.trader.sql.SQLConnection;
@@ -59,12 +61,17 @@ public class TraderActivity extends Activity {
 	private EditText clientField;
 	private static Activity activity;
 	private PositionAdapter positionsAdapter;
+	private ArrayAdapter<ClientType> clientTypeAdapter;
+	private boolean loaded;
+	private LayoutInflater inflater;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_trader);
 		activity = this;
+		
+		inflater = LayoutInflater.from(this);
 
 		organizationSpinner = (Spinner) findViewById(R.id.organizationSpinner);
 		managerSpinner = (Spinner) findViewById(R.id.managerSpinner);
@@ -73,9 +80,10 @@ public class TraderActivity extends Activity {
 		positionsList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
 		loadingDialog = new ProgressDialog(this);
-		loadingDialog.setIndeterminate(true);
-		loadingDialog.setCancelable(true);
+		loadingDialog.setIndeterminate(false);
+		loadingDialog.setCancelable(false);
 		loadingDialog.setMessage(getString(R.string.connecting));
+		loadingDialog.show();
 
 		searchingDialog = new ProgressDialog(this);
 		searchingDialog.setIndeterminate(true);
@@ -117,18 +125,25 @@ public class TraderActivity extends Activity {
 				// TODO: Implement this method
 			}
 		});
-
 		
-		loadingDialog.show();
+		clientTypeAdapter = new ArrayAdapter<ClientType>(this, android.R.layout.simple_spinner_dropdown_item, ClientType.values());
+		
 		connectionTask.execute("192.168.0.202", "1433", "trade2005", "test",
-				"test", this, loadingDialog);
+				"test", loadingDialog);
 		dataLoaderTask.execute();
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-
+		if (loaded) {
+			loadingDialog.show();
+			connectionTask = new ConnectionTask();
+			connectionTask.execute("192.168.0.202", "1433", "trade2005",
+					"test", "test", loadingDialog);
+		} else {
+			loaded = true;
+		}
 	}
 
 	@Override
@@ -136,9 +151,16 @@ public class TraderActivity extends Activity {
 		try {
 			SQLConnection.INSTANCE.closeConnection();
 		} catch (Exception e) {
-
+			Log.e("onStop", e.getMessage());
 		}
 		super.onStop();
+	}
+
+	@Override
+	protected void onDestroy() {
+		SearchResults.INSTANCE.clear();
+		Order.INSTANCE.clearPositions();
+		super.onDestroy();
 	}
 
 	protected class DataLoaderTask extends AsyncTask<Object, Object, Object> {
@@ -147,6 +169,8 @@ public class TraderActivity extends Activity {
 
 		private List<Manager> activeManagers;
 		private ArrayAdapter<Manager> managerAdapter;
+
+		private ProgressDialog dataLoadingDialog;
 
 		private Connection connection;
 
@@ -166,7 +190,7 @@ public class TraderActivity extends Activity {
 							.getString(2), rs.getString(3)));
 				}
 				organizationAdapter = new ArrayAdapter<Organization>(
-						getApplication(), android.R.layout.simple_list_item_1,
+						getApplication(), android.R.layout.simple_spinner_dropdown_item,
 						organizations) {
 
 					@Override
@@ -206,7 +230,7 @@ public class TraderActivity extends Activity {
 							.getString(2), rs.getString(3)));
 				}
 				managerAdapter = new ArrayAdapter<Manager>(getApplication(),
-						android.R.layout.simple_list_item_1, activeManagers) {
+						android.R.layout.simple_spinner_dropdown_item, activeManagers) {
 
 					@Override
 					public View getDropDownView(int position, View convertView,
@@ -251,49 +275,60 @@ public class TraderActivity extends Activity {
 		}
 
 		@Override
+		protected void onPreExecute() {
+			dataLoadingDialog = new ProgressDialog(activity);
+			dataLoadingDialog.setIndeterminate(false);
+			dataLoadingDialog.setCancelable(false);
+			dataLoadingDialog.setMessage(activity
+					.getString(R.string.dataloading));
+			dataLoadingDialog.show();
+		}
+
+		@Override
 		protected void onPostExecute(Object result) {
-			organizationSpinner.setAdapter(organizationAdapter);
-			organizationSpinner
-					.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			if (organizationAdapter != null) {
+				organizationSpinner.setAdapter(organizationAdapter);
+				organizationSpinner
+						.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-						@Override
-						public void onItemSelected(AdapterView<?> adapter,
-								View arg1, int selectedPosition, long arg3) {
-							Order.INSTANCE
-									.setOrganization((Organization) adapter
-											.getSelectedItem());
-						}
+							@Override
+							public void onItemSelected(AdapterView<?> adapter,
+									View arg1, int selectedPosition, long arg3) {
+								Order.INSTANCE
+										.setOrganization((Organization) adapter
+												.getSelectedItem());
+							}
 
-						@Override
-						public void onNothingSelected(AdapterView<?> arg0) {
-							// TODO Auto-generated method stub
+							@Override
+							public void onNothingSelected(AdapterView<?> arg0) {
+								// TODO Auto-generated method stub
 
-						}
-					});
+							}
+						});
 
-			managerSpinner.setAdapter(managerAdapter);
-			managerSpinner
-					.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+				managerSpinner.setAdapter(managerAdapter);
+				managerSpinner
+						.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-						@Override
-						public void onItemSelected(AdapterView<?> adapter,
-								View arg1, int selectedPosition, long arg3) {
-							Order.INSTANCE.setManager((Manager) adapter
-									.getSelectedItem());
-						}
+							@Override
+							public void onItemSelected(AdapterView<?> adapter,
+									View arg1, int selectedPosition, long arg3) {
+								Order.INSTANCE.setManager((Manager) adapter
+										.getSelectedItem());
+							}
 
-						@Override
-						public void onNothingSelected(AdapterView<?> arg0) {
-							// TODO Auto-generated method stub
+							@Override
+							public void onNothingSelected(AdapterView<?> arg0) {
+								// TODO Auto-generated method stub
 
-						}
-					});
+							}
+						});
 
-			positionsAdapter = new PositionAdapter(activity);
-			Order.INSTANCE.addObserver(positionsAdapter);
-			positionsList.setAdapter(positionsAdapter);
-			
-			loadingDialog.dismiss();
+				positionsAdapter = new PositionAdapter(activity);
+				Order.INSTANCE.addObserver(positionsAdapter);
+				positionsList.setAdapter(positionsAdapter);
+			}
+			dataLoadingDialog.dismiss();
 			super.onPostExecute(result);
 		}
 	}
@@ -312,10 +347,9 @@ public class TraderActivity extends Activity {
 				Toast.LENGTH_LONG).show();
 	}
 
-	// Add postion button
+	// Add postion button click
 	public void searchRemains(View view) {
-		LayoutInflater layoutInflater = LayoutInflater.from(this);
-		final View remainsView = layoutInflater.inflate(R.layout.remains, null);
+		final View remainsView = inflater.inflate(R.layout.remains, null);
 
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 		alertDialogBuilder.setView(remainsView);
@@ -379,6 +413,37 @@ public class TraderActivity extends Activity {
 		} catch (Exception e) {
 			Log.e("findClients", e.getMessage());
 		}
+	}
+	
+	//Create new client button click
+	public void onCreateNewClientClick(View view) {
+		final View newClientView = inflater.inflate(R.layout.new_client_layout, null);
+		
+		Spinner clientTypeSpinner = (Spinner) newClientView.findViewById(R.id.clientTypeSpinner);
+		clientTypeSpinner.setAdapter(clientTypeAdapter);
+		
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+		alertDialogBuilder.setView(newClientView);
+		alertDialogBuilder.setPositiveButton(activity.getString(R.string.create), new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		alertDialogBuilder.setNegativeButton(activity.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+		
+		AlertDialog newClientDialog = alertDialogBuilder.create();
+		
+		newClientDialog.show();
 	}
 
 }

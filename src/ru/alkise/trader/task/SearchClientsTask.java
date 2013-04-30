@@ -42,10 +42,10 @@ public class SearchClientsTask extends AsyncTask<Object, List<Client>, Object> {
 			activity = (Activity) params[3];
 			clients = new ArrayList<Client>();
 
-			if (searchingString.length() >= 3) {
+			if (searchingString.length() >= 3 && connection != null) {
 
 				PreparedStatement pstmt = connection
-						.prepareStatement("SELECT ID, CODE, DESCR FROM SC16 WHERE DESCR LIKE ? AND (PARENTID = ? OR PARENTID = ? OR PARENTID = ? OR PARENTID = ?) ORDER BY DESCR");
+						.prepareStatement("SELECT ID, CODE, DESCR, SP237 FROM SC16 WHERE DESCR LIKE ? AND (PARENTID = ? OR PARENTID = ? OR PARENTID = ? OR PARENTID = ?) ORDER BY DESCR");
 
 				pstmt.setString(1, "%" + searchingString + "%");
 				pstmt.setString(2, parents[0]);
@@ -57,7 +57,7 @@ public class SearchClientsTask extends AsyncTask<Object, List<Client>, Object> {
 
 				while (rs.next()) {
 					clients.add(new Client(rs.getString(1), rs.getString(2), rs
-							.getString(3)));
+							.getString(3), rs.getString(4)));
 				}
 				clientAdapter = new ArrayAdapter<Client>(activity,
 						android.R.layout.simple_expandable_list_item_1, clients) {
@@ -83,31 +83,35 @@ public class SearchClientsTask extends AsyncTask<Object, List<Client>, Object> {
 
 	@Override
 	protected void onPostExecute(Object result) {
+		if (clientAdapter != null) {
+			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+					activity);
+			alertDialogBuilder.setAdapter(clientAdapter,
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							Order.INSTANCE.setClient(clients.get(which));
+							((EditText) activity.findViewById(R.id.clientField))
+									.setText(Order.INSTANCE.getClient()
+											.toString());
+						}
+					});
+			alertDialogBuilder.setTitle(activity
+					.getString(R.string.selectClient));
+			alertDialogBuilder.setNegativeButton(
+					activity.getString(R.string.cancel),
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.cancel();
+						}
+					});
+			AlertDialog alertDialog = alertDialogBuilder.create();
+			alertDialog.show();
+		}
 		searchingDialog.dismiss();
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-				activity);
-		alertDialogBuilder.setAdapter(clientAdapter,
-				new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						Order.INSTANCE.setClient(clients.get(which));
-						((EditText) activity.findViewById(R.id.clientField))
-								.setText(Order.INSTANCE.getClient().toString());
-					}
-				});
-		alertDialogBuilder.setTitle(activity.getString(R.string.selectClient));
-		alertDialogBuilder.setNegativeButton(
-				activity.getString(R.string.cancel),
-				new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.cancel();
-					}
-				});
-		AlertDialog alertDialog = alertDialogBuilder.create();
-		alertDialog.show();
 		super.onPostExecute(result);
 	}
 

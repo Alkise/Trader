@@ -34,13 +34,11 @@ public class SearchGoodsTask extends AsyncTask<Object, Object, Object> {
 		searchingString = String.valueOf(params[1]).trim();
 
 		searchingDialog = (ProgressDialog) params[2];
-		searchingDialog.dismiss();
 
 		activity = (Activity) params[3];
+		goods = new ArrayList<Goods>();
 
-		if (searchingString.length() >= 3) {
-			goods = new ArrayList<Goods>();
-
+		if (searchingString.length() >= 3 && connection != null) {
 			try {
 				PreparedStatement pstmt = connection
 						.prepareStatement("SELECT SC14.ID, SC14.CODE, SC14.DESCR, SUM(RG46.SP49) FROM SC14, RG46 WHERE RG46.PERIOD = (SELECT MAX(PERIOD) FROM RG46) AND SC14.ID = RG46.SP48 AND DESCR LIKE ? GROUP BY SC14.ID, SC14.CODE,SC14.CODE, SC14.DESCR ORDER BY DESCR");
@@ -79,34 +77,44 @@ public class SearchGoodsTask extends AsyncTask<Object, Object, Object> {
 
 	@Override
 	protected void onPostExecute(Object result) {
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-				activity);
-		alertDialogBuilder.setAdapter(goodsAdapter,
-				new DialogInterface.OnClickListener() {
+		if (goodsAdapter != null) {
+			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+					activity);
+			alertDialogBuilder.setAdapter(goodsAdapter,
+					new DialogInterface.OnClickListener() {
 
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						searchingDialog.show();
-						
-						SearchRemainsTask searchRemainsTask = new SearchRemainsTask();
-						searchRemainsTask.execute(connection, goods.get(which)
-								.getCode(), searchingDialog, activity);
-					}
-				});
-		alertDialogBuilder.setTitle(activity
-				.getString(R.string.selectNomeclature));
-		alertDialogBuilder.setNegativeButton(
-				activity.getString(R.string.cancel),
-				new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							searchingDialog.show();
 
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.cancel();
-					}
-				});
-		AlertDialog alertDialog = alertDialogBuilder.create();
-		alertDialog.show();
-		
+							SearchRemainsTask searchRemainsTask = new SearchRemainsTask();
+							searchRemainsTask.execute(connection, goodsAdapter
+									.getItem(which).getCode(), searchingDialog,
+									activity);
+							goods.clear();
+						}
+					});
+			alertDialogBuilder.setTitle(activity
+					.getString(R.string.selectNomeclature)
+					+ " : "
+					+ goods.size());
+			alertDialogBuilder.setNegativeButton(
+					activity.getString(R.string.cancel),
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.cancel();
+							goods.clear();
+						}
+					});
+			AlertDialog alertDialog = alertDialogBuilder.create();
+			searchingString = null;
+			alertDialog.show();
+		}
+
+		searchingDialog.dismiss();
+
 		super.onPostExecute(result);
 	}
 
