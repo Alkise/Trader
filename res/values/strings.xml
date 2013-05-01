@@ -23,6 +23,7 @@
     <string name="selectNomeclature">Choose the nomenclature</string>
     <string name="cancel">Cancel</string>
     <string name="create">Create</string>
+    <string name="delete">Delete</string>
     <string name="order">Order</string>
     <string name="search_param">Searching parameters</string>
     <string name="by_code_param">by code</string>

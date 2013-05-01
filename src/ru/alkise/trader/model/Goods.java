@@ -12,7 +12,7 @@ public class Goods {
 	public Goods(String id, int code, String descr) {
 		this.id = id;
 		this.code = code;
-		this.descr = descr;
+		this.descr = descr.trim();
 	}
 
 	public String getId() {
@@ -36,7 +36,7 @@ public class Goods {
 	}
 
 	public void setDescr(String descr) {
-		this.descr = descr;
+		this.descr = descr.trim();
 	}
 
 	@Override

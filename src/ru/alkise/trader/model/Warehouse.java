@@ -8,7 +8,7 @@ public class Warehouse {
 	public Warehouse(String id, int code, String descr) {
 		this.id = id;
 		this.code = code;
-		this.descr = descr;
+		this.descr = descr.trim();
 	}
 
 	public String getId() {
@@ -32,7 +32,7 @@ public class Warehouse {
 	}
 
 	public void setDescr(String descr) {
-		this.descr = descr;
+		this.descr = descr.trim();
 	}
 	
 	@Override

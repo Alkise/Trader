@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -110,5 +111,6 @@ public class PositionAdapter extends BaseAdapter {
 		EditText count;
 		TextView whFromSpinner;
 		Spinner whToSpinner;
+		Button deleteButton;
 	}
 }

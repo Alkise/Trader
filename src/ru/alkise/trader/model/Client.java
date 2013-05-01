@@ -5,12 +5,15 @@ public class Client {
 	private String code;
 	private String descr;
 	private String fullName;
-	
-	public Client(String id, String code, String descr, String fullName) {
+	private ClientType type;
+
+	public Client(String id, String code, String descr, String fullName,
+			ClientType type) {
 		this.id = id;
 		this.code = code;
-		this.descr = descr;
-		this.fullName = fullName;
+		this.descr = descr.trim();
+		this.fullName = fullName.trim();
+		this.type = type;
 	}
 
 	public String getId() {
@@ -20,7 +23,7 @@ public class Client {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	public String getCode() {
 		return code;
 	}
@@ -34,17 +37,25 @@ public class Client {
 	}
 
 	public void setDescr(String descr) {
-		this.descr = descr;
+		this.descr = descr.trim();
 	}
-	
+
 	public String getFullName() {
 		return fullName;
 	}
-	
+
 	public void setFullName(String fullName) {
-		this.fullName = fullName;
+		this.fullName = fullName.trim();
 	}
-	
+
+	public ClientType getType() {
+		return type;
+	}
+
+	public void setType(ClientType type) {
+		this.type = type;
+	}
+
 	@Override
 	public String toString() {
 		return fullName.trim();

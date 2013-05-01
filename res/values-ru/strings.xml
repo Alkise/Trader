@@ -19,6 +19,7 @@
     <string name="selectNomeclature">Выберите номенклатуру</string>
     <string name="cancel">Отмена</string>
     <string name="create">Создать</string>
+    <string name="delete">Удалить</string>
     <string name="order">Заказ</string>
     <string name="search_param">Параметры поиска</string>
     <string name="by_code_param">по коду</string>

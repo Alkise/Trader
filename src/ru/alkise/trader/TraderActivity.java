@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.alkise.trader.adapter.PositionAdapter;
+import ru.alkise.trader.model.Client;
 import ru.alkise.trader.model.ClientType;
 import ru.alkise.trader.model.Manager;
 import ru.alkise.trader.model.Order;
@@ -70,7 +71,7 @@ public class TraderActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_trader);
 		activity = this;
-		
+
 		inflater = LayoutInflater.from(this);
 
 		organizationSpinner = (Spinner) findViewById(R.id.organizationSpinner);
@@ -125,9 +126,11 @@ public class TraderActivity extends Activity {
 				// TODO: Implement this method
 			}
 		});
-		
-		clientTypeAdapter = new ArrayAdapter<ClientType>(this, android.R.layout.simple_spinner_dropdown_item, ClientType.values());
-		
+
+		clientTypeAdapter = new ArrayAdapter<ClientType>(this,
+				android.R.layout.simple_spinner_dropdown_item,
+				ClientType.values());
+
 		connectionTask.execute("192.168.0.202", "1433", "trade2005", "test",
 				"test", loadingDialog);
 		dataLoaderTask.execute();
@@ -190,7 +193,8 @@ public class TraderActivity extends Activity {
 							.getString(2), rs.getString(3)));
 				}
 				organizationAdapter = new ArrayAdapter<Organization>(
-						getApplication(), android.R.layout.simple_spinner_dropdown_item,
+						getApplication(),
+						android.R.layout.simple_spinner_dropdown_item,
 						organizations) {
 
 					@Override
@@ -230,7 +234,8 @@ public class TraderActivity extends Activity {
 							.getString(2), rs.getString(3)));
 				}
 				managerAdapter = new ArrayAdapter<Manager>(getApplication(),
-						android.R.layout.simple_spinner_dropdown_item, activeManagers) {
+						android.R.layout.simple_spinner_dropdown_item,
+						activeManagers) {
 
 					@Override
 					public View getDropDownView(int position, View convertView,
@@ -414,36 +419,50 @@ public class TraderActivity extends Activity {
 			Log.e("findClients", e.getMessage());
 		}
 	}
-	
-	//Create new client button click
+
+	// Create new client button click
 	public void onCreateNewClientClick(View view) {
-		final View newClientView = inflater.inflate(R.layout.new_client_layout, null);
-		
-		Spinner clientTypeSpinner = (Spinner) newClientView.findViewById(R.id.clientTypeSpinner);
+		final View newClientView = inflater.inflate(R.layout.new_client_layout,
+				null);
+		final Spinner clientTypeSpinner = (Spinner) newClientView
+				.findViewById(R.id.clientTypeSpinner);
+
 		clientTypeSpinner.setAdapter(clientTypeAdapter);
-		
+
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 		alertDialogBuilder.setView(newClientView);
-		alertDialogBuilder.setPositiveButton(activity.getString(R.string.create), new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		
-		alertDialogBuilder.setNegativeButton(activity.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.cancel();
-			}
-		});
-		
+		alertDialogBuilder.setPositiveButton(
+				activity.getString(R.string.create),
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						EditText clientShortNameEdit = (EditText) newClientView
+								.findViewById(R.id.clientShortNameEdit);
+						EditText clientFullNameEdit = (EditText) newClientView
+								.findViewById(R.id.clientFullNameEdit);
+						Order.INSTANCE.setClient(new Client("new", "new",
+								(clientShortNameEdit.getText()).toString(),
+								(clientFullNameEdit.getText()).toString(),
+								(ClientType) clientTypeSpinner
+										.getSelectedItem()));
+						EditText clientEdit = (EditText) activity.findViewById(R.id.clientField);
+						clientEdit.setText(clientShortNameEdit.getText());
+					}
+				});
+
+		alertDialogBuilder.setNegativeButton(
+				activity.getString(R.string.cancel),
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				});
+
 		AlertDialog newClientDialog = alertDialogBuilder.create();
-		
+
 		newClientDialog.show();
 	}
-
 }

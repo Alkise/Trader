@@ -45,7 +45,7 @@ public class SearchClientsTask extends AsyncTask<Object, List<Client>, Object> {
 			if (searchingString.length() >= 3 && connection != null) {
 
 				PreparedStatement pstmt = connection
-						.prepareStatement("SELECT ID, CODE, DESCR, SP237 FROM SC16 WHERE DESCR LIKE ? AND (PARENTID = ? OR PARENTID = ? OR PARENTID = ? OR PARENTID = ?) ORDER BY DESCR");
+						.prepareStatement("SELECT ID, CODE, DESCR, SP237, SP3136 FROM SC16 WHERE DESCR LIKE ? AND (PARENTID = ? OR PARENTID = ? OR PARENTID = ? OR PARENTID = ?) ORDER BY DESCR");
 
 				pstmt.setString(1, "%" + searchingString + "%");
 				pstmt.setString(2, parents[0]);
@@ -57,7 +57,7 @@ public class SearchClientsTask extends AsyncTask<Object, List<Client>, Object> {
 
 				while (rs.next()) {
 					clients.add(new Client(rs.getString(1), rs.getString(2), rs
-							.getString(3), rs.getString(4)));
+							.getString(3), rs.getString(4), ClientType._2F2.getClientTypeById(rs.getString(5))));
 				}
 				clientAdapter = new ArrayAdapter<Client>(activity,
 						android.R.layout.simple_expandable_list_item_1, clients) {

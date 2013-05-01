@@ -8,7 +8,7 @@ public class Organization {
 	public Organization(String id , String code ,String descr) {
 		this.id = id;
 		this.code = code;
-		this.descr = descr;
+		this.descr = descr.trim();
 	}
 	
 	public String getId() {
@@ -32,11 +32,11 @@ public class Organization {
 	}
 
 	public void setDescr(String descr) {
-		this.descr = descr;
+		this.descr = descr.trim();
 	}
 	
 	@Override
 	public String toString() {
-		return descr.trim();
+		return descr;
 	}
 }
