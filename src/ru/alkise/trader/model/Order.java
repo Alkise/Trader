@@ -4,32 +4,30 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import android.widget.BaseAdapter;
-
 public enum Order {
 	INSTANCE;
 
 	private Organization organization;
 	private Manager manager;
 	private Client client;
-	private List<Position> positions;
-	private List<BaseAdapter> observerList;
+	private static List<Position> positions;
+	private static List<OrderObserver> observerList;
 
-	{
+	static {
 		positions = new ArrayList<Position>();
-		observerList = new ArrayList<BaseAdapter>();
+		observerList = new ArrayList<OrderObserver>();
 	}
 
 	public void setOrganization(Organization organization) {
 		this.organization = organization;
 	}
 
-	public void addObserver(BaseAdapter adapter) {
-		observerList.add(adapter);
+	public void addObserver(OrderObserver observer) {
+		observerList.add(observer);
 	}
 	
-	public void removeObserver(BaseAdapter adapter) {
-		observerList.remove(adapter);
+	public void removeObserver(OrderObserver observer) {
+		observerList.remove(observer);
 	}
 	
 	public void removeObservers() {
@@ -37,8 +35,8 @@ public enum Order {
 	}
 	
 	private void notifyObservers() {
-		for (BaseAdapter adapter : observerList) {
-			adapter.notifyDataSetChanged();
+		for (OrderObserver observer : observerList) {
+			observer.update();
 		}
 	}
 	
@@ -72,17 +70,22 @@ public enum Order {
 	}
 
 	public void addPositions(Collection<Position> positions) {
-		this.positions.addAll(positions);
+		Order.positions.addAll(positions);
 		notifyObservers();
 	}
 
 	public void removePosition(Position position) {
-		positions.remove(position);
+		Order.positions.remove(position);
 		notifyObservers();
 	}
 
+	public void removePosition(int posNum) {
+		Order.positions.remove(posNum);
+		notifyObservers();
+	}
+	
 	public void removePositions(Collection<Position> positions) {
-		this.positions.removeAll(positions);
+		Order.positions.removeAll(positions);
 		notifyObservers();
 	}
 

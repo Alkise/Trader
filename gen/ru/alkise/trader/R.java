@@ -72,26 +72,27 @@ public final class R {
         public static final int addPosition=0x7f05000c;
         public static final int app_name=0x7f050000;
         public static final int btnNewClient=0x7f050007;
-        public static final int by_code_param=0x7f050019;
-        public static final int by_name_param=0x7f05001a;
+        public static final int by_code_param=0x7f05001a;
+        public static final int by_name_param=0x7f05001b;
         public static final int cancel=0x7f050014;
         public static final int client=0x7f050004;
-        public static final int client_full_name=0x7f05001c;
+        public static final int client_full_name=0x7f05001d;
         public static final int client_not_selected=0x7f050008;
-        public static final int client_short_name=0x7f05001b;
-        public static final int client_type=0x7f05001d;
+        public static final int client_short_name=0x7f05001c;
+        public static final int client_type=0x7f05001e;
         public static final int connecting=0x7f050009;
         public static final int create=0x7f050015;
         public static final int dataloading=0x7f050010;
+        public static final int del_button=0x7f050017;
         public static final int delete=0x7f050016;
         public static final int hello_world=0x7f050002;
         public static final int loadManagers=0x7f05000a;
         public static final int loadOrganizations=0x7f05000b;
         public static final int manager=0x7f050003;
         public static final int nomenclature=0x7f050005;
-        public static final int order=0x7f050017;
+        public static final int order=0x7f050018;
         public static final int search=0x7f05000e;
-        public static final int search_param=0x7f050018;
+        public static final int search_param=0x7f050019;
         public static final int searching=0x7f050011;
         public static final int select=0x7f05000f;
         public static final int selectClient=0x7f050012;
@@ -120,22 +121,12 @@ public final class R {
         res/values-v11/styles.xml on API 14+ devices.
     
  API 14 theme customizations can go here. 
-
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    
-
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        
          */
         public static final int AppBaseTheme=0x7f060000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
- Application theme. 
- All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f060001;
+        public static final int ButtonStyle=0x7f060002;
     }
 }

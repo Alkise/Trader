@@ -7,7 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.alkise.trader.adapter.PositionAdapter;
+import ru.alkise.trader.adapter.ArrayPositonAdapter;
 import ru.alkise.trader.model.Client;
 import ru.alkise.trader.model.ClientType;
 import ru.alkise.trader.model.Manager;
@@ -61,7 +61,7 @@ public class TraderActivity extends Activity {
 	private Button uploadTo1CBtn;
 	private EditText clientField;
 	private static Activity activity;
-	private PositionAdapter positionsAdapter;
+	private ArrayPositonAdapter positionsAdapter;
 	private ArrayAdapter<ClientType> clientTypeAdapter;
 	private boolean loaded;
 	private LayoutInflater inflater;
@@ -329,7 +329,7 @@ public class TraderActivity extends Activity {
 							}
 						});
 
-				positionsAdapter = new PositionAdapter(activity);
+				positionsAdapter = new ArrayPositonAdapter(activity, R.layout.position_layout, Order.INSTANCE.getPositions());
 				Order.INSTANCE.addObserver(positionsAdapter);
 				positionsList.setAdapter(positionsAdapter);
 			}
@@ -350,6 +350,7 @@ public class TraderActivity extends Activity {
 	public void showOrder(View view) {
 		Toast.makeText(getApplication(), Order.INSTANCE.displayOrder(),
 				Toast.LENGTH_LONG).show();
+		positionsAdapter.notifyDataSetChanged();
 	}
 
 	// Add postion button click

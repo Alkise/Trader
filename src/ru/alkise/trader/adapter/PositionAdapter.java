@@ -1,9 +1,11 @@
 package ru.alkise.trader.adapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ru.alkise.trader.R;
 import ru.alkise.trader.model.Order;
+import ru.alkise.trader.model.OrderObserver;
 import ru.alkise.trader.model.Position;
 import ru.alkise.trader.model.Warehouse;
 import ru.alkise.trader.model.Warehouses;
@@ -21,34 +23,36 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class PositionAdapter extends BaseAdapter {
+public class PositionAdapter extends BaseAdapter implements OrderObserver {
 	private LayoutInflater inflater;
 	private ArrayList<Warehouse> whToList;
 	private ArrayAdapter<Warehouse> whToAdapter;
+	private List<Position> positions;
 
 	public PositionAdapter(Activity activity) {
 		inflater = (LayoutInflater) activity.getApplication().getSystemService(
 				Context.LAYOUT_INFLATER_SERVICE);
-		whToList = new ArrayList<Warehouse>(Warehouses.INSTANCE.getWarehousesList());
-		whToAdapter = new ArrayAdapter<Warehouse>(activity, android.R.layout.simple_dropdown_item_1line, whToList){
-			
-		};
+		whToList = new ArrayList<Warehouse>(
+				Warehouses.INSTANCE.getWarehousesList());
+		whToAdapter = new ArrayAdapter<Warehouse>(activity,
+				android.R.layout.simple_dropdown_item_1line, whToList);
 		whToAdapter.setDropDownViewResource(R.layout.spinner_custom_item);
+		positions = new ArrayList<Position>(Order.INSTANCE.getPositions());
 	}
 
 	@Override
 	public int getCount() {
-		return Order.INSTANCE.getPositions().size();
+		return positions.size();
 	}
 
 	@Override
 	public Object getItem(int arg0) {
-		return Order.INSTANCE.getPositions().get(arg0);
+		return positions.get(arg0);
 	}
 
 	@Override
 	public long getItemId(int arg0) {
-		return Order.INSTANCE.getPositions().get(arg0).getId();
+		return positions.get(arg0).getId();
 	}
 
 	@Override
@@ -68,8 +72,10 @@ public class PositionAdapter extends BaseAdapter {
 
 			holder.whToSpinner = (Spinner) modifiedView
 					.findViewById(R.id.whToSpinner);
+			holder.deleteButton = (Button) modifiedView
+					.findViewById(R.id.deleteButton);
 
-			Position position = Order.INSTANCE.getPositions().get(pos);
+			Position position = positions.get(pos);
 
 			if (position != null) {
 				holder.posNameView.setText(position.getGoods().toString());
@@ -80,24 +86,39 @@ public class PositionAdapter extends BaseAdapter {
 
 				holder.whFromSpinner.setText(position.getWhFrom().toString());
 				holder.whFromSpinner.setTextColor(Color.BLACK);
-				
+
 				holder.whToSpinner.setAdapter(whToAdapter);
-				holder.whToSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+				holder.whToSpinner
+						.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-					@Override
-					public void onItemSelected(AdapterView<?> adapter, View arg1,
-							int arg2, long arg3) {
-						Order.INSTANCE.getPositions().get(pos).setWhTo((Warehouse)adapter.getSelectedItem());
-					}
+							@Override
+							public void onItemSelected(AdapterView<?> adapter,
+									View arg1, int arg2, long arg3) {
+								Order.INSTANCE
+										.getPositions()
+										.get(pos)
+										.setWhTo(
+												(Warehouse) adapter
+														.getSelectedItem());
+							}
 
-					@Override
-					public void onNothingSelected(AdapterView<?> arg0) {
-						// TODO Auto-generated method stub
-						
-					}
+							@Override
+							public void onNothingSelected(AdapterView<?> arg0) {
+								// TODO Auto-generated method stub
+
+							}
+
+						});
+				holder.whToSpinner.setSelection(whToList.indexOf(position
+						.getWhFrom()));
 				
+				holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						Order.INSTANCE.removePosition(pos);
+					}
 				});
-				holder.whToSpinner.setSelection(whToList.indexOf(position.getWhFrom()));
 			}
 
 		} else {
@@ -112,5 +133,13 @@ public class PositionAdapter extends BaseAdapter {
 		TextView whFromSpinner;
 		Spinner whToSpinner;
 		Button deleteButton;
+	}
+
+	@Override
+	public void update() {
+		positions.clear();
+		positions.addAll(Order.INSTANCE.getPositions());
+		whToAdapter.notifyDataSetChanged();
+		notifyDataSetChanged();
 	}
 }
