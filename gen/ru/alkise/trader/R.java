@@ -22,42 +22,40 @@ public final class R {
         public static final int activity_vertical_margin=0x7f040001;
     }
     public static final class drawable {
-        public static final int basket=0x7f020000;
-        public static final int ic_launcher=0x7f020001;
+        public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int LinearLayout1=0x7f080013;
-        public static final int action_settings=0x7f08001f;
+        public static final int LinearLayout1=0x7f080012;
+        public static final int action_settings=0x7f08001e;
         public static final int btnAddPosition=0x7f080008;
         public static final int btnUpload=0x7f080009;
         public static final int clientField=0x7f080004;
-        public static final int clientFullNameEdit=0x7f080010;
-        public static final int clientFullNameView=0x7f08000f;
-        public static final int clientShortNameEdit=0x7f08000e;
-        public static final int clientShortNameView=0x7f08000d;
-        public static final int clientTypeSpinner=0x7f080012;
-        public static final int clientTypeView=0x7f080011;
-        public static final int countEdit=0x7f080015;
-        public static final int deleteButton=0x7f080018;
+        public static final int clientFullNameEdit=0x7f08000f;
+        public static final int clientFullNameView=0x7f08000e;
+        public static final int clientShortNameEdit=0x7f08000d;
+        public static final int clientShortNameView=0x7f08000c;
+        public static final int clientTypeSpinner=0x7f080011;
+        public static final int clientTypeView=0x7f080010;
+        public static final int countEdit=0x7f080014;
+        public static final int deleteButton=0x7f080017;
         public static final int findClientsBtn=0x7f080005;
-        public static final int imageButton1=0x7f08000b;
         public static final int linearLayout1=0x7f080000;
         public static final int linearLayout2=0x7f080003;
         public static final int linearLayout3=0x7f080007;
         public static final int managerSpinner=0x7f080002;
         public static final int newClientBtn=0x7f080006;
         public static final int organizationSpinner=0x7f080001;
-        public static final int paramGroup=0x7f08001c;
-        public static final int paramView=0x7f08001a;
-        public static final int posNameView=0x7f080014;
-        public static final int positionList=0x7f08000c;
-        public static final int radioByCode=0x7f08001d;
-        public static final int radioByName=0x7f08001e;
+        public static final int paramGroup=0x7f08001b;
+        public static final int paramView=0x7f080019;
+        public static final int posNameView=0x7f080013;
+        public static final int positionList=0x7f08000b;
+        public static final int radioByCode=0x7f08001c;
+        public static final int radioByName=0x7f08001d;
         public static final int remainsButton=0x7f08000a;
-        public static final int remains_layout=0x7f080019;
-        public static final int requiredEdit=0x7f08001b;
-        public static final int whFromView=0x7f080017;
-        public static final int whToSpinner=0x7f080016;
+        public static final int remains_layout=0x7f080018;
+        public static final int requiredEdit=0x7f08001a;
+        public static final int whFromView=0x7f080016;
+        public static final int whToSpinner=0x7f080015;
     }
     public static final class layout {
         public static final int activity_trader=0x7f030000;
