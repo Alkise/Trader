@@ -154,7 +154,7 @@ public class TraderActivity extends Activity {
 		try {
 			SQLConnection.INSTANCE.closeConnection();
 		} catch (Exception e) {
-			Log.e("onStop", e.getMessage());
+			Log.e("Stop trader", e.getMessage());
 		}
 		super.onStop();
 	}
@@ -162,7 +162,7 @@ public class TraderActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		SearchResults.INSTANCE.clear();
-		Order.INSTANCE.clearPositions();
+		positionsAdapter.clear();
 		super.onDestroy();
 	}
 
@@ -330,7 +330,6 @@ public class TraderActivity extends Activity {
 						});
 
 				positionsAdapter = new ArrayPositonAdapter(activity, R.layout.position_layout, Order.INSTANCE.getPositions());
-				Order.INSTANCE.addObserver(positionsAdapter);
 				positionsList.setAdapter(positionsAdapter);
 			}
 			dataLoadingDialog.dismiss();
@@ -339,7 +338,7 @@ public class TraderActivity extends Activity {
 	}
 
 	public void showMessage(String message) {
-		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+		Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
 	}
 
 	public void showWarehouses(View view) {
@@ -387,7 +386,7 @@ public class TraderActivity extends Activity {
 										((EditText) remainsView
 												.findViewById(R.id.requiredEdit))
 												.getText(),
-										searchingRemainsDialog, activity);
+										searchingRemainsDialog, activity, positionsAdapter);
 							} else {
 								searchGoodsTask = new SearchGoodsTask();
 								searchGoodsTask.execute(
@@ -395,10 +394,10 @@ public class TraderActivity extends Activity {
 										((EditText) remainsView
 												.findViewById(R.id.requiredEdit))
 												.getText(),
-										searchingRemainsDialog, activity);
+										searchingRemainsDialog, activity, positionsAdapter);
 							}
 						} catch (Exception e) {
-							Log.e("Searching", e.getMessage());
+							Log.e("Search Remains", e.getMessage());
 						}
 					}
 
@@ -417,7 +416,7 @@ public class TraderActivity extends Activity {
 			searchClientTask.execute(connectionTask.get(),
 					clientField.getText(), searchingDialog, activity);
 		} catch (Exception e) {
-			Log.e("findClients", e.getMessage());
+			Log.e("Find clients", e.getMessage());
 		}
 	}
 

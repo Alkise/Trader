@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.alkise.trader.R;
+import ru.alkise.trader.adapter.ArrayPositonAdapter;
 import ru.alkise.trader.model.Goods;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -24,6 +25,7 @@ public class SearchGoodsTask extends AsyncTask<Object, Object, Object> {
 	private Connection connection;
 	private String searchingString;
 	private ProgressDialog searchingDialog;
+	private ArrayPositonAdapter adapter;
 	private List<Goods> goods;
 	private Activity activity;
 	private static ArrayAdapter<Goods> goodsAdapter;
@@ -36,6 +38,9 @@ public class SearchGoodsTask extends AsyncTask<Object, Object, Object> {
 		searchingDialog = (ProgressDialog) params[2];
 
 		activity = (Activity) params[3];
+		
+		adapter = (ArrayPositonAdapter) params[4];
+		
 		goods = new ArrayList<Goods>();
 
 		if (searchingString.length() >= 3 && connection != null) {
@@ -90,7 +95,7 @@ public class SearchGoodsTask extends AsyncTask<Object, Object, Object> {
 							SearchRemainsTask searchRemainsTask = new SearchRemainsTask();
 							searchRemainsTask.execute(connection, goodsAdapter
 									.getItem(which).getCode(), searchingDialog,
-									activity);
+									activity, adapter);
 							goods.clear();
 						}
 					});

@@ -6,8 +6,8 @@ import java.sql.ResultSet;
 import java.util.List;
 
 import ru.alkise.trader.R;
+import ru.alkise.trader.adapter.ArrayPositonAdapter;
 import ru.alkise.trader.model.Goods;
-import ru.alkise.trader.model.Order;
 import ru.alkise.trader.model.Position;
 import ru.alkise.trader.model.SearchResult;
 import ru.alkise.trader.model.SearchResults;
@@ -30,6 +30,7 @@ public class SearchRemainsTask extends AsyncTask<Object, Object, Object> {
 	private ProgressDialog loadingDialog;
 	private List<SearchResult> results;
 	private ArrayAdapter<SearchResult> remainsAdapter;
+	private ArrayPositonAdapter adapter;
 	private String searchingValue;
 	public static final boolean SEARCH_BY_CODE = true;
 	public static final boolean SEARCH_BY_NAME = false;
@@ -40,13 +41,14 @@ public class SearchRemainsTask extends AsyncTask<Object, Object, Object> {
 		searchingValue = String.valueOf(params[1]).trim();
 		loadingDialog = (ProgressDialog) params[2];
 		activity = (Activity) params[3];
+		adapter = (ArrayPositonAdapter)params[4];
 		
 		if (searchingValue.length() > 0 && connection != null) {
 			try {
-				String query = "SELECT SC14.ID, SC14.CODE, SC14.DESCR, RG46.SP47, RG46.SP49 FROM SC14, RG46 WHERE SC14.ID = RG46.SP48 AND RG46.PERIOD = (SELECT MAX(PERIOD) FROM RG46) AND SC14.CODE = ? ORDER BY SC14.DESCR";
+				String query = "SELECT SC14.ID, SC14.CODE, SC14.DESCR, RG46.SP47, RG46.SP49 FROM SC14, RG46 WHERE SC14.ID = RG46.SP48 AND RG46.PERIOD = (SELECT MAX(PERIOD) FROM RG46) AND SC14.CODE LIKE ? ORDER BY SC14.DESCR";
 
 				PreparedStatement pstmt = connection.prepareStatement(query);
-				pstmt.setString(1, searchingValue);
+				pstmt.setString(1, "%" + searchingValue);
 
 				ResultSet rs = pstmt.executeQuery();
 				while (rs.next()) {
@@ -96,7 +98,7 @@ public class SearchRemainsTask extends AsyncTask<Object, Object, Object> {
 
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							Order.INSTANCE.addPosition(new Position(
+							adapter.add(new Position(
 									SearchResults.INSTANCE.getGoods(), results
 											.get(which).getCount(), results
 											.get(which).getWarehouse(), results
