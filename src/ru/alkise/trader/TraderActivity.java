@@ -36,8 +36,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -57,8 +57,8 @@ public class TraderActivity extends Activity {
 	private Spinner organizationSpinner;
 	private Spinner managerSpinner;
 	private ListView positionsList;
-	private Button findClientsBtn;
-	private Button uploadTo1CBtn;
+	private ImageButton findClientsBtn;
+	private ImageButton uploadTo1CBtn;
 	private EditText clientField;
 	private static Activity activity;
 	private ArrayPositonAdapter positionsAdapter;
@@ -79,7 +79,7 @@ public class TraderActivity extends Activity {
 
 		positionsList = (ListView) findViewById(R.id.positionList);
 		positionsList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
+		
 		loadingDialog = new ProgressDialog(this);
 		loadingDialog.setIndeterminate(false);
 		loadingDialog.setCancelable(false);
@@ -99,9 +99,9 @@ public class TraderActivity extends Activity {
 		connectionTask = new ConnectionTask();
 		dataLoaderTask = new DataLoaderTask();
 
-		findClientsBtn = (Button) findViewById(R.id.findClientsBtn);
+		findClientsBtn = (ImageButton) findViewById(R.id.findClientsBtn);
 
-		uploadTo1CBtn = (Button) findViewById(R.id.btnUpload);
+		uploadTo1CBtn = (ImageButton) findViewById(R.id.btnUpload);
 		uploadTo1CBtn.setEnabled(false);
 
 		clientField = (EditText) findViewById(R.id.clientField);
@@ -418,6 +418,10 @@ public class TraderActivity extends Activity {
 		} catch (Exception e) {
 			Log.e("Find clients", e.getMessage());
 		}
+	}
+	
+	public void onTrashButtonClick(View view) {
+		positionsAdapter.clear();
 	}
 
 	// Create new client button click

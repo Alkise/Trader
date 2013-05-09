@@ -42,14 +42,16 @@
             android:text="@string/warehouse"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <Button
+        <ImageButton
             android:id="@+id/deleteButton"
-            style="@style/ButtonStyle"
+            android:scaleType="fitXY"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_width="10sp"
-            android:layout_weight="4"
-            android:background="@android:color/background_light"
-            android:text="@string/del_button" />
+            android:src="@drawable/delete_position_button"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/delete" 
+            android:layout_marginLeft="4dip"
+            android:layout_marginRight="4dip"/>
 
     </LinearLayout>
 

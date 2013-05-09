@@ -14,8 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -61,7 +61,7 @@ public class ArrayPositonAdapter extends ArrayAdapter<Position> {
 
 			holder.whToSpinner = (Spinner) rowView
 					.findViewById(R.id.whToSpinner);
-			holder.deleteButton = (Button) rowView
+			holder.deleteButton = (ImageButton) rowView
 					.findViewById(R.id.deleteButton);
 
 			holder.deleteButton.setTag(position);
@@ -86,9 +86,8 @@ public class ArrayPositonAdapter extends ArrayAdapter<Position> {
 							public void onItemSelected(AdapterView<?> adapter,
 									View arg1, int arg2, long arg3) {
 								Position position = getItem(pos);
-								position.setWhTo(
-												(Warehouse) adapter
-														.getSelectedItem());
+								position.setWhTo((Warehouse) adapter
+										.getSelectedItem());
 							}
 
 							@Override
@@ -126,7 +125,7 @@ public class ArrayPositonAdapter extends ArrayAdapter<Position> {
 		EditText count;
 		TextView whFromTextView;
 		Spinner whToSpinner;
-		Button deleteButton;
+		ImageButton deleteButton;
 	}
 
 }

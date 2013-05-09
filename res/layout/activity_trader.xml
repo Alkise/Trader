@@ -39,7 +39,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayout2"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
@@ -47,34 +47,44 @@
 
         <EditText
             android:id="@+id/clientField"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
+            android:layout_weight="100"
             android:inputType="none"
             android:text="@string/client_not_selected" >
 
             <requestFocus />
         </EditText>
 
-        <Button
+        <ImageButton
             android:id="@+id/findClientsBtn"
-            style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dip"
+            android:layout_marginLeft="4dip"
+            android:layout_marginRight="4dip"
+            android:layout_marginTop="4dip"
             android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/search"
             android:onClick="findClients"
-            android:text="@string/search" />
+            android:scaleType="fitXY"
+            android:src="@drawable/search_client_button" />
 
-        <Button
+        <ImageButton
             android:id="@+id/newClientBtn"
-            style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dip"
+            android:layout_marginLeft="4dip"
+            android:layout_marginRight="4dip"
+            android:layout_marginTop="4dip"
             android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/create"
             android:onClick="onCreateNewClientClick"
-            android:text="@string/create" />
-
+            android:scaleType="fitXY"
+            android:src="@drawable/add_client_button" />
     </LinearLayout>
 
     <LinearLayout
@@ -85,37 +95,61 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/linearLayout2" >
 
-        <Button
+        <ImageButton
             android:id="@+id/btnAddPosition"
-            style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dip"
+            android:layout_marginRight="4dip"
+            android:layout_marginTop="4dip"
+            android:layout_marginBottom="4dip"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/addPosition"
             android:onClick="searchRemains"
-            android:text="@string/addPosition" />
+            android:scaleType="fitXY"
+            android:src="@drawable/add_position_button" />
 
-        <Button
-            android:id="@+id/btnUpload"
-            style="?android:attr/buttonStyleSmall"
+        <ImageButton
+            android:id="@+id/btnTrash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/upload" />
+            android:layout_marginLeft="4dip"
+            android:layout_marginRight="4dip"
+            android:layout_marginTop="4dip"
+            android:layout_marginBottom="4dip"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/clear"
+            android:onClick="onTrashButtonClick"
+            android:scaleType="fitXY"
+            android:src="@drawable/trash_button" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-
-        <Button
-            android:id="@+id/remainsButton"
-            style="@style/ButtonStyle"
+        <ImageButton
+            android:id="@+id/orderBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dip"
+            android:layout_marginRight="4dip"
+            android:layout_marginTop="4dip"
+            android:layout_marginBottom="4dip"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/order"
             android:onClick="showOrder"
-            android:text="@string/order" />
+            android:scaleType="fitXY"
+            android:src="@drawable/order_button" />
 
-        <Space
+        <ImageButton
+            android:id="@+id/btnUpload"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dip"
+            android:layout_marginRight="4dip"
+            android:layout_marginTop="4dip"
+            android:layout_marginBottom="4dip"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/upload"
+            android:onClick="searchRemains"
+            android:scaleType="fitXY"
+            android:src="@drawable/upload_button" />
     </LinearLayout>
 
     <ListView
@@ -125,8 +159,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/linearLayout3">
-
+        android:layout_below="@+id/linearLayout3" >
     </ListView>
 
 </RelativeLayout>

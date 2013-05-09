@@ -24,13 +24,14 @@
     <string name="cancel">Cancel</string>
     <string name="create">Create</string>
     <string name="delete">Delete</string>
-    <string name="del_button">X</string>
+    <string name="clear">Clear</string>
     <string name="order">Order</string>
     <string name="search_param">Searching parameters</string>
-    <string name="by_code_param">by code</string>
-    <string name="by_name_param">by name</string>
-	<string name="client_short_name">Short name:</string>
-	<string name="client_full_name">Full name:</string>
-	<string name="client_type">Type:</string>
-    
+    <string name="search_by">Search by</string>
+    <string name="by_code_param">code</string>
+    <string name="by_name_param">name</string>
+    <string name="client_short_name">Short name:</string>
+    <string name="client_full_name">Full name:</string>
+    <string name="client_type">Type:</string>
+
 </resources>
