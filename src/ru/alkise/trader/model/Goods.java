@@ -3,20 +3,16 @@ package ru.alkise.trader.model;
 import java.io.Serializable;
 
 public class Goods implements Serializable {
-	
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private String id;
 	private int code;
 	private String descr;
 
-	public Goods(String id, String code, String descr) {
-		this(id, Integer.valueOf(code.trim()), descr);
-	}
-	
 	public Goods(String id, int code, String descr) {
 		this.id = id;
 		this.code = code;
@@ -45,6 +41,19 @@ public class Goods implements Serializable {
 
 	public void setDescr(String descr) {
 		this.descr = descr.trim();
+	}
+
+	@Override
+	public int hashCode() {
+		return code;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Goods) {
+			return ((Goods) o).getCode() == code;
+		}
+		return false;
 	}
 
 	@Override

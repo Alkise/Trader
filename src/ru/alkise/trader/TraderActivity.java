@@ -21,8 +21,6 @@ import ru.alkise.trader.sql.DBConnection;
 import ru.alkise.trader.sql.SQLConnectionFactory;
 import ru.alkise.trader.task.ConnectionTask;
 import ru.alkise.trader.task.SearchClientsTask;
-import ru.alkise.trader.task.SearchGoodsTask;
-import ru.alkise.trader.task.SearchRemainsTask;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -52,8 +50,6 @@ public class TraderActivity extends Activity {
 	private ConnectionTask connectionTask;
 	private DataLoaderTask dataLoaderTask;
 	private SearchClientsTask searchClientTask;
-	private SearchRemainsTask searchRemainsTask;
-	private SearchGoodsTask searchGoodsTask;
 	private ProgressDialog loadingDialog;
 	private ProgressDialog searchingDialog;
 	private ProgressDialog searchingRemainsDialog;
@@ -66,7 +62,6 @@ public class TraderActivity extends Activity {
 	private static Activity activity;
 	private ArrayPositonAdapter positionsAdapter;
 	private ArrayAdapter<ClientType> clientTypeAdapter;
-	private boolean loaded;
 	private LayoutInflater inflater;
 
 	@Override
@@ -99,7 +94,6 @@ public class TraderActivity extends Activity {
 		searchingRemainsDialog.setCancelable(true);
 		searchingRemainsDialog.setMessage(getString(R.string.searching));
 
-		connectionTask = new ConnectionTask();
 		dataLoaderTask = new DataLoaderTask();
 
 		findClientsBtn = (ImageButton) findViewById(R.id.findClientsBtn);
@@ -134,22 +128,12 @@ public class TraderActivity extends Activity {
 				android.R.layout.simple_spinner_dropdown_item,
 				ClientType.values());
 
-		connectionTask.execute("192.168.0.202", "1433", "trade2005", "test",
-				"test", loadingDialog);
 		dataLoaderTask.execute();
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		if (loaded) {
-			loadingDialog.show();
-			connectionTask = new ConnectionTask();
-			connectionTask.execute("192.168.0.202", "1433", "trade2005",
-					"test", "test", loadingDialog);
-		} else {
-			loaded = true;
-		}
 	}
 
 	@Override
@@ -203,7 +187,7 @@ public class TraderActivity extends Activity {
 				organizations = new ArrayList<Organization>();
 				while (rs.next()) {
 					organizations.add(new Organization(rs.getString(1), rs
-							.getString(2), rs.getString(3)));
+							.getInt(2), rs.getString(3)));
 				}
 				organizationAdapter = new ArrayAdapter<Organization>(
 						getApplication(),
@@ -244,7 +228,7 @@ public class TraderActivity extends Activity {
 				activeManagers = new ArrayList<Manager>();
 				while (rs.next()) {
 					activeManagers.add(new Manager(rs.getString(1), rs
-							.getString(2), rs.getString(3)));
+							.getInt(2), rs.getString(3)));
 				}
 				managerAdapter = new ArrayAdapter<Manager>(getApplication(),
 						android.R.layout.simple_spinner_dropdown_item,
@@ -346,6 +330,7 @@ public class TraderActivity extends Activity {
 						R.layout.position_layout, Order.INSTANCE.getPositions());
 				positionsList.setAdapter(positionsAdapter);
 			}
+			loadingDialog.dismiss();
 			dataLoadingDialog.dismiss();
 			super.onPostExecute(result);
 		}
@@ -397,11 +382,17 @@ public class TraderActivity extends Activity {
 											.getCheckedRadioButtonId()))
 									.getText().equals(activity
 									.getString(R.string.by_code_param)))) {
+								
+								try {
+									int code = Integer.valueOf(searchingText.trim());
+									Intent remainsIntent = new Intent("ru.alkise.trader.RemainsActivity");
+									remainsIntent.putExtra("code", code);
+									startActivityForResult(remainsIntent, 1);
+									searchingRemainsDialog.dismiss();
+								} catch (Exception e) {
+									Log.e("TraderActivity", e.getMessage());
+								}
 
-								searchRemainsTask = new SearchRemainsTask();
-								searchRemainsTask.execute(connectionTask.get(),
-										searchingText, searchingRemainsDialog,
-										activity, positionsAdapter);
 							} else {
 								Intent goodsIntent = new Intent(
 										"ru.alkise.trader.GoodsActivity");
@@ -410,14 +401,6 @@ public class TraderActivity extends Activity {
 										searchingText);
 								startActivityForResult(goodsIntent, 1);
 								searchingRemainsDialog.dismiss();
-								/*
-								 * searchGoodsTask = new SearchGoodsTask();
-								 * searchGoodsTask.execute(
-								 * connectionTask.get(), ((EditText) remainsView
-								 * .findViewById(R.id.requiredEdit)) .getText(),
-								 * searchingRemainsDialog, activity,
-								 * positionsAdapter);
-								 */
 							}
 						} catch (Exception e) {
 							Log.e("Search Remains", e.getMessage());
@@ -442,9 +425,28 @@ public class TraderActivity extends Activity {
 			Log.e("Find clients", e.getMessage());
 		}
 	}
-
+	
+	//Trash button click
 	public void onTrashButtonClick(View view) {
-		positionsAdapter.clear();
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+		alertDialogBuilder.setNegativeButton(getString(R.string.cancel),
+				new DialogInterface.OnClickListener() {
+
+					public void onClick(DialogInterface p1, int p2) {
+						p1.cancel();
+					}
+
+				}).setPositiveButton(getString(R.string.delete),
+				new DialogInterface.OnClickListener() {
+
+					public void onClick(DialogInterface p1, int p2) {
+						positionsAdapter.clear();
+					}
+				}).setMessage("Delete all positions?");
+		
+		AlertDialog deletingDialog = alertDialogBuilder.create();
+
+		deletingDialog.show();
 	}
 
 	// Create new client button click
@@ -468,7 +470,7 @@ public class TraderActivity extends Activity {
 								.findViewById(R.id.clientShortNameEdit);
 						EditText clientFullNameEdit = (EditText) newClientView
 								.findViewById(R.id.clientFullNameEdit);
-						Order.INSTANCE.setClient(new Client("new", "new",
+						Order.INSTANCE.setClient(new Client("new", -1,
 								(clientShortNameEdit.getText()).toString(),
 								(clientFullNameEdit.getText()).toString(),
 								(ClientType) clientTypeSpinner

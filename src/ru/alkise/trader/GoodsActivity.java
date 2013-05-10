@@ -53,7 +53,8 @@ public class GoodsActivity extends Activity {
 			public void onItemClick(AdapterView<?> adapter, View arg1, int pos,
 					long arg3) {
 				Intent intent = new Intent("ru.alkise.trader.RemainsActivity");
-				intent.putExtra("goods", (Goods) adapter.getItemAtPosition(pos));
+				int code = ((Goods) adapter.getItemAtPosition(pos)).getCode();
+				intent.putExtra("code", code);
 				startActivityForResult(intent, 1);
 			}
 		});
@@ -113,7 +114,7 @@ public class GoodsActivity extends Activity {
 
 				while (rs.next()) {
 					if (rs.getDouble(4) > 0) {
-						goods.add(new Goods(rs.getString(1), rs.getString(2),
+						goods.add(new Goods(rs.getString(1), rs.getInt(2),
 								rs.getString(3)));
 					}
 				}

@@ -46,4 +46,17 @@ public class Warehouse implements Serializable {
 	public String toString() {
 		return descr;
 	}
+	
+	@Override
+	public int hashCode() {
+		return getCode();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Warehouse) {
+			return ((Warehouse) o).getCode() == code;
+		}
+		return false;
+	}
 }

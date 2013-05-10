@@ -56,7 +56,7 @@ public class SearchClientsTask extends AsyncTask<Object, List<Client>, Object> {
 				ResultSet rs = pstmt.executeQuery();
 
 				while (rs.next()) {
-					clients.add(new Client(rs.getString(1), rs.getString(2), rs
+					clients.add(new Client(rs.getString(1), rs.getInt(2), rs
 							.getString(3), rs.getString(4), ClientType._2F2.getClientTypeById(rs.getString(5))));
 				}
 				clientAdapter = new ArrayAdapter<Client>(activity,

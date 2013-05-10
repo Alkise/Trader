@@ -27,23 +27,22 @@ public class RemainsActivity extends Activity {
 	private TextView descrLabel;
 	private ListView remainsList;
 	private Goods goods;
+	private int code;
 	private ArrayAdapter<Position> remainsAdapter;
 	private Connection connection;
 	private Activity activity;
 	private ProgressDialog progressDialog;
-	private String searchingCode;
 	private Intent data;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.remains_layout);
 
 		activity = this;
 		data = new Intent();
-		goods = (Goods) getIntent().getSerializableExtra("goods");
-
+		code = getIntent().getIntExtra("code", 0);
+		
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setIndeterminate(false);
 		progressDialog.setCancelable(false);
@@ -65,9 +64,7 @@ public class RemainsActivity extends Activity {
 					}
 				});
 
-		searchingCode = String.valueOf(goods.getCode());
-		codeLabel.setText(searchingCode);
-		descrLabel.setText(goods.getDescr().trim());
+		codeLabel.setText(String.valueOf(code));
 	}
 
 	@Override
@@ -98,21 +95,25 @@ public class RemainsActivity extends Activity {
 			try {
 				connection = SQLConnectionFactory.createTrade2000Connection();
 
-				String query = "SELECT SC14.ID, SC14.CODE, SC14.DESCR, RG46.SP47, RG46.SP49, RG46.SP48, SC12.CODE " +
-						"FROM RG46 " + 
-						"LEFT JOIN SC14 ON (SC14.ID = RG46.SP48) " + 
-						"LEFT JOIN SC12 ON (SC12.ID = RG46.SP47) " + 
-						"WHERE SC14.CODE LIKE ? " + 
-						"AND RG46.PERIOD = (SELECT MAX(PERIOD) FROM RG46) " + 
-						"ORDER BY SC14.DESCR";
+				String query = "SELECT SC14.ID, SC14.CODE, SC14.DESCR, RG46.SP47, RG46.SP49, RG46.SP48, SC12.CODE "
+						+ "FROM RG46 "
+						+ "LEFT JOIN SC14 ON (SC14.ID = RG46.SP48) "
+						+ "LEFT JOIN SC12 ON (SC12.ID = RG46.SP47) "
+						+ "WHERE SC14.CODE LIKE ? "
+						+ "AND RG46.PERIOD = (SELECT MAX(PERIOD) FROM RG46) "
+						+ "ORDER BY SC14.DESCR";
 
 				PreparedStatement pstmt = connection.prepareStatement(query);
-				pstmt.setString(1, "%" + searchingCode);
+				pstmt.setString(1, "%" + code);
 
 				positions = new ArrayList<Position>();
 
 				ResultSet rs = pstmt.executeQuery();
 				while (rs.next()) {
+					if (rs.isFirst()) {
+						goods = new Goods(rs.getString(1), rs.getInt(2),
+								rs.getString(3));
+					}
 					positions
 							.add(new Position(goods, rs.getDouble(5),
 									Warehouses.INSTANCE.getWarehouseByCode(rs
@@ -139,10 +140,16 @@ public class RemainsActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Object result) {
+			if (goods != null) {
+				descrLabel.setText(goods.getDescr().trim());
+			}
+			
 			if (remainsAdapter != null) {
 				remainsList.setAdapter(remainsAdapter);
 			}
+			
 			progressDialog.dismiss();
+			
 			super.onPostExecute(result);
 		}
 

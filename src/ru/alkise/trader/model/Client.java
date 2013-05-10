@@ -2,12 +2,12 @@ package ru.alkise.trader.model;
 
 public class Client {
 	private String id;
-	private String code;
+	private int code;
 	private String descr;
 	private String fullName;
 	private ClientType type;
 
-	public Client(String id, String code, String descr, String fullName,
+	public Client(String id, int code, String descr, String fullName,
 			ClientType type) {
 		this.id = id;
 		this.code = code;
@@ -24,11 +24,11 @@ public class Client {
 		this.id = id;
 	}
 
-	public String getCode() {
+	public int getCode() {
 		return code;
 	}
 
-	public void setCode(String code) {
+	public void setCode(int code) {
 		this.code = code;
 	}
 
@@ -54,6 +54,19 @@ public class Client {
 
 	public void setType(ClientType type) {
 		this.type = type;
+	}
+
+	@Override
+	public int hashCode() {
+		return code;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Client) {
+			return ((Client) o).getCode() == code;
+		}
+		return false;
 	}
 
 	@Override

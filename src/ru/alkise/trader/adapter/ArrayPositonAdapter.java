@@ -7,7 +7,9 @@ import ru.alkise.trader.R;
 import ru.alkise.trader.model.Position;
 import ru.alkise.trader.model.Warehouse;
 import ru.alkise.trader.model.Warehouses;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 public class ArrayPositonAdapter extends ArrayAdapter<Position> {
 	private ArrayAdapter<Warehouse> whToAdapter;
 	private List<Warehouse> whList;
+	private List<Position> positions;
 	private int layoutResourceId;
 	private LayoutInflater inflater;
 	private Context context;
@@ -29,6 +32,7 @@ public class ArrayPositonAdapter extends ArrayAdapter<Position> {
 	public ArrayPositonAdapter(Context context, int textViewResourceId,
 			List<Position> positions) {
 		super(context, textViewResourceId, positions);
+		this.positions = positions;
 		this.context = context;
 
 		layoutResourceId = textViewResourceId;
@@ -73,8 +77,32 @@ public class ArrayPositonAdapter extends ArrayAdapter<Position> {
 
 							@Override
 							public void onClick(View v) {
-								Position position = getItem(pos);
-								remove(position);
+								AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+								alertDialogBuilder.setNegativeButton(context.getString(R.string.cancel),
+										new DialogInterface.OnClickListener() {
+
+											public void onClick(DialogInterface p1, int p2) {
+												p1.cancel();
+											}
+
+										}).setPositiveButton(context.getString(R.string.delete),
+										new DialogInterface.OnClickListener() {
+
+											public void onClick(DialogInterface p1, int p2) {
+												System.out.println("Before : " + getCount());
+												if (getCount() == 1) {
+													clear();
+												} else {
+													Position position = getItem(pos);
+													remove(position);
+												}
+												System.out.println("After : " + getCount());
+											}
+										}).setMessage("Delete this position?");
+								
+								AlertDialog deletingDialog = alertDialogBuilder.create();
+
+								deletingDialog.show();
 							}
 						});
 
@@ -115,7 +143,6 @@ public class ArrayPositonAdapter extends ArrayAdapter<Position> {
 		holder.whFromTextView.setTextColor(Color.BLACK);
 		holder.whFromTextView.setTextSize(16);
 
-		System.out.println(whToAdapter.getCount());
 		holder.whToSpinner.setSelection(whToAdapter.getPosition(position.getWhFrom()));
 
 		return rowView;
