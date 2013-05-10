@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:id="@+id/remains_layout"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:padding="10dp">
+		
+		<TextView
+			android:id="@+id/paramView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/search_param"/>
+		
+		<EditText
+		    android:id="@+id/requiredEdit"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:inputType="none" >
+			
+			<requestFocus />
+			
+		</EditText>
+		
+		<RadioGroup
+			android:id="@+id/paramGroup"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal">
+			
+			<RadioButton
+				android:id="@+id/radioByCode"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/by_code_param"
+				android:checked="true"/>
+				
+			<RadioButton
+				android:id="@+id/radioByName"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/by_name_param"
+				/>
+		</RadioGroup>
+	</LinearLayout>
