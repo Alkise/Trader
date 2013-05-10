@@ -45,8 +45,14 @@ public class SearchRemainsTask extends AsyncTask<Object, Object, Object> {
 		
 		if (searchingValue.length() > 0 && connection != null) {
 			try {
-				String query = "SELECT SC14.ID, SC14.CODE, SC14.DESCR, RG46.SP47, RG46.SP49 FROM SC14, RG46 WHERE SC14.ID = RG46.SP48 AND RG46.PERIOD = (SELECT MAX(PERIOD) FROM RG46) AND SC14.CODE LIKE ? ORDER BY SC14.DESCR";
-
+				String query = "SC14.ID, SC14.CODE, SC14.DESCR, RG46.SP47, RG46.SP49, RG46.SP48, SC12.CODE "
+						+ "FROM RG46 "
+						+ "LEFT JOIN SC14 ON (SC14.ID = RG46.SP48) "
+						+ "LEFT JOIN SC12 ON (SC12.ID = RG46.SP47) "
+						+ "WHERE SC14.CODE LIKE ? "
+						+ "AND RG46.PERIOD = (SELECT MAX(PERIOD) FROM RG46) "
+						+ "ORDER BY SC14.DESCR";
+				
 				PreparedStatement pstmt = connection.prepareStatement(query);
 				pstmt.setString(1, "%" + searchingValue);
 
@@ -59,8 +65,8 @@ public class SearchRemainsTask extends AsyncTask<Object, Object, Object> {
 										.getString(2), rs.getString(3)));
 					}
 					SearchResults.INSTANCE
-							.addRemain(Warehouses.INSTANCE.getWarehouseById(rs
-									.getString(4)), rs.getDouble(5));
+							.addRemain(Warehouses.INSTANCE.getWarehouseByCode(rs
+									.getInt(7)), rs.getDouble(5));
 				}
 
 				results = SearchResults.INSTANCE.getResults();

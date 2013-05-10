@@ -115,7 +115,8 @@ public class ArrayPositonAdapter extends ArrayAdapter<Position> {
 		holder.whFromTextView.setTextColor(Color.BLACK);
 		holder.whFromTextView.setTextSize(16);
 
-		holder.whToSpinner.setSelection(whList.indexOf(position.getWhTo()));
+		System.out.println(whToAdapter.getCount());
+		holder.whToSpinner.setSelection(whToAdapter.getPosition(position.getWhFrom()));
 
 		return rowView;
 	}

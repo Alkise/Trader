@@ -3,11 +3,11 @@ package ru.alkise.trader.sql;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-public enum SQLConnection {
+public enum DBConnection {
 	INSTANCE;
 
 	private Connection conn;
-
+	
 	public Connection createConnection(String host, String port, String dbname,
 			String user, String password) throws Exception {
 		if (conn == null) {

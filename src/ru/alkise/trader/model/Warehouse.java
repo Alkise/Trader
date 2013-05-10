@@ -1,10 +1,17 @@
 package ru.alkise.trader.model;
 
-public class Warehouse {
+import java.io.Serializable;
+
+public class Warehouse implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private String id;
 	private int code;
 	private String descr;
-	
+
 	public Warehouse(String id, int code, String descr) {
 		this.id = id;
 		this.code = code;
@@ -34,7 +41,7 @@ public class Warehouse {
 	public void setDescr(String descr) {
 		this.descr = descr.trim();
 	}
-	
+
 	@Override
 	public String toString() {
 		return descr;

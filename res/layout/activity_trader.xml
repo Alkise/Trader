@@ -48,8 +48,9 @@
         <EditText
             android:id="@+id/clientField"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_weight="100"
+            android:gravity="bottom"
             android:inputType="none"
             android:text="@string/client_not_selected" >
 

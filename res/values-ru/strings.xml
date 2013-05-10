@@ -22,12 +22,18 @@
     <string name="delete">Удалить</string>
     <string name="clear">Очистить</string>
     <string name="order">Заказ</string>
+    <string name="search_by_name">Поиск по наименованию:</string>
+    <string name="name">Наименование</string>
     <string name="search_param">Параметры поиска</string>
     <string name="search_by">Искать по</string>
-    <string name="by_code_param">коду</string>
-    <string name="by_name_param">наименованию</string>
+    <string name="code_param">коду</string>
+    <string name="name_param">наименованию</string>
+    <string name="by_code_param">по коду</string>
+    <string name="by_name_param">по наименованию</string>
     <string name="client_short_name">Краткое наименование:</string>
     <string name="client_full_name">Полное наименование:</string>
     <string name="client_type">Тип клиента:</string>
+    <string name="code">Код</string>
+    <string name="remains_on">Остатки по:</string>
 
 </resources>

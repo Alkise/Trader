@@ -1,6 +1,14 @@
 package ru.alkise.trader.model;
 
-public class Goods {
+import java.io.Serializable;
+
+public class Goods implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private String id;
 	private int code;
 	private String descr;

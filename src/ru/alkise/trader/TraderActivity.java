@@ -13,10 +13,12 @@ import ru.alkise.trader.model.ClientType;
 import ru.alkise.trader.model.Manager;
 import ru.alkise.trader.model.Order;
 import ru.alkise.trader.model.Organization;
+import ru.alkise.trader.model.Position;
 import ru.alkise.trader.model.SearchResults;
 import ru.alkise.trader.model.Warehouse;
 import ru.alkise.trader.model.Warehouses;
-import ru.alkise.trader.sql.SQLConnection;
+import ru.alkise.trader.sql.DBConnection;
+import ru.alkise.trader.sql.SQLConnectionFactory;
 import ru.alkise.trader.task.ConnectionTask;
 import ru.alkise.trader.task.SearchClientsTask;
 import ru.alkise.trader.task.SearchGoodsTask;
@@ -25,6 +27,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -79,7 +82,7 @@ public class TraderActivity extends Activity {
 
 		positionsList = (ListView) findViewById(R.id.positionList);
 		positionsList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-		
+
 		loadingDialog = new ProgressDialog(this);
 		loadingDialog.setIndeterminate(false);
 		loadingDialog.setCancelable(false);
@@ -152,7 +155,7 @@ public class TraderActivity extends Activity {
 	@Override
 	protected void onStop() {
 		try {
-			SQLConnection.INSTANCE.closeConnection();
+			DBConnection.INSTANCE.closeConnection();
 		} catch (Exception e) {
 			Log.e("Stop trader", e.getMessage());
 		}
@@ -164,6 +167,16 @@ public class TraderActivity extends Activity {
 		SearchResults.INSTANCE.clear();
 		positionsAdapter.clear();
 		super.onDestroy();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == 1) {
+			if (resultCode == RESULT_OK) {
+				Position receivedPosition = (Position) data.getSerializableExtra("position");
+				positionsAdapter.add(receivedPosition);
+			}
+		}
 	}
 
 	protected class DataLoaderTask extends AsyncTask<Object, Object, Object> {
@@ -181,7 +194,7 @@ public class TraderActivity extends Activity {
 		protected Object doInBackground(Object... params) {
 			try {
 				// Loading organizations
-				connection = (Connection) connectionTask.get();
+				connection = SQLConnectionFactory.createTrade2000Connection();
 				Statement stmt = connection.createStatement();
 
 				ResultSet rs = stmt
@@ -329,7 +342,8 @@ public class TraderActivity extends Activity {
 							}
 						});
 
-				positionsAdapter = new ArrayPositonAdapter(activity, R.layout.position_layout, Order.INSTANCE.getPositions());
+				positionsAdapter = new ArrayPositonAdapter(activity,
+						R.layout.position_layout, Order.INSTANCE.getPositions());
 				positionsList.setAdapter(positionsAdapter);
 			}
 			dataLoadingDialog.dismiss();
@@ -371,6 +385,10 @@ public class TraderActivity extends Activity {
 					public void onClick(DialogInterface p1, int p2) {
 
 						searchingRemainsDialog.show();
+						String searchingText = String.valueOf(
+								((EditText) remainsView
+										.findViewById(R.id.requiredEdit))
+										.getText()).trim();
 
 						try {
 							if ((((RadioButton) remainsView
@@ -381,20 +399,25 @@ public class TraderActivity extends Activity {
 									.getString(R.string.by_code_param)))) {
 
 								searchRemainsTask = new SearchRemainsTask();
-								searchRemainsTask.execute(
-										connectionTask.get(),
-										((EditText) remainsView
-												.findViewById(R.id.requiredEdit))
-												.getText(),
-										searchingRemainsDialog, activity, positionsAdapter);
+								searchRemainsTask.execute(connectionTask.get(),
+										searchingText, searchingRemainsDialog,
+										activity, positionsAdapter);
 							} else {
-								searchGoodsTask = new SearchGoodsTask();
-								searchGoodsTask.execute(
-										connectionTask.get(),
-										((EditText) remainsView
-												.findViewById(R.id.requiredEdit))
-												.getText(),
-										searchingRemainsDialog, activity, positionsAdapter);
+								Intent goodsIntent = new Intent(
+										"ru.alkise.trader.GoodsActivity");
+
+								goodsIntent.putExtra("positionName",
+										searchingText);
+								startActivityForResult(goodsIntent, 1);
+								searchingRemainsDialog.dismiss();
+								/*
+								 * searchGoodsTask = new SearchGoodsTask();
+								 * searchGoodsTask.execute(
+								 * connectionTask.get(), ((EditText) remainsView
+								 * .findViewById(R.id.requiredEdit)) .getText(),
+								 * searchingRemainsDialog, activity,
+								 * positionsAdapter);
+								 */
 							}
 						} catch (Exception e) {
 							Log.e("Search Remains", e.getMessage());
@@ -419,7 +442,7 @@ public class TraderActivity extends Activity {
 			Log.e("Find clients", e.getMessage());
 		}
 	}
-	
+
 	public void onTrashButtonClick(View view) {
 		positionsAdapter.clear();
 	}
@@ -450,7 +473,8 @@ public class TraderActivity extends Activity {
 								(clientFullNameEdit.getText()).toString(),
 								(ClientType) clientTypeSpinner
 										.getSelectedItem()));
-						EditText clientEdit = (EditText) activity.findViewById(R.id.clientField);
+						EditText clientEdit = (EditText) activity
+								.findViewById(R.id.clientField);
 						clientEdit.setText(clientShortNameEdit.getText());
 					}
 				});

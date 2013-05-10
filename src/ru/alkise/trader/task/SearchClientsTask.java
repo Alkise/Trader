@@ -93,8 +93,7 @@ public class SearchClientsTask extends AsyncTask<Object, List<Client>, Object> {
 						public void onClick(DialogInterface dialog, int which) {
 							Order.INSTANCE.setClient(clients.get(which));
 							((EditText) activity.findViewById(R.id.clientField))
-									.setText(Order.INSTANCE.getClient()
-											.toString());
+									.setText(clients.get(which).toString());
 						}
 					});
 			alertDialogBuilder.setTitle(activity

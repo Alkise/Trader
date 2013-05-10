@@ -26,12 +26,18 @@
     <string name="delete">Delete</string>
     <string name="clear">Clear</string>
     <string name="order">Order</string>
+    <string name="search_by_name">Search by name:</string>
+    <string name="name">Name</string>
     <string name="search_param">Searching parameters</string>
     <string name="search_by">Search by</string>
-    <string name="by_code_param">code</string>
-    <string name="by_name_param">name</string>
+    <string name="code_param">code</string>
+    <string name="name_param">name</string>
+    <string name="by_code_param">by code</string>
+    <string name="by_name_param">by name</string>
     <string name="client_short_name">Short name:</string>
     <string name="client_full_name">Full name:</string>
     <string name="client_type">Type:</string>
+    <string name="code">Code</string>
+    <string name="remains_on">The remains on:</string>
 
 </resources>

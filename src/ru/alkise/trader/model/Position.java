@@ -1,9 +1,15 @@
 package ru.alkise.trader.model;
 
-public class Position {
+import java.io.Serializable;
+
+public class Position implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private Goods goods;
 	private double count;
-	private long id;
 	private Warehouse whFrom;
 	private Warehouse whTo;
 
@@ -12,13 +18,8 @@ public class Position {
 		this.count = count;
 		this.whFrom = whFrom;
 		this.whTo = whTo;
-		id = whFrom.getCode() + goods.getCode() + whTo.getCode() + (int) count;
 	}
 
-	public long getId() {
-		return id;
-	}
-	
 	public Goods getGoods() {
 		return goods;
 	}
@@ -53,13 +54,9 @@ public class Position {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder(goods.getDescr());
+		StringBuilder sb = new StringBuilder(whFrom.getDescr());
 		sb.append(' ');
 		sb.append(count);
-		sb.append(' ');
-		sb.append(whTo.getDescr());
-		sb.append(' ');
-		sb.append(whFrom.getDescr());
 		return sb.toString();
 	}
 }

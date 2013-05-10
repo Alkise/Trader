@@ -39,14 +39,14 @@
 				android:id="@+id/radioByCode"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@string/by_code_param"
+				android:text="@string/code_param"
 				android:checked="true"/>
 				
 			<RadioButton
 				android:id="@+id/radioByName"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@string/by_name_param"
+				android:text="@string/name_param"
 				/>
 		</RadioGroup>
 	</LinearLayout>

@@ -52,7 +52,13 @@ public enum Order {
 		sb.append((client != null) ? client.getDescr() : "Клиент не выбран");
 		for (Position position : positions) {
 			sb.append('\n');
-			sb.append(position.toString());
+			sb.append(position.getGoods().getCode());
+			sb.append('\n');
+			sb.append(position.getCount());
+			sb.append('\n');
+			sb.append(position.getWhTo());
+			sb.append('\n');
+			sb.append(position.getWhFrom());
 		}
 		return sb.toString();
 	}
