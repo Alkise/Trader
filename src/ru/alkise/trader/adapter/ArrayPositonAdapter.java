@@ -24,7 +24,6 @@ import android.widget.TextView;
 public class ArrayPositonAdapter extends ArrayAdapter<Position> {
 	private ArrayAdapter<Warehouse> whToAdapter;
 	private List<Warehouse> whList;
-	private List<Position> positions;
 	private int layoutResourceId;
 	private LayoutInflater inflater;
 	private Context context;
@@ -32,7 +31,6 @@ public class ArrayPositonAdapter extends ArrayAdapter<Position> {
 	public ArrayPositonAdapter(Context context, int textViewResourceId,
 			List<Position> positions) {
 		super(context, textViewResourceId, positions);
-		this.positions = positions;
 		this.context = context;
 
 		layoutResourceId = textViewResourceId;
