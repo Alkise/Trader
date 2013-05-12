@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.alkise.trader.R;
+import ru.alkise.trader.model.Order;
 import ru.alkise.trader.model.Position;
 import ru.alkise.trader.model.Warehouse;
 import ru.alkise.trader.model.Warehouses;
@@ -44,8 +45,8 @@ public class ArrayPositonAdapter extends ArrayAdapter<Position> {
 	@Override
 	public View getView(final int pos, View convertView, ViewGroup parent) {
 		ViewHolder holder;
-		Position position = getItem(pos);
 		View rowView = convertView;
+		Position position = getItem(pos);
 
 		if (rowView == null) {
 			inflater = (LayoutInflater) context
@@ -66,8 +67,6 @@ public class ArrayPositonAdapter extends ArrayAdapter<Position> {
 			holder.deleteButton = (ImageButton) rowView
 					.findViewById(R.id.deleteButton);
 
-			holder.deleteButton.setTag(position);
-
 			if (position != null) {
 
 				holder.deleteButton
@@ -75,30 +74,45 @@ public class ArrayPositonAdapter extends ArrayAdapter<Position> {
 
 							@Override
 							public void onClick(View v) {
-								AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-								alertDialogBuilder.setNegativeButton(context.getString(R.string.cancel),
-										new DialogInterface.OnClickListener() {
+								AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+										context);
+								alertDialogBuilder
+										.setNegativeButton(
+												context.getString(R.string.cancel),
+												new DialogInterface.OnClickListener() {
 
-											public void onClick(DialogInterface p1, int p2) {
-												p1.cancel();
-											}
+													public void onClick(
+															DialogInterface p1,
+															int p2) {
+														p1.cancel();
+													}
 
-										}).setPositiveButton(context.getString(R.string.delete),
-										new DialogInterface.OnClickListener() {
+												})
+										.setPositiveButton(
+												context.getString(R.string.delete),
+												new DialogInterface.OnClickListener() {
 
-											public void onClick(DialogInterface p1, int p2) {
-												System.out.println("Before : " + getCount());
-												if (getCount() == 1) {
-													clear();
-												} else {
-													Position position = getItem(pos);
-													remove(position);
-												}
-												System.out.println("After : " + getCount());
-											}
-										}).setMessage("Delete this position?");
-								
-								AlertDialog deletingDialog = alertDialogBuilder.create();
+													public void onClick(
+															DialogInterface p1,
+															int p2) {
+														System.out
+																.println("Before : "
+																		+ getCount());
+														if (getCount() == 1) {
+															clear();
+
+														} else {
+															remove(getItem(pos));
+														}
+														System.out
+																.println("After : "
+																		+ getCount());
+													}
+												})
+										.setMessage("Delete this position?");
+
+								AlertDialog deletingDialog = alertDialogBuilder
+										.create();
 
 								deletingDialog.show();
 							}
@@ -111,14 +125,15 @@ public class ArrayPositonAdapter extends ArrayAdapter<Position> {
 							@Override
 							public void onItemSelected(AdapterView<?> adapter,
 									View arg1, int arg2, long arg3) {
-								Position position = getItem(pos);
-								position.setWhTo((Warehouse) adapter
-										.getSelectedItem());
+								if (Order.INSTANCE.getPositions().size() != 0) {
+									Position position = getItem(pos);
+									position.setWhTo((Warehouse) adapter
+											.getSelectedItem());
+								}
 							}
 
 							@Override
 							public void onNothingSelected(AdapterView<?> arg0) {
-								// TODO Auto-generated method stub
 
 							}
 
@@ -141,7 +156,10 @@ public class ArrayPositonAdapter extends ArrayAdapter<Position> {
 		holder.whFromTextView.setTextColor(Color.BLACK);
 		holder.whFromTextView.setTextSize(16);
 
-		holder.whToSpinner.setSelection(whToAdapter.getPosition(position.getWhFrom()));
+		if (getCount() >= 1) {
+			holder.whToSpinner.setSelection(whToAdapter.getPosition(position
+					.getWhTo()));
+		}
 
 		return rowView;
 	}

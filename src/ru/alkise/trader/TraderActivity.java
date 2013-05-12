@@ -348,7 +348,6 @@ public class TraderActivity extends Activity {
 	public void showOrder(View view) {
 		Toast.makeText(getApplication(), Order.INSTANCE.displayOrder(),
 				Toast.LENGTH_LONG).show();
-		positionsAdapter.notifyDataSetChanged();
 	}
 
 	// Add postion button click

@@ -43,6 +43,10 @@ public enum Order {
 	public List<Position> getPositions() {
 		return positions;
 	}
+	
+	public void addPosition(Position position) {
+		positions.add(position);
+	}
 
 	public String displayOrder() {
 		StringBuilder sb = new StringBuilder(organization.getDescr());
