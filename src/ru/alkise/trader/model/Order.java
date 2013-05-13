@@ -18,8 +18,7 @@ public enum Order {
 	public void setOrganization(Organization organization) {
 		this.organization = organization;
 	}
-	
-	
+
 	public Organization getOrganization() {
 		return organization;
 	}
@@ -39,13 +38,20 @@ public enum Order {
 	public Client getClient() {
 		return client;
 	}
-	
+
 	public List<Position> getPositions() {
 		return positions;
 	}
-	
+
 	public void addPosition(Position position) {
 		positions.add(position);
+	}
+
+	public boolean checkOrder() {
+		if (client != null && positions.size() > 0) {
+			return true;
+		}
+		return false;
 	}
 
 	public String displayOrder() {

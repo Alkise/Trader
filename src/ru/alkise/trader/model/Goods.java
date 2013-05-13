@@ -12,7 +12,13 @@ public class Goods implements Serializable {
 	private String id;
 	private int code;
 	private String descr;
+	private double count;
 
+	public Goods(String id, int code, String descr, double count) {
+		this(id,code,descr);
+		this.count = count;
+	}
+	
 	public Goods(String id, int code, String descr) {
 		this.id = id;
 		this.code = code;
@@ -41,6 +47,14 @@ public class Goods implements Serializable {
 
 	public void setDescr(String descr) {
 		this.descr = descr.trim();
+	}
+
+	public double getCount() {
+		return count;
+	}
+
+	public void setCount(double count) {
+		this.count = count;
 	}
 
 	@Override

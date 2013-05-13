@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 import ru.alkise.trader.model.*;
+import ru.alkise.trader.sql.SQLConnectionFactory;
 
 public class SearchClientsTask extends AsyncTask<Object, List<Client>, Object> {
 	private Connection connection;
@@ -34,12 +35,12 @@ public class SearchClientsTask extends AsyncTask<Object, List<Client>, Object> {
 	@Override
 	protected Object doInBackground(Object... params) {
 		try {
-			connection = (Connection) params[0];
-			searchingString = String.valueOf(params[1]).trim();
+			connection = SQLConnectionFactory.createTrade2000Connection();
+			searchingString = String.valueOf(params[0]).trim();
 
-			searchingDialog = (ProgressDialog) params[2];
+			searchingDialog = (ProgressDialog) params[1];
 
-			activity = (Activity) params[3];
+			activity = (Activity) params[2];
 			clients = new ArrayList<Client>();
 
 			if (searchingString.length() >= 3 && connection != null) {

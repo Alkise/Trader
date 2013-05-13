@@ -5,11 +5,15 @@
     <string name="action_settings">Настройки</string>
     <string name="manager">Менеджер:</string>
     <string name="client">Клиент:</string>
+    <string name="nomenclature">Номенклатура</string>
+    <string name="count">Количество</string>
+    <string name="warehouse">Склад</string>
     <string name="btnNewClient">Добавить</string>
     <string name="client_not_selected">Клиент не выбран</string>
     <string name="connecting">Подключение к базе данных&#8230;</string>
     <string name="loadManagers">Загрузка списка менеджеров&#8230;</string>
     <string name="addPosition">Добавить позицию</string>
+    <string name="approve">Применить</string>
     <string name="upload">Выгрузить в 1С</string>
     <string name="search">Найти</string>
     <string name="select">Выбрать</string>
@@ -20,6 +24,8 @@
     <string name="cancel">Отмена</string>
     <string name="create">Создать</string>
     <string name="delete">Удалить</string>
+    <string name="delete_all_positions">Удалить все позиции?</string>
+    <string name="delete_position">Удалить позицию:</string>
     <string name="clear">Очистить</string>
     <string name="order">Заказ</string>
     <string name="search_by_name">Поиск по наименованию:</string>
@@ -34,6 +40,7 @@
     <string name="client_full_name">Полное наименование:</string>
     <string name="client_type">Тип клиента:</string>
     <string name="code">Код</string>
+    <string name="rests">Остаток</string>
     <string name="remains_on">Остатки по:</string>
 
 </resources>

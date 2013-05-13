@@ -7,6 +7,7 @@
     <string name="manager">Current manager:</string>
     <string name="client">Current client:</string>
     <string name="nomenclature">Nomenclature</string>
+    <string name="count">Count</string>
     <string name="warehouse">Warehouse</string>
     <string name="btnNewClient">Create new</string>
     <string name="client_not_selected">Client not selected</string>
@@ -14,6 +15,7 @@
     <string name="loadManagers">Loading managers&#8230;</string>
     <string name="loadOrganizations">Loading organizations&#8230;</string>
     <string name="addPosition">Add position</string>
+    <string name="approve">Approve</string>
     <string name="upload">Upload to 1C</string>
     <string name="search">Search</string>
     <string name="select">Select</string>
@@ -24,6 +26,8 @@
     <string name="cancel">Cancel</string>
     <string name="create">Create</string>
     <string name="delete">Delete</string>
+    <string name="delete_all_positions">Delete all positions?</string>
+    <string name="delete_position">Delete position:</string>
     <string name="clear">Clear</string>
     <string name="order">Order</string>
     <string name="search_by_name">Search by name:</string>
@@ -38,6 +42,7 @@
     <string name="client_full_name">Full name:</string>
     <string name="client_type">Type:</string>
     <string name="code">Code</string>
+    <string name="rests">Rests</string>
     <string name="remains_on">The remains on:</string>
 
 </resources>

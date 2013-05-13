@@ -43,6 +43,15 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="ru.alkise.trader.PositionEditActivity"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="ru.alkise.trader.PositionEditActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.alkise.trader.adapter.RemainsAdapter;
 import ru.alkise.trader.model.Goods;
 import ru.alkise.trader.model.Position;
 import ru.alkise.trader.model.Warehouses;
@@ -18,7 +19,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,7 +28,7 @@ public class RemainsActivity extends Activity {
 	private ListView remainsList;
 	private Goods goods;
 	private int code;
-	private ArrayAdapter<Position> remainsAdapter;
+	private RemainsAdapter remainsAdapter;
 	private Connection connection;
 	private Activity activity;
 	private ProgressDialog progressDialog;
@@ -120,9 +120,8 @@ public class RemainsActivity extends Activity {
 											.getInt(7)), Warehouses.INSTANCE
 											.getWarehouseByCode(rs.getInt(7))));
 				}
-
-				remainsAdapter = new ArrayAdapter<Position>(activity,
-						android.R.layout.simple_list_item_1, positions);
+				
+				remainsAdapter = new RemainsAdapter(activity, R.layout.one_remain, positions);
 			} catch (Exception e) {
 				Log.e("RemainsActivity.RemainsSearchTask", e.getMessage());
 			} finally {

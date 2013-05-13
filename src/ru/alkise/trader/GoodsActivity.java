@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.alkise.trader.adapter.FindingGoodsAdapter;
 import ru.alkise.trader.model.Goods;
 import ru.alkise.trader.sql.SQLConnectionFactory;
 import android.app.Activity;
@@ -16,7 +17,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,7 +24,8 @@ public class GoodsActivity extends Activity {
 	private TextView lblPositionName;
 	private String searchingString;
 	private ListView goodsList;
-	private ArrayAdapter<Goods> goodsAdapter;
+//	private ArrayAdapter<Goods> goodsAdapter;
+	private FindingGoodsAdapter goodsAdapter;
 	private ProgressDialog progressDialog;
 	private Activity activity;
 	private Connection connection;
@@ -115,12 +116,12 @@ public class GoodsActivity extends Activity {
 				while (rs.next()) {
 					if (rs.getDouble(4) > 0) {
 						goods.add(new Goods(rs.getString(1), rs.getInt(2),
-								rs.getString(3)));
+								rs.getString(3), rs.getDouble(4)));
 					}
 				}
 
-				goodsAdapter = new ArrayAdapter<Goods>(activity,
-						android.R.layout.simple_list_item_1, goods);
+				goodsAdapter = new FindingGoodsAdapter(activity,
+						R.layout.goods_remain_layout, goods);
 
 			} catch (Exception e) {
 				Log.e("GoogsActivity.GoodsSearchTask", e.getMessage());

@@ -52,6 +52,8 @@
             android:layout_weight="100"
             android:gravity="bottom"
             android:inputType="none"
+            android:focusable="true"
+            android:selectAllOnFocus="true"
             android:text="@string/client_not_selected" >
 
             <requestFocus />
@@ -71,6 +73,21 @@
             android:onClick="findClients"
             android:scaleType="fitXY"
             android:src="@drawable/search_client_button" />
+
+        <ImageButton
+            android:id="@+id/clearClientBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginBottom="4dip"
+            android:layout_marginLeft="4dip"
+            android:layout_marginRight="4dip"
+            android:layout_marginTop="4dip"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/clear"
+            android:scaleType="fitXY"
+            android:onClick="clearClient"
+            android:src="@drawable/delete_button" />
 
         <ImageButton
             android:id="@+id/newClientBtn"
@@ -148,7 +165,7 @@
             android:layout_marginBottom="4dip"
             android:background="@android:color/transparent"
             android:contentDescription="@string/upload"
-            android:onClick="searchRemains"
+            android:onClick="uploadTo1C"
             android:scaleType="fitXY"
             android:src="@drawable/upload_button" />
     </LinearLayout>

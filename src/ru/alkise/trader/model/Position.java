@@ -12,12 +12,14 @@ public class Position implements Serializable {
 	private double count;
 	private Warehouse whFrom;
 	private Warehouse whTo;
+	private double maxCount;
 
 	public Position(Goods goods, double count, Warehouse whFrom, Warehouse whTo) {
 		this.goods = goods;
 		this.count = count;
 		this.whFrom = whFrom;
 		this.whTo = whTo;
+		maxCount = count;
 	}
 
 	public Goods getGoods() {
@@ -26,6 +28,10 @@ public class Position implements Serializable {
 
 	public void setGoods(Goods goods) {
 		this.goods = goods;
+	}
+	
+	public double getMaxCount() {
+		return maxCount;
 	}
 
 	public double getCount() {
