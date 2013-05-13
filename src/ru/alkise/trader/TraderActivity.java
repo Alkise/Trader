@@ -1,8 +1,8 @@
 package ru.alkise.trader;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,21 +19,22 @@ import ru.alkise.trader.model.Manager;
 import ru.alkise.trader.model.Order;
 import ru.alkise.trader.model.Organization;
 import ru.alkise.trader.model.Position;
-import ru.alkise.trader.model.SearchResults;
 import ru.alkise.trader.model.Warehouse;
 import ru.alkise.trader.model.Warehouses;
 import ru.alkise.trader.sql.DBConnection;
 import ru.alkise.trader.sql.SQLConnectionFactory;
 import ru.alkise.trader.task.SearchClientsTask;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -212,7 +213,6 @@ public class TraderActivity extends Activity {
 
 	@Override
 	protected void onDestroy() {
-		SearchResults.INSTANCE.clear();
 		positionsAdapter.clear();
 		super.onDestroy();
 	}
@@ -578,104 +578,115 @@ public class TraderActivity extends Activity {
 	}
 
 	// Upload button
+	@SuppressLint("WorldReadableFiles")
 	public void uploadTo1C(View view) {
 		if (Order.INSTANCE.checkOrder()) {
 			XmlSerializer serializer = Xml.newSerializer();
 			FileOutputStream os = null;
-			StringWriter writer = null;
+			File file = null;
 			try {
-				os = getApplicationContext().openFileOutput(System.currentTimeMillis() + ".xml",
-						Context.MODE_PRIVATE);
-				writer = new StringWriter();
-				serializer.setOutput(writer);
+				File sdCard = Environment.getExternalStorageDirectory();
+				File directory = new File(sdCard.getAbsolutePath()+"/Orders");
+				directory.mkdirs();
+				String fileName = System.currentTimeMillis() + ".xml";
+				file = new File(directory , fileName);
+				os = new FileOutputStream(file);
+				serializer.setOutput(os, "UTF-8");
 				serializer.startDocument("UTF-8", true);
 				//Order
 				serializer.startTag(null, "ORDER");
 
-				/*//Organization
-				serializer.startTag("", "ORGANIZATION");
+				//Organization
+				serializer.startTag(null, "ORGANIZATION");
 				//Organization.code
-				serializer.startTag("", "CODE");
+				serializer.startTag(null, "CODE");
 				serializer.text(String.valueOf(Order.INSTANCE
 						.getOrganization().getCode()));
-				serializer.endTag("", "CODE");
+				serializer.endTag(null, "CODE");
 				
-				serializer.endTag("", "ORGANIZATION");
-
+				serializer.endTag(null, "ORGANIZATION");
+				
 				//Manager
-				serializer.startTag("", "MANAGER");
+				serializer.startTag(null, "MANAGER");
 				//Manager.code
-				serializer.startTag("", "CODE");
+				serializer.startTag(null, "CODE");
 				serializer.text(String.valueOf(Order.INSTANCE.getManager().getCode()));
-				serializer.endTag("", "CODE");
+				serializer.endTag(null, "CODE");
 				
-				serializer.endTag("", "MANAGER");
-
+				serializer.endTag(null, "MANAGER");
+				
 				//Client
-				serializer.startTag("", "CLIENT");
+				serializer.startTag(null, "CLIENT");
 				//Client.code
-				serializer.startTag("", "CODE");
+				serializer.startTag(null, "CODE");
 				serializer.text(
 						String.valueOf(Order.INSTANCE.getClient().getCode()));
-				serializer.endTag("", "CODE");
+				serializer.endTag(null, "CODE");
 				//Client.type
-				serializer.startTag("", "TYPE");
-				serializer.text(Order.INSTANCE.getClient()
-						.getType().getCode());
-				serializer.endTag("", "TYPE");
+				serializer.startTag(null, "TYPE");
+				if (Order.INSTANCE.getClient().getType() == null) {
+					serializer.text("");
+				} else
+				serializer.text(Order.INSTANCE.getClient().getType().getValue());
+				serializer.endTag(null, "TYPE");
 				//Client.short_name
-				serializer.startTag("", "SHORT_NAME");
+				serializer.startTag(null, "SHORT_NAME");
 				serializer.text(Order.INSTANCE
 						.getClient().getDescr());
-				serializer.endTag("", "SHORT_NAME");
+				serializer.endTag(null, "SHORT_NAME");
 				//Client.full_name
-				serializer.startTag("", "FULL_NAME");
+				serializer.startTag(null, "FULL_NAME");
 				serializer.text(String
 						.valueOf(Order.INSTANCE.getClient().getFullName()));
-				serializer.endTag("", "FULL_NAME");
+				serializer.endTag(null, "FULL_NAME");
 				
-				serializer.endTag("", "CLIENT");
-
+				serializer.endTag(null, "CLIENT");
+				
 				for (Position position : Order.INSTANCE.getPositions()) {
 					//Position
-					serializer.startTag("", "POSITION");
+					serializer.startTag(null, "POSITION");
 					//Position.code
-					serializer.startTag("", "CODE");
+					serializer.startTag(null, "CODE");
 					serializer.text(String.valueOf(position.getGoods().getCode()));
-					serializer.endTag("", "CODE");
+					serializer.endTag(null, "CODE");
 					//Position.count
-					serializer.startTag("", "COUNT");
+					serializer.startTag(null, "COUNT");
 					serializer.text(
 							String.valueOf(position.getCount()));
-					serializer.endTag("", "COUNT");
+					serializer.endTag(null, "COUNT");
 					//Position.warehouse_from
-					serializer.startTag("", "WAREHOUSE_FROM");
+					serializer.startTag(null, "WAREHOUSE_FROM");
 					serializer.text(
 							String.valueOf(position.getWhFrom().getCode()));
-					serializer.endTag("", "WAREHOUSE_FROM");
+					serializer.endTag(null, "WAREHOUSE_FROM");
 					//Position.warehouse_to
-					serializer.startTag("", "WAREHOUSE_TO");
+					serializer.startTag(null, "WAREHOUSE_TO");
 					serializer.text(
 							String.valueOf(position.getWhTo().getCode()));
-					serializer.endTag("", "WAREHOUSE_TO");
+					serializer.endTag(null, "WAREHOUSE_TO");
 					
-					serializer.endTag("", "POSITION");
-				}*/
+					serializer.endTag(null, "POSITION");
+				}
 				
 				serializer.endTag(null, "ORDER");
 				serializer.endDocument();
+
 				serializer.flush();
-				os.write(writer.toString().getBytes());
+				os.flush();
+				Intent intent = new Intent();
+				intent.setAction(Intent.ACTION_PICK);
+				Uri smbUri = Uri.parse("smb://192.168.0.202");
+				intent.setDataAndType(smbUri, "vnd.android.cursor.dir/lysesoft.andsmb.uri");
+				intent.putExtra("command_type", "upload");
+				intent.putExtra("smb_username", "Order");
+				intent.putExtra("smb_password", "dk2013order");
+				intent.putExtra("smb_domain", "SHOP.DOMKAFEL.RU");
+				intent.putExtra("local_file1", file.getAbsolutePath());
+				intent.putExtra("remote_folder", "/Orders");
+				startActivityForResult(intent, 4);
 			} catch (Exception e) {
 				Log.e("XML Serialization error", e.getMessage());
 			} finally {
-				if (writer != null) {
-					try {
-						writer.close();
-					} catch (IOException e1) {
-						Log.e("XML Serialization error", e1.getMessage());
-					}
-				}
 				if (os != null) {
 					try {
 						os.close();

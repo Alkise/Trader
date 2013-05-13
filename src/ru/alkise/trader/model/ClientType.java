@@ -5,8 +5,8 @@ import java.util.Map;
 
 
 public enum ClientType {
-	_2F2("   2F2   ", "Физ.лицо"), _2F3("   2F3   ", "Юр.лицо"), _2F6(
-			"   2F6   ", "ИП");
+	_2F2("2F2", "Физ.лицо"), _2F3("2F3", "Юр.лицо"), _2F6(
+			"2F6", "ИП");
 
 	private String code;
 	private String value;
@@ -21,7 +21,7 @@ public enum ClientType {
 		if (idToClientTypeMap == null) {
 			initMap();
 		}
-		return idToClientTypeMap.get(id);
+		return idToClientTypeMap.get(id.trim());
 	}
 	
 	private void initMap() {
