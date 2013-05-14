@@ -4,8 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum ClientType {
-	_2F2("2F2", "Физ.лицо"), _2F3("2F3", "Юр.лицо"), _2F6("2F6", "ИП"), _2F0(
-			"", "");
+	_2F2("2F2", "Физ.лицо"), _2F3("2F3", "Юр.лицо"), _2F6("2F6", "ИП");
 
 	private String code;
 	private String value;
@@ -19,11 +18,6 @@ public enum ClientType {
 	public ClientType getClientTypeById(String id) {
 		if (idToClientTypeMap == null) {
 			initMap();
-		}
-		System.out.println(id);
-		if (id == null) {
-			System.out.println(id);
-			return ClientType._2F0;
 		}
 		return idToClientTypeMap.get(id.trim());
 	}
