@@ -1,5 +1,7 @@
 package ru.alkise.trader;
 
+import java.beans.XMLEncoder;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -523,7 +525,7 @@ public class TraderActivity extends Activity {
 							public void onClick(DialogInterface p1, int p2) {
 								positionsAdapter.clear();
 							}
-						}).setMessage("Delete all positions?");
+						}).setMessage(activity.getString(R.string.delete_all_positions));
 
 		AlertDialog deletingDialog = alertDialogBuilder.create();
 
@@ -582,6 +584,7 @@ public class TraderActivity extends Activity {
 	public void uploadTo1C(View view) {
 		if (Order.INSTANCE.checkOrder()) {
 			XmlSerializer serializer = Xml.newSerializer();
+			XMLEncoder encoder = null;
 			FileOutputStream os = null;
 			File file = null;
 			try {
@@ -591,84 +594,90 @@ public class TraderActivity extends Activity {
 				String fileName = System.currentTimeMillis() + ".xml";
 				file = new File(directory , fileName);
 				os = new FileOutputStream(file);
+//				encoder = new XMLEncoder(new BufferedOutputStream(os));
+//				encoder.writeObject(Order.INSTANCE.createDemand());
+//				encoder.close();
 				serializer.setOutput(os, "UTF-8");
 				serializer.startDocument("UTF-8", true);
 				//Order
-				serializer.startTag(null, "ORDER");
+				serializer.startTag("", "ORDER");
 
 				//Organization
-				serializer.startTag(null, "ORGANIZATION");
+				serializer.startTag("", "ORGANIZATION");
 				//Organization.code
-				serializer.startTag(null, "CODE");
+				serializer.startTag("", "CODE");
 				serializer.text(String.valueOf(Order.INSTANCE
 						.getOrganization().getCode()));
-				serializer.endTag(null, "CODE");
+				serializer.endTag("", "CODE");
 				
-				serializer.endTag(null, "ORGANIZATION");
+				serializer.endTag("", "ORGANIZATION");
 				
 				//Manager
-				serializer.startTag(null, "MANAGER");
+				serializer.startTag("", "MANAGER");
 				//Manager.code
-				serializer.startTag(null, "CODE");
+				serializer.startTag("", "CODE");
 				serializer.text(String.valueOf(Order.INSTANCE.getManager().getCode()));
-				serializer.endTag(null, "CODE");
+				serializer.endTag("", "CODE");
 				
-				serializer.endTag(null, "MANAGER");
+				serializer.endTag("", "MANAGER");
 				
 				//Client
-				serializer.startTag(null, "CLIENT");
+				serializer.startTag("", "CLIENT");
 				//Client.code
-				serializer.startTag(null, "CODE");
+				serializer.startTag("", "CODE");
 				serializer.text(
 						String.valueOf(Order.INSTANCE.getClient().getCode()));
-				serializer.endTag(null, "CODE");
+				serializer.endTag("", "CODE");
 				//Client.type
-				serializer.startTag(null, "TYPE");
+				serializer.startTag("", "TYPE");
 				if (Order.INSTANCE.getClient().getType() == null) {
+					System.out.println("null");
 					serializer.text("");
 				} else
-				serializer.text(Order.INSTANCE.getClient().getType().getValue());
-				serializer.endTag(null, "TYPE");
+				serializer.text(Order.INSTANCE.getClient().getType().getCode());
+				serializer.endTag("", "TYPE");
 				//Client.short_name
-				serializer.startTag(null, "SHORT_NAME");
+				serializer.startTag("", "SHORT_NAME");
 				serializer.text(Order.INSTANCE
 						.getClient().getDescr());
-				serializer.endTag(null, "SHORT_NAME");
+				serializer.endTag("", "SHORT_NAME");
 				//Client.full_name
-				serializer.startTag(null, "FULL_NAME");
+				serializer.startTag("", "FULL_NAME");
 				serializer.text(String
 						.valueOf(Order.INSTANCE.getClient().getFullName()));
-				serializer.endTag(null, "FULL_NAME");
+				serializer.endTag("", "FULL_NAME");
 				
-				serializer.endTag(null, "CLIENT");
-				
+				serializer.endTag("", "CLIENT");
+				serializer.startTag("", "POSITIONS");
 				for (Position position : Order.INSTANCE.getPositions()) {
 					//Position
-					serializer.startTag(null, "POSITION");
+					serializer.startTag("", "POSITION");
 					//Position.code
-					serializer.startTag(null, "CODE");
+					serializer.startTag("", "CODE");
 					serializer.text(String.valueOf(position.getGoods().getCode()));
-					serializer.endTag(null, "CODE");
+					serializer.endTag("", "CODE");
 					//Position.count
-					serializer.startTag(null, "COUNT");
+					serializer.startTag("", "COUNT");
 					serializer.text(
 							String.valueOf(position.getCount()));
-					serializer.endTag(null, "COUNT");
+					serializer.endTag("", "COUNT");
 					//Position.warehouse_from
-					serializer.startTag(null, "WAREHOUSE_FROM");
+					serializer.startTag("", "WAREHOUSE_FROM");
 					serializer.text(
 							String.valueOf(position.getWhFrom().getCode()));
-					serializer.endTag(null, "WAREHOUSE_FROM");
+					serializer.endTag("", "WAREHOUSE_FROM");
 					//Position.warehouse_to
-					serializer.startTag(null, "WAREHOUSE_TO");
+					serializer.startTag("", "WAREHOUSE_TO");
 					serializer.text(
 							String.valueOf(position.getWhTo().getCode()));
-					serializer.endTag(null, "WAREHOUSE_TO");
+					serializer.endTag("", "WAREHOUSE_TO");
 					
-					serializer.endTag(null, "POSITION");
+					serializer.endTag("", "POSITION");
 				}
 				
-				serializer.endTag(null, "ORDER");
+				serializer.endTag("", "POSITIONS");
+				
+				serializer.endTag("", "ORDER");
 				serializer.endDocument();
 
 				serializer.flush();
@@ -702,7 +711,25 @@ public class TraderActivity extends Activity {
 
 	// Clear client button
 	public void clearClient(View view) {
-		Order.INSTANCE.setClient(null);
-		clientField.setText(activity.getString(R.string.client_not_selected));
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+		alertDialogBuilder.setMessage(getString(R.string.clear_client_field));
+		alertDialogBuilder.setPositiveButton(getString(R.string.clear), new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Order.INSTANCE.setClient(null);
+				clientField.setText(activity.getString(R.string.client_not_selected));
+			}
+		});
+		alertDialogBuilder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();				
+			}
+		});
+		
+		AlertDialog clearClientConfirmationDialog = alertDialogBuilder.create();
+		clearClientConfirmationDialog.show();
 	}
 }

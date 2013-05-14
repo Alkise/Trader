@@ -27,6 +27,7 @@
     <string name="delete_all_positions">Удалить все позиции?</string>
     <string name="delete_position">Удалить позицию:</string>
     <string name="clear">Очистить</string>
+    <string name="clear_client_field">Очистить поле: Клиент?</string>
     <string name="order">Заказ</string>
     <string name="search_by_name">Поиск по наименованию:</string>
     <string name="name">Наименование</string>

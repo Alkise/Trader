@@ -53,6 +53,10 @@ public enum Order {
 		}
 		return false;
 	}
+	
+	public Demand createDemand() {
+		return new Demand(organization, manager, client, positions);
+	}
 
 	public String displayOrder() {
 		StringBuilder sb = new StringBuilder(organization.getDescr());

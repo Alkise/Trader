@@ -29,6 +29,7 @@
     <string name="delete_all_positions">Delete all positions?</string>
     <string name="delete_position">Delete position:</string>
     <string name="clear">Clear</string>
+    <string name="clear_client_field">To clear a field: Client?</string>
     <string name="order">Order</string>
     <string name="search_by_name">Search by name:</string>
     <string name="name">Name</string>
