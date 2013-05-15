@@ -3,6 +3,8 @@ package ru.alkise.trader;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.alkise.trader.model.Order;
+import ru.alkise.trader.model.OrderType;
 import ru.alkise.trader.model.Position;
 import ru.alkise.trader.model.Warehouse;
 import ru.alkise.trader.model.Warehouses;
@@ -26,11 +28,11 @@ public class PositionEditActivity extends Activity {
 	private EditText editCount;
 	private Spinner spinnerWhTo;
 	private ImageButton btnApprove;
+	private ImageButton btnBack;
 	private ArrayAdapter<Warehouse> whToAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.position_edit_layout);
 
@@ -45,6 +47,7 @@ public class PositionEditActivity extends Activity {
 		spinnerWhTo = (Spinner) findViewById(R.id.spinnerWhTo);
 
 		btnApprove = (ImageButton) findViewById(R.id.btnApprove);
+		btnBack = (ImageButton) findViewById(R.id.btnBack);
 
 		if (position != null) {
 			lblPosName.setText(position.getGoods().getDescr());
@@ -60,13 +63,24 @@ public class PositionEditActivity extends Activity {
 		spinnerWhTo.setAdapter(whToAdapter);
 		spinnerWhTo.setSelection(whToAdapter.getPosition(position.getWhTo()));
 
+		btnBack.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				setResult(RESULT_CANCELED);
+				finish();
+			}
+		});
+
 		btnApprove.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				double newCount = Double.parseDouble(String.valueOf(editCount
 						.getText()));
-				if (newCount <= position.getMaxCount()) {
+				if ((newCount >= 1.0)
+						&& ((Order.getOrderType() == OrderType.DEMAND) 
+								|| (newCount <= position.getMaxCount()))) {
 					Intent intent = new Intent();
 					position.setCount(newCount);
 					position.setWhTo((Warehouse) spinnerWhTo.getSelectedItem());

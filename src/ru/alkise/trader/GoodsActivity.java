@@ -8,6 +8,8 @@ import java.util.List;
 
 import ru.alkise.trader.adapter.FindingGoodsAdapter;
 import ru.alkise.trader.model.Goods;
+import ru.alkise.trader.model.Order;
+import ru.alkise.trader.model.OrderType;
 import ru.alkise.trader.sql.SQLConnectionFactory;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -24,7 +26,6 @@ public class GoodsActivity extends Activity {
 	private TextView lblPositionName;
 	private String searchingString;
 	private ListView goodsList;
-//	private ArrayAdapter<Goods> goodsAdapter;
 	private FindingGoodsAdapter goodsAdapter;
 	private ProgressDialog progressDialog;
 	private Activity activity;
@@ -100,13 +101,18 @@ public class GoodsActivity extends Activity {
 			try {
 				connection = SQLConnectionFactory.createTrade2000Connection();
 
-				PreparedStatement pstmt = connection
-						.prepareStatement("SELECT SC14.ID, SC14.CODE, SC14.DESCR, SUM(RG46.SP49) AS 'COUNT' " + 
-								"FROM SC14 LEFT JOIN RG46 ON (RG46.SP48 = SC14.ID) " + 
-								"WHERE SC14.DESCR LIKE ? " + 
-								"AND RG46.PERIOD = (SELECT MAX(PERIOD) FROM RG46) " + 
-								"GROUP BY SC14.ID, SC14.CODE,SC14.CODE, SC14.DESCR " +
-								"ORDER BY SC14.DESCR");
+				String query = "SELECT SC14.CODE, SC14.DESCR, SUM(RG46.SP49) AS 'COUNT' "
+						+ "FROM SC14 LEFT JOIN RG46 ON (RG46.SP48 = SC14.ID) "
+						+ "WHERE SC14.DESCR LIKE ? "
+						+ "AND RG46.PERIOD = (SELECT MAX(PERIOD) FROM RG46) "
+						+ "GROUP BY SC14.ID, SC14.CODE,SC14.CODE, SC14.DESCR "
+						+ "ORDER BY SC14.DESCR";
+
+				String demandQuery = "SELECT SC14.CODE, SC14.DESCR, 1 FROM SC14 WHERE SC14.DESCR LIKE ?";
+
+				PreparedStatement pstmt = connection.prepareStatement(Order
+						.getOrderType() == OrderType.DEMAND ? demandQuery
+						: query);
 				pstmt.setString(1, "%" + searchingString + "%");
 
 				ResultSet rs = pstmt.executeQuery();
@@ -114,10 +120,10 @@ public class GoodsActivity extends Activity {
 				goods = new ArrayList<Goods>();
 
 				while (rs.next()) {
-					if (rs.getDouble(4) > 0) {
-						goods.add(new Goods(rs.getString(1), rs.getInt(2),
-								rs.getString(3), rs.getDouble(4)));
-					}
+					// if (rs.getDouble(4) > 0) {
+					goods.add(new Goods(rs.getInt(1), rs.getString(2), rs
+							.getDouble(3)));
+					// }
 				}
 
 				goodsAdapter = new FindingGoodsAdapter(activity,

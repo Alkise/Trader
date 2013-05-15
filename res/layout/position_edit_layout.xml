@@ -57,19 +57,41 @@
                 android:id="@+id/spinnerWhTo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="0dip"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:padding="0dip" />
         </LinearLayout>
     </LinearLayout>
 
-    <ImageButton
-        android:id="@+id/btnApprove"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/linearLayout1"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/approve"
-        android:src="@drawable/approve_button" />
+        android:layout_below="@+id/linearLayout1" >
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dip"
+            android:layout_marginLeft="4dip"
+            android:layout_marginRight="4dip"
+            android:layout_marginTop="4dip"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/back"
+            android:src="@drawable/back_button" />
+
+        <ImageButton
+            android:id="@+id/btnApprove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dip"
+            android:layout_marginLeft="4dip"
+            android:layout_marginRight="4dip"
+            android:layout_marginTop="4dip"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/approve"
+            android:src="@drawable/approve_button" />
+
+    </LinearLayout>
 
 </RelativeLayout>

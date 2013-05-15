@@ -50,9 +50,9 @@
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:layout_weight="100"
-            android:gravity="bottom"
-            android:inputType="none"
             android:focusable="true"
+            android:gravity="bottom|center"
+            android:inputType="none"
             android:selectAllOnFocus="true"
             android:text="@string/client_not_selected" >
 
@@ -168,6 +168,14 @@
             android:onClick="uploadTo1C"
             android:scaleType="fitXY"
             android:src="@drawable/upload_button" />
+
+        <Spinner
+            android:id="@+id/spinnerOrderType"
+            android:padding="0dip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
     </LinearLayout>
 
     <ListView

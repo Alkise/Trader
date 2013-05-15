@@ -3,6 +3,8 @@
 
     <string name="app_name">Trader</string>
     <string name="action_settings">Настройки</string>
+    <string name="type">Тип</string>
+    <string name="organization">Организация</string>
     <string name="manager">Менеджер:</string>
     <string name="client">Клиент:</string>
     <string name="nomenclature">Номенклатура</string>
@@ -14,6 +16,7 @@
     <string name="loadManagers">Загрузка списка менеджеров&#8230;</string>
     <string name="addPosition">Добавить позицию</string>
     <string name="approve">Применить</string>
+    <string name="back">Назад</string>
     <string name="upload">Выгрузить в 1С</string>
     <string name="search">Найти</string>
     <string name="select">Выбрать</string>
@@ -43,5 +46,6 @@
     <string name="code">Код</string>
     <string name="rests">Остаток</string>
     <string name="remains_on">Остатки по:</string>
+    <string name="confirm_change_doc_type">The list of the chosen nomenclature will be cleared. To replace document type?</string>
 
 </resources>

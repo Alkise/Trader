@@ -17,12 +17,22 @@
         android:layout_alignParentTop="true" >
 
         <Spinner
+            android:id="@+id/spinnerOrderType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:prompt="@string/type"
+            android:padding="0dip" />
+
+        <Spinner
             android:id="@+id/organizationSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
             android:padding="0dip"
+            android:prompt="@string/organization"
             android:paddingLeft="0dip"
             android:paddingRight="0dip" />
 
@@ -50,9 +60,9 @@
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:layout_weight="100"
-            android:gravity="bottom"
-            android:inputType="none"
             android:focusable="true"
+            android:gravity="bottom|center"
+            android:inputType="none"
             android:selectAllOnFocus="true"
             android:text="@string/client_not_selected" >
 
@@ -168,6 +178,7 @@
             android:onClick="uploadTo1C"
             android:scaleType="fitXY"
             android:src="@drawable/upload_button" />
+
     </LinearLayout>
 
     <ListView

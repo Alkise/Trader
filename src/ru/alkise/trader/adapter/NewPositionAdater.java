@@ -46,7 +46,7 @@ public class NewPositionAdater extends ArrayAdapter<Position> {
 			holder = (ViewHolder) rowView.getTag();
 		}
 		
-		holder.nameLabel.setText(position.getGoods().getDescr().trim());
+		holder.nameLabel.setText(position.getGoods().toString());
 		holder.countLabel.setText(String.valueOf(position.getCount()).trim());
 		holder.whToLabel.setText(position.getWhTo().getDescr().trim());
 		holder.whFromLabel.setText(position.getWhFrom().getDescr().trim());

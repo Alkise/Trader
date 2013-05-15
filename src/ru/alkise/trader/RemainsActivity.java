@@ -8,6 +8,8 @@ import java.util.List;
 
 import ru.alkise.trader.adapter.RemainsAdapter;
 import ru.alkise.trader.model.Goods;
+import ru.alkise.trader.model.Order;
+import ru.alkise.trader.model.OrderType;
 import ru.alkise.trader.model.Position;
 import ru.alkise.trader.model.Warehouses;
 import ru.alkise.trader.sql.SQLConnectionFactory;
@@ -42,7 +44,7 @@ public class RemainsActivity extends Activity {
 		activity = this;
 		data = new Intent();
 		code = getIntent().getIntExtra("code", 0);
-		
+
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setIndeterminate(false);
 		progressDialog.setCancelable(false);
@@ -95,7 +97,7 @@ public class RemainsActivity extends Activity {
 			try {
 				connection = SQLConnectionFactory.createTrade2000Connection();
 
-				String query = "SELECT SC14.ID, SC14.CODE, SC14.DESCR, RG46.SP47, RG46.SP49, RG46.SP48, SC12.CODE "
+				String query = "SELECT SC14.CODE, SC14.DESCR, RG46.SP49, SC12.CODE "
 						+ "FROM RG46 "
 						+ "LEFT JOIN SC14 ON (SC14.ID = RG46.SP48) "
 						+ "LEFT JOIN SC12 ON (SC12.ID = RG46.SP47) "
@@ -103,25 +105,34 @@ public class RemainsActivity extends Activity {
 						+ "AND RG46.PERIOD = (SELECT MAX(PERIOD) FROM RG46) "
 						+ "ORDER BY SC14.DESCR";
 
-				PreparedStatement pstmt = connection.prepareStatement(query);
-				pstmt.setString(1, "%" + code);
+				String demandQuery = "SELECT SC14.CODE, SC14.DESCR, 1, SC12.CODE "
+						+ "FROM SC14 "
+						+ "LEFT JOIN SC12 ON (SC12.ID = SC14.SP1225) "
+						+ "WHERE SC14.CODE = ? "
+						+ "ORDER BY SC14.DESCR ";
+
+				PreparedStatement pstmt = connection.prepareStatement(Order
+						.getOrderType() == OrderType.DEMAND ? demandQuery
+						: query);
+				pstmt.setInt(1, code);
 
 				positions = new ArrayList<Position>();
 
 				ResultSet rs = pstmt.executeQuery();
 				while (rs.next()) {
 					if (rs.isFirst()) {
-						goods = new Goods(rs.getString(1), rs.getInt(2),
-								rs.getString(3));
+						goods = new Goods(rs.getInt(1),
+								rs.getString(2));
 					}
 					positions
-							.add(new Position(goods, rs.getDouble(5),
+							.add(new Position(goods, rs.getDouble(3),
 									Warehouses.INSTANCE.getWarehouseByCode(rs
-											.getInt(7)), Warehouses.INSTANCE
-											.getWarehouseByCode(rs.getInt(7))));
+											.getInt(4)), Warehouses.INSTANCE
+											.getWarehouseByCode(rs.getInt(4))));
 				}
-				
-				remainsAdapter = new RemainsAdapter(activity, R.layout.one_remain, positions);
+
+				remainsAdapter = new RemainsAdapter(activity,
+						R.layout.one_remain, positions);
 			} catch (Exception e) {
 				Log.e("RemainsActivity.RemainsSearchTask", e.getMessage());
 			} finally {
@@ -142,13 +153,13 @@ public class RemainsActivity extends Activity {
 			if (goods != null) {
 				descrLabel.setText(goods.getDescr().trim());
 			}
-			
+
 			if (remainsAdapter != null) {
 				remainsList.setAdapter(remainsAdapter);
 			}
-			
+
 			progressDialog.dismiss();
-			
+
 			super.onPostExecute(result);
 		}
 

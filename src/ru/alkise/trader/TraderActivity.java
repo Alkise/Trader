@@ -15,6 +15,7 @@ import ru.alkise.trader.model.Client;
 import ru.alkise.trader.model.ClientType;
 import ru.alkise.trader.model.Manager;
 import ru.alkise.trader.model.Order;
+import ru.alkise.trader.model.OrderType;
 import ru.alkise.trader.model.Organization;
 import ru.alkise.trader.model.Position;
 import ru.alkise.trader.model.Warehouse;
@@ -57,12 +58,14 @@ public class TraderActivity extends Activity {
 	private ProgressDialog searchingRemainsDialog;
 	private Spinner organizationSpinner;
 	private Spinner managerSpinner;
+	private Spinner orderTypeSpinner;
 	private ListView positionsList;
 	private ImageButton findClientsBtn;
 	private EditText clientField;
 	private Activity activity;
 	private NewPositionAdater positionsAdapter;
 	private ArrayAdapter<ClientType> clientTypeAdapter;
+	private ArrayAdapter<OrderType> orderTypeAdapter;
 	private LayoutInflater inflater;
 	public static final int REMAINS_OK = 1;
 	public static final int FIND_GOODS_OK = 2;
@@ -78,6 +81,7 @@ public class TraderActivity extends Activity {
 
 		organizationSpinner = (Spinner) findViewById(R.id.organizationSpinner);
 		managerSpinner = (Spinner) findViewById(R.id.managerSpinner);
+		orderTypeSpinner = (Spinner) findViewById(R.id.spinnerOrderType);
 
 		positionsList = (ListView) findViewById(R.id.positionList);
 		positionsList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -141,6 +145,34 @@ public class TraderActivity extends Activity {
 					}
 				});
 
+		orderTypeAdapter = new ArrayAdapter<OrderType>(activity,
+				android.R.layout.simple_spinner_dropdown_item,
+				OrderType.values());
+		orderTypeSpinner.setAdapter(orderTypeAdapter);
+		orderTypeSpinner.setSelection(orderTypeAdapter
+				.getPosition(OrderType.CONSIGNMENT_NOTE));
+
+		orderTypeSpinner
+				.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+					@Override
+					public void onItemSelected(AdapterView<?> adapter,
+							View arg1, int pos, long arg3) {
+						Order.setOrderType((OrderType) adapter
+								.getItemAtPosition(pos));
+						if ((positionsAdapter != null)
+								&& (!positionsAdapter.isEmpty())) {
+							positionsAdapter.clear();
+						}
+					}
+
+					@Override
+					public void onNothingSelected(AdapterView<?> arg0) {
+						// TODO Auto-generated method stub
+
+					}
+				});
+
 		loadingDialog = new ProgressDialog(this);
 		loadingDialog.setIndeterminate(false);
 		loadingDialog.setCancelable(false);
@@ -165,23 +197,24 @@ public class TraderActivity extends Activity {
 		clientField.selectAll();
 
 		clientField.addTextChangedListener(new TextWatcher() {
-			private int currentLength;
 
 			public void beforeTextChanged(CharSequence p1, int p2, int p3,
 					int p4) {
-				currentLength = p1.length();
 			}
 
 			public void onTextChanged(CharSequence p1, int p2, int p3, int p4) {
-				if ((p1.length() == 3) && (currentLength == 2)) {
-					findClientsBtn.setEnabled(true);
-				} else if ((p1.length() == 2) && (currentLength == 3)) {
-					findClientsBtn.setEnabled(false);
-				}
+
 			}
 
 			public void afterTextChanged(Editable p1) {
-				// TODO: Implement this method
+				if (p1.length() < 3 && findClientsBtn.isEnabled()) {
+					findClientsBtn.setEnabled(false);
+				} else {
+					if (p1.length() >= 3 && !findClientsBtn.isEnabled()) {
+						findClientsBtn.setEnabled(true);
+					}
+				}
+
 			}
 		});
 
@@ -254,12 +287,12 @@ public class TraderActivity extends Activity {
 				Statement stmt = connection.createStatement();
 
 				ResultSet rs = stmt
-						.executeQuery("SELECT ID, CODE, DESCR FROM SC308");
+						.executeQuery("SELECT CODE, DESCR FROM SC308");
 
 				organizations = new ArrayList<Organization>();
 				while (rs.next()) {
-					organizations.add(new Organization(rs.getString(1), rs
-							.getInt(2), rs.getString(3)));
+					organizations.add(new Organization(rs.getInt(1), rs
+							.getString(2)));
 				}
 				organizationAdapter = new ArrayAdapter<Organization>(
 						getApplication(),
@@ -292,15 +325,15 @@ public class TraderActivity extends Activity {
 
 				// Loading managers
 				PreparedStatement pstmt = connection
-						.prepareStatement("SELECT ID, CODE, DESCR FROM SC377 WHERE SP1860 = ? ORDER BY DESCR");
+						.prepareStatement("SELECT CODE, DESCR FROM SC377 WHERE SP1860 = ? ORDER BY DESCR");
 				pstmt.setInt(1, 1);
 
 				rs = pstmt.executeQuery();
 
 				activeManagers = new ArrayList<Manager>();
 				while (rs.next()) {
-					activeManagers.add(new Manager(rs.getString(1), rs
-							.getInt(2), rs.getString(3)));
+					activeManagers.add(new Manager(rs.getInt(1), rs
+							.getString(2)));
 				}
 				managerAdapter = new ArrayAdapter<Manager>(getApplication(),
 						android.R.layout.simple_spinner_dropdown_item,
@@ -332,15 +365,15 @@ public class TraderActivity extends Activity {
 
 				// Loading warehouses
 				pstmt = connection
-						.prepareStatement("SELECT ID, CODE, DESCR FROM SC12 WHERE SP2505 = ? AND ISFOLDER = ? ORDER BY DESCR ");
+						.prepareStatement("SELECT CODE, DESCR FROM SC12 WHERE SP2505 = ? AND ISFOLDER = ? ORDER BY DESCR ");
 				pstmt.setInt(1, 0);
 				pstmt.setInt(2, 2);
 
 				rs = pstmt.executeQuery();
 
 				while (rs.next()) {
-					Warehouses.INSTANCE.addWarehouse(new Warehouse(rs
-							.getString(1), rs.getInt(2), rs.getString(3)));
+					Warehouses.INSTANCE.addWarehouse(new Warehouse(
+							rs.getInt(1), rs.getString(2)));
 				}
 
 			} catch (Exception e) {
@@ -368,9 +401,8 @@ public class TraderActivity extends Activity {
 							@Override
 							public void onItemSelected(AdapterView<?> adapter,
 									View arg1, int selectedPosition, long arg3) {
-								Order.INSTANCE
-										.setOrganization((Organization) adapter
-												.getSelectedItem());
+								Order.setOrganization((Organization) adapter
+										.getSelectedItem());
 							}
 
 							@Override
@@ -387,7 +419,7 @@ public class TraderActivity extends Activity {
 							@Override
 							public void onItemSelected(AdapterView<?> adapter,
 									View arg1, int selectedPosition, long arg3) {
-								Order.INSTANCE.setManager((Manager) adapter
+								Order.setManager((Manager) adapter
 										.getSelectedItem());
 							}
 
@@ -399,7 +431,7 @@ public class TraderActivity extends Activity {
 						});
 
 				positionsAdapter = new NewPositionAdater(activity,
-						R.layout.new_pos_layout, Order.INSTANCE.getPositions());
+						R.layout.new_pos_layout, Order.getPositions());
 				positionsList.setAdapter(positionsAdapter);
 			}
 			loadingDialog.dismiss();
@@ -418,8 +450,8 @@ public class TraderActivity extends Activity {
 	}
 
 	public void showOrder(View view) {
-		Toast.makeText(getApplication(), Order.INSTANCE.displayOrder(),
-				Toast.LENGTH_LONG).show();
+		Toast.makeText(getApplication(), Order.displayOrder(),
+				Toast.LENGTH_SHORT).show();
 	}
 
 	// Add postion button click
@@ -462,10 +494,10 @@ public class TraderActivity extends Activity {
 									remainsIntent.putExtra("code", code);
 									startActivityForResult(remainsIntent,
 											REMAINS_OK);
-									searchingRemainsDialog.dismiss();
 								} catch (Exception e) {
 									Log.e("TraderActivity", e.getMessage());
 								}
+								searchingRemainsDialog.dismiss();
 
 							} else {
 								Intent goodsIntent = new Intent(
@@ -519,7 +551,8 @@ public class TraderActivity extends Activity {
 							public void onClick(DialogInterface p1, int p2) {
 								positionsAdapter.clear();
 							}
-						}).setMessage(activity.getString(R.string.delete_all_positions));
+						})
+				.setMessage(activity.getString(R.string.delete_all_positions));
 
 		AlertDialog deletingDialog = alertDialogBuilder.create();
 
@@ -547,9 +580,9 @@ public class TraderActivity extends Activity {
 								.findViewById(R.id.clientShortNameEdit);
 						EditText clientFullNameEdit = (EditText) newClientView
 								.findViewById(R.id.clientFullNameEdit);
-						Order.INSTANCE.setClient(new Client("new", -1,
-								(clientShortNameEdit.getText()).toString(),
-								(clientFullNameEdit.getText()).toString(),
+						Order.setClient(new Client(-1, (clientShortNameEdit
+								.getText()).toString(), (clientFullNameEdit
+								.getText()).toString(),
 								(ClientType) clientTypeSpinner
 										.getSelectedItem()));
 						EditText clientEdit = (EditText) activity
@@ -575,23 +608,24 @@ public class TraderActivity extends Activity {
 
 	// Upload button
 	public void uploadTo1C(View view) {
-		if (Order.INSTANCE.checkOrder()) {
+		if (Order.checkOrder()) {
 			FileOutputStream os = null;
 			File file = null;
 			try {
 				File sdCard = Environment.getExternalStorageDirectory();
-				File directory = new File(sdCard.getAbsolutePath()+"/Orders");
+				File directory = new File(sdCard.getAbsolutePath() + "/Orders");
 				directory.mkdirs();
 				String fileName = System.currentTimeMillis() + ".xml";
-				file = new File(directory , fileName);
+				file = new File(directory, fileName);
 				os = new FileOutputStream(file);
-				String xmlText = Order.INSTANCE.getXmlText();
+				String xmlText = Order.getXmlText();
 				os.write(xmlText.getBytes());
 				os.flush();
 				Intent intent = new Intent();
 				intent.setAction(Intent.ACTION_PICK);
 				Uri smbUri = Uri.parse("smb://192.168.0.202");
-				intent.setDataAndType(smbUri, "vnd.android.cursor.dir/lysesoft.andsmb.uri");
+				intent.setDataAndType(smbUri,
+						"vnd.android.cursor.dir/lysesoft.andsmb.uri");
 				intent.putExtra("command_type", "upload");
 				intent.putExtra("smb_username", "Order");
 				intent.putExtra("smb_password", "dk2013order");
@@ -610,31 +644,35 @@ public class TraderActivity extends Activity {
 					}
 				}
 			}
-		}  else {
+		} else {
 			System.out.println("Error order");
 		}
 	}
 
 	// Clear client button
 	public void clearClient(View view) {
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+				activity);
 		alertDialogBuilder.setMessage(getString(R.string.clear_client_field));
-		alertDialogBuilder.setPositiveButton(getString(R.string.clear), new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				Order.INSTANCE.setClient(null);
-				clientField.setText(activity.getString(R.string.client_not_selected));
-			}
-		});
-		alertDialogBuilder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.cancel();				
-			}
-		});
-		
+		alertDialogBuilder.setPositiveButton(getString(R.string.clear),
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Order.setClient(null);
+						clientField.setText(activity
+								.getString(R.string.client_not_selected));
+					}
+				});
+		alertDialogBuilder.setNegativeButton(getString(R.string.cancel),
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				});
+
 		AlertDialog clearClientConfirmationDialog = alertDialogBuilder.create();
 		clearClientConfirmationDialog.show();
 	}

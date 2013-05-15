@@ -4,6 +4,8 @@
     <string name="app_name">Trader</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="type">Type</string>
+    <string name="organization">Organization</string>
     <string name="manager">Current manager:</string>
     <string name="client">Current client:</string>
     <string name="nomenclature">Nomenclature</string>
@@ -16,6 +18,7 @@
     <string name="loadOrganizations">Loading organizations&#8230;</string>
     <string name="addPosition">Add position</string>
     <string name="approve">Approve</string>
+    <string name="back">Back</string>
     <string name="upload">Upload to 1C</string>
     <string name="search">Search</string>
     <string name="select">Select</string>
@@ -45,5 +48,6 @@
     <string name="code">Code</string>
     <string name="rests">Rests</string>
     <string name="remains_on">The remains on:</string>
+    <string name="confirm_change_doc_type">The list of the chosen nomenclature will be cleared. To replace document type?</string>
 
 </resources>

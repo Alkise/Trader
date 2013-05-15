@@ -1,27 +1,18 @@
 package ru.alkise.trader.model;
 
 public class Client {
-	private String id;
 	private int code;
 	private String descr;
 	private String fullName;
 	private ClientType type;
 
-	public Client(String id, int code, String descr, String fullName,
+	public Client(int code, String descr, String fullName,
 			ClientType type) {
-		this.id = id;
+
 		this.code = code;
 		this.descr = descr.trim();
 		this.fullName = fullName.trim();
 		this.type = type;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public int getCode() {

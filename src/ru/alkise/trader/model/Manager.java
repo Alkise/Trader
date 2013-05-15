@@ -1,22 +1,12 @@
 package ru.alkise.trader.model;
 
 public class Manager {
-	private String id;
 	private int code;
 	private String descr;
 
-	public Manager(String id, int code, String descr) {
-		this.id = id;
+	public Manager(int code, String descr) {
 		this.code = code;
 		this.descr = descr.trim();
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public int getCode() {
