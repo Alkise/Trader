@@ -3,11 +3,8 @@ package ru.alkise.trader.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public enum Order {
-	INSTANCE;
+public class Order {
 
-	public static final int TYPE_DEMAND = 0;
-	public static final int TYPE_CONSIGNMENT_NOTE = 1;
 	public static final String ORDER = "ORDER";
 	public static final String ORGANIZATION = "ORGANIZATION";
 	public static final String MANAGER = "MANAGER";
@@ -30,57 +27,65 @@ public enum Order {
 	private static final String TAG_LEVEL_2 = "\t\t";
 	private static final String TAG_LEVEL_3 = "\t\t\t";
 	
-	private static OrderType orderType;
-	private static Organization organization;
-	private static Manager manager;
-	private static Client client;
-	private static List<Position> positions;
+	private OrderType orderType;
+	private Organization organization;
+	private Manager manager;
+	private Client client;
+	private List<Position> positions;
 
-	static {
+	public Order() {
 		positions = new ArrayList<Position>();
 		orderType = OrderType.CONSIGNMENT_NOTE;
 	}
 	
-	public static void setOrganization(Organization organization) {
-		Order.organization = organization;
+	public OrderType getOrderType() {
+		return orderType;
 	}
 
-	public static Organization getOrganization() {
+	public void setOrderType(OrderType orderType) {
+		this.orderType = orderType;
+	}
+	
+	public void setOrganization(Organization organization) {
+		this.organization = organization;
+	}
+
+	public Organization getOrganization() {
 		return organization;
 	}
 
-	public static void setManager(Manager manager) {
-		Order.manager = manager;
+	public void setManager(Manager manager) {
+		this.manager = manager;
 	}
 
-	public static Manager getManager() {
+	public Manager getManager() {
 		return manager;
 	}
 
-	public static void setClient(Client client) {
-		Order.client = client;
+	public void setClient(Client client) {
+		this.client = client;
 	}
 
-	public static Client getClient() {
+	public Client getClient() {
 		return client;
 	}
 
-	public static List<Position> getPositions() {
+	public List<Position> getPositions() {
 		return positions;
 	}
 
-	public static void addPosition(Position position) {
+	public void addPosition(Position position) {
 		positions.add(position);
 	}
 
-	public static boolean checkOrder() {
+	public boolean checkOrder() {
 		if (client != null && positions.size() > 0) {
 			return true;
 		}
 		return false;
 	}
 
-	public static String displayOrder() {
+	public String displayOrder() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(orderType.getCode());
 		sb.append('\n');
@@ -121,13 +126,13 @@ public enum Order {
 		return sb.toString();
 	}
 
-	public static String getXmlText() {
+	public String getXmlText() {
 		StringBuilder sb = new StringBuilder(XML);
 		sb.append('\n');
 //		<ORDER>
 		sb.append(startTag(TAG_LEVEL_0, ORDER));
 //			<TYPE>
-		sb.append(fieldWithValue(TAG_LEVEL_1, TYPE, String.valueOf(Order.getOrderType().getCode())));
+		sb.append(fieldWithValue(TAG_LEVEL_1, TYPE, String.valueOf(orderType.getCode())));
 //			</TYPE>
 //			<ORGANIZATION>
 		sb.append(startTag(TAG_LEVEL_1, ORGANIZATION));
@@ -184,14 +189,6 @@ public enum Order {
 //		</ORDER>
 		sb.append(endTag(TAG_LEVEL_0, ORDER));
 		return sb.toString();
-	}
-
-	public static OrderType getOrderType() {
-		return orderType;
-	}
-
-	public static void setOrderType(OrderType orderType) {
-		Order.orderType = orderType;
 	}
 
 }

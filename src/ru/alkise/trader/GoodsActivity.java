@@ -8,7 +8,6 @@ import java.util.List;
 
 import ru.alkise.trader.adapter.FindingGoodsAdapter;
 import ru.alkise.trader.model.Goods;
-import ru.alkise.trader.model.Order;
 import ru.alkise.trader.model.OrderType;
 import ru.alkise.trader.sql.SQLConnectionFactory;
 import android.app.Activity;
@@ -23,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class GoodsActivity extends Activity {
+	private OrderType docType;
 	private TextView lblPositionName;
 	private String searchingString;
 	private ListView goodsList;
@@ -38,6 +38,7 @@ public class GoodsActivity extends Activity {
 
 		activity = this;
 
+		docType = (OrderType) getIntent().getSerializableExtra("docType");
 		searchingString = getIntent().getStringExtra("positionName");
 
 		progressDialog = new ProgressDialog(this);
@@ -56,6 +57,7 @@ public class GoodsActivity extends Activity {
 					long arg3) {
 				Intent intent = new Intent("ru.alkise.trader.RemainsActivity");
 				int code = ((Goods) adapter.getItemAtPosition(pos)).getCode();
+				intent.putExtra("docType", docType);
 				intent.putExtra("code", code);
 				startActivityForResult(intent, 1);
 			}
@@ -110,9 +112,9 @@ public class GoodsActivity extends Activity {
 
 				String demandQuery = "SELECT SC14.CODE, SC14.DESCR, 1 FROM SC14 WHERE SC14.DESCR LIKE ?";
 
-				PreparedStatement pstmt = connection.prepareStatement(Order
-						.getOrderType() == OrderType.DEMAND ? demandQuery
-						: query);
+				PreparedStatement pstmt = connection
+						.prepareStatement(docType == OrderType.DEMAND ? demandQuery
+								: query);
 				pstmt.setString(1, "%" + searchingString + "%");
 
 				ResultSet rs = pstmt.executeQuery();
@@ -120,10 +122,8 @@ public class GoodsActivity extends Activity {
 				goods = new ArrayList<Goods>();
 
 				while (rs.next()) {
-					// if (rs.getDouble(4) > 0) {
 					goods.add(new Goods(rs.getInt(1), rs.getString(2), rs
 							.getDouble(3)));
-					// }
 				}
 
 				goodsAdapter = new FindingGoodsAdapter(activity,

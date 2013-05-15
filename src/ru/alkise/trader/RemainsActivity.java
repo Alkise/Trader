@@ -8,7 +8,6 @@ import java.util.List;
 
 import ru.alkise.trader.adapter.RemainsAdapter;
 import ru.alkise.trader.model.Goods;
-import ru.alkise.trader.model.Order;
 import ru.alkise.trader.model.OrderType;
 import ru.alkise.trader.model.Position;
 import ru.alkise.trader.model.Warehouses;
@@ -35,6 +34,7 @@ public class RemainsActivity extends Activity {
 	private Activity activity;
 	private ProgressDialog progressDialog;
 	private Intent data;
+	private OrderType docType;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +43,7 @@ public class RemainsActivity extends Activity {
 
 		activity = this;
 		data = new Intent();
+		docType = (OrderType) getIntent().getSerializableExtra("docType");
 		code = getIntent().getIntExtra("code", 0);
 
 		progressDialog = new ProgressDialog(this);
@@ -108,12 +109,11 @@ public class RemainsActivity extends Activity {
 				String demandQuery = "SELECT SC14.CODE, SC14.DESCR, 1, SC12.CODE "
 						+ "FROM SC14 "
 						+ "LEFT JOIN SC12 ON (SC12.ID = SC14.SP1225) "
-						+ "WHERE SC14.CODE = ? "
-						+ "ORDER BY SC14.DESCR ";
+						+ "WHERE SC14.CODE = ? " + "ORDER BY SC14.DESCR ";
 
-				PreparedStatement pstmt = connection.prepareStatement(Order
-						.getOrderType() == OrderType.DEMAND ? demandQuery
-						: query);
+				PreparedStatement pstmt = connection
+						.prepareStatement(docType == OrderType.DEMAND ? demandQuery
+								: query);
 				pstmt.setInt(1, code);
 
 				positions = new ArrayList<Position>();
@@ -121,8 +121,7 @@ public class RemainsActivity extends Activity {
 				ResultSet rs = pstmt.executeQuery();
 				while (rs.next()) {
 					if (rs.isFirst()) {
-						goods = new Goods(rs.getInt(1),
-								rs.getString(2));
+						goods = new Goods(rs.getInt(1), rs.getString(2));
 					}
 					positions
 							.add(new Position(goods, rs.getDouble(3),

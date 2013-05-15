@@ -3,7 +3,6 @@ package ru.alkise.trader;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.alkise.trader.model.Order;
 import ru.alkise.trader.model.OrderType;
 import ru.alkise.trader.model.Position;
 import ru.alkise.trader.model.Warehouse;
@@ -30,6 +29,7 @@ public class PositionEditActivity extends Activity {
 	private ImageButton btnApprove;
 	private ImageButton btnBack;
 	private ArrayAdapter<Warehouse> whToAdapter;
+	private OrderType docType;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +38,7 @@ public class PositionEditActivity extends Activity {
 
 		activity = this;
 		data = getIntent();
+		docType = (OrderType) getIntent().getSerializableExtra("docType");
 		position = (Position) data.getSerializableExtra("position");
 
 		lblPosName = (TextView) findViewById(R.id.lblNomenclature);
@@ -79,8 +80,8 @@ public class PositionEditActivity extends Activity {
 				double newCount = Double.parseDouble(String.valueOf(editCount
 						.getText()));
 				if ((newCount >= 1.0)
-						&& ((Order.getOrderType() == OrderType.DEMAND) 
-								|| (newCount <= position.getMaxCount()))) {
+						&& ((docType == OrderType.DEMAND) || (newCount <= position
+								.getMaxCount()))) {
 					Intent intent = new Intent();
 					position.setCount(newCount);
 					position.setWhTo((Warehouse) spinnerWhTo.getSelectedItem());

@@ -51,6 +51,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class TraderActivity extends Activity {
+	private Order order;
+
 	private DataLoaderTask dataLoaderTask;
 	private SearchClientsTask searchClientTask;
 	private ProgressDialog loadingDialog;
@@ -64,6 +66,7 @@ public class TraderActivity extends Activity {
 	private EditText clientField;
 	private Activity activity;
 	private NewPositionAdater positionsAdapter;
+	private ArrayAdapter<Client> clientAdapter;
 	private ArrayAdapter<ClientType> clientTypeAdapter;
 	private ArrayAdapter<OrderType> orderTypeAdapter;
 	private LayoutInflater inflater;
@@ -75,6 +78,9 @@ public class TraderActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_trader);
+
+		order = new Order();
+
 		activity = this;
 
 		inflater = LayoutInflater.from(this);
@@ -138,6 +144,7 @@ public class TraderActivity extends Activity {
 							int pos, long arg3) {
 						Intent editIntent = new Intent(
 								"ru.alkise.trader.PositionEditActivity");
+						editIntent.putExtra("docType", order.getOrderType());
 						editIntent.putExtra("pos", pos);
 						editIntent.putExtra("position",
 								positionsAdapter.getItem(pos));
@@ -158,7 +165,7 @@ public class TraderActivity extends Activity {
 					@Override
 					public void onItemSelected(AdapterView<?> adapter,
 							View arg1, int pos, long arg3) {
-						Order.setOrderType((OrderType) adapter
+						order.setOrderType((OrderType) adapter
 								.getItemAtPosition(pos));
 						if ((positionsAdapter != null)
 								&& (!positionsAdapter.isEmpty())) {
@@ -259,7 +266,7 @@ public class TraderActivity extends Activity {
 			case POSITION_EDIT_OK:
 				Position positionToModify = positionsAdapter.getItem(data
 						.getIntExtra("pos", 0));
-				positionToModify.setCount(data.getDoubleExtra("count", 0.0));
+				positionToModify.setCount(data.getDoubleExtra("count", 1.0));
 				positionToModify.setWhTo((Warehouse) data
 						.getSerializableExtra("whTo"));
 				positionsAdapter.notifyDataSetChanged();
@@ -401,7 +408,7 @@ public class TraderActivity extends Activity {
 							@Override
 							public void onItemSelected(AdapterView<?> adapter,
 									View arg1, int selectedPosition, long arg3) {
-								Order.setOrganization((Organization) adapter
+								order.setOrganization((Organization) adapter
 										.getSelectedItem());
 							}
 
@@ -419,7 +426,7 @@ public class TraderActivity extends Activity {
 							@Override
 							public void onItemSelected(AdapterView<?> adapter,
 									View arg1, int selectedPosition, long arg3) {
-								Order.setManager((Manager) adapter
+								order.setManager((Manager) adapter
 										.getSelectedItem());
 							}
 
@@ -431,7 +438,7 @@ public class TraderActivity extends Activity {
 						});
 
 				positionsAdapter = new NewPositionAdater(activity,
-						R.layout.new_pos_layout, Order.getPositions());
+						R.layout.new_pos_layout, order.getPositions());
 				positionsList.setAdapter(positionsAdapter);
 			}
 			loadingDialog.dismiss();
@@ -450,7 +457,7 @@ public class TraderActivity extends Activity {
 	}
 
 	public void showOrder(View view) {
-		Toast.makeText(getApplication(), Order.displayOrder(),
+		Toast.makeText(getApplication(), order.displayOrder(),
 				Toast.LENGTH_SHORT).show();
 	}
 
@@ -491,6 +498,8 @@ public class TraderActivity extends Activity {
 											.trim());
 									Intent remainsIntent = new Intent(
 											"ru.alkise.trader.RemainsActivity");
+									remainsIntent.putExtra("docType",
+											order.getOrderType());
 									remainsIntent.putExtra("code", code);
 									startActivityForResult(remainsIntent,
 											REMAINS_OK);
@@ -503,6 +512,8 @@ public class TraderActivity extends Activity {
 								Intent goodsIntent = new Intent(
 										"ru.alkise.trader.GoodsActivity");
 
+								goodsIntent.putExtra("docType",
+										order.getOrderType());
 								goodsIntent.putExtra("positionName",
 										searchingText);
 								startActivityForResult(goodsIntent,
@@ -522,12 +533,42 @@ public class TraderActivity extends Activity {
 	}
 
 	// Searching client button
+	@SuppressWarnings("unchecked")
 	public void findClients(View v) {
 		searchClientTask = new SearchClientsTask();
 		searchingDialog.show();
 		try {
 			searchClientTask.execute(clientField.getText(), searchingDialog,
 					activity);
+			clientAdapter = new ArrayAdapter<Client>(activity,
+					android.R.layout.simple_spinner_dropdown_item,
+					(List<Client>) searchClientTask.get());
+			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+					activity);
+			alertDialogBuilder.setAdapter(clientAdapter,
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							Client client = clientAdapter.getItem(which);
+							order.setClient(client);
+							((EditText) activity.findViewById(R.id.clientField))
+									.setText(client.toString());
+						}
+					});
+			alertDialogBuilder.setTitle(activity
+					.getString(R.string.selectClient));
+			alertDialogBuilder.setNegativeButton(
+					activity.getString(R.string.cancel),
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.cancel();
+						}
+					});
+			AlertDialog alertDialog = alertDialogBuilder.create();
+			alertDialog.show();
 		} catch (Exception e) {
 			Log.e("Find clients", e.getMessage());
 		}
@@ -580,7 +621,7 @@ public class TraderActivity extends Activity {
 								.findViewById(R.id.clientShortNameEdit);
 						EditText clientFullNameEdit = (EditText) newClientView
 								.findViewById(R.id.clientFullNameEdit);
-						Order.setClient(new Client(-1, (clientShortNameEdit
+						order.setClient(new Client(-1, (clientShortNameEdit
 								.getText()).toString(), (clientFullNameEdit
 								.getText()).toString(),
 								(ClientType) clientTypeSpinner
@@ -608,7 +649,7 @@ public class TraderActivity extends Activity {
 
 	// Upload button
 	public void uploadTo1C(View view) {
-		if (Order.checkOrder()) {
+		if (order.checkOrder()) {
 			FileOutputStream os = null;
 			File file = null;
 			try {
@@ -618,7 +659,7 @@ public class TraderActivity extends Activity {
 				String fileName = System.currentTimeMillis() + ".xml";
 				file = new File(directory, fileName);
 				os = new FileOutputStream(file);
-				String xmlText = Order.getXmlText();
+				String xmlText = order.getXmlText();
 				os.write(xmlText.getBytes());
 				os.flush();
 				Intent intent = new Intent();
@@ -659,9 +700,10 @@ public class TraderActivity extends Activity {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						Order.setClient(null);
+						order.setClient(null);
 						clientField.setText(activity
 								.getString(R.string.client_not_selected));
+						clientField.selectAll();
 					}
 				});
 		alertDialogBuilder.setNegativeButton(getString(R.string.cancel),
