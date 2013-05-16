@@ -27,6 +27,15 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="ru.alkise.trader.ManagerActivity"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="ru.alkise.trader.ManagerActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name="ru.alkise.trader.GoodsActivity"
             android:screenOrientation="portrait" >
             <intent-filter>

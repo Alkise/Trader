@@ -11,23 +11,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.alkise.trader.adapter.NewPositionAdater;
+import ru.alkise.trader.db.mssql.SQLConnectionFactory;
 import ru.alkise.trader.model.Client;
 import ru.alkise.trader.model.ClientType;
 import ru.alkise.trader.model.Manager;
 import ru.alkise.trader.model.Order;
-import ru.alkise.trader.model.OrderType;
+import ru.alkise.trader.model.DocumentType;
 import ru.alkise.trader.model.Organization;
 import ru.alkise.trader.model.Position;
 import ru.alkise.trader.model.Warehouse;
 import ru.alkise.trader.model.Warehouses;
-import ru.alkise.trader.sql.DBConnection;
-import ru.alkise.trader.sql.SQLConnectionFactory;
 import ru.alkise.trader.task.SearchClientsTask;
+import ru.alkise.trader.xml.XmlOrderGenerator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -51,6 +54,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class TraderActivity extends Activity {
+
+	private static final String DATABASE_NAME = "trader_ db";
+
+	private SharedPreferences sp;
 	private Order order;
 
 	private DataLoaderTask dataLoaderTask;
@@ -68,16 +75,19 @@ public class TraderActivity extends Activity {
 	private NewPositionAdater positionsAdapter;
 	private ArrayAdapter<Client> clientAdapter;
 	private ArrayAdapter<ClientType> clientTypeAdapter;
-	private ArrayAdapter<OrderType> orderTypeAdapter;
+	private ArrayAdapter<DocumentType> orderTypeAdapter;
 	private LayoutInflater inflater;
 	public static final int REMAINS_OK = 1;
 	public static final int FIND_GOODS_OK = 2;
 	public static final int POSITION_EDIT_OK = 3;
+	public static final int MANAGERS_OK = 4;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_trader);
+
+		sp = getSharedPreferences(DATABASE_NAME, Context.MODE_PRIVATE);
 
 		order = new Order();
 
@@ -152,12 +162,12 @@ public class TraderActivity extends Activity {
 					}
 				});
 
-		orderTypeAdapter = new ArrayAdapter<OrderType>(activity,
+		orderTypeAdapter = new ArrayAdapter<DocumentType>(activity,
 				android.R.layout.simple_spinner_dropdown_item,
-				OrderType.values());
+				DocumentType.values());
 		orderTypeSpinner.setAdapter(orderTypeAdapter);
 		orderTypeSpinner.setSelection(orderTypeAdapter
-				.getPosition(OrderType.CONSIGNMENT_NOTE));
+				.getPosition(DocumentType.CONSIGNMENT_NOTE));
 
 		orderTypeSpinner
 				.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -165,7 +175,7 @@ public class TraderActivity extends Activity {
 					@Override
 					public void onItemSelected(AdapterView<?> adapter,
 							View arg1, int pos, long arg3) {
-						order.setOrderType((OrderType) adapter
+						order.setOrderType((DocumentType) adapter
 								.getItemAtPosition(pos));
 						if ((positionsAdapter != null)
 								&& (!positionsAdapter.isEmpty())) {
@@ -230,25 +240,33 @@ public class TraderActivity extends Activity {
 				ClientType.values());
 
 		dataLoaderTask.execute();
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
+		Log.i(Order.ORDER_TYPE_CODE, String.valueOf(sp.getInt(Order.ORDER_TYPE_CODE, -1)));
+		Log.i(Order.ORGANIZATION_CODE,
+				String.valueOf(sp.getInt(Order.ORGANIZATION_CODE, -1)));
+		Log.i(Order.MANAGER_CODE, String.valueOf(sp.getInt(Order.MANAGER_CODE, -1)));
+		Log.i(Order.CLIENT_CODE, String.valueOf(sp.getInt(Order.CLIENT_CODE, -1)));
 	}
 
 	@Override
 	protected void onStop() {
-		try {
-			DBConnection.INSTANCE.closeConnection();
-		} catch (Exception e) {
-			Log.e("Stop trader", e.getMessage());
-		}
 		super.onStop();
 	}
 
 	@Override
 	protected void onDestroy() {
+		Editor e = sp.edit();
+		e.putInt(Order.ORDER_TYPE_CODE, order.getOrderType().getCode());
+		e.putInt(Order.ORGANIZATION_CODE, order.getOrganization().getCode());
+		e.putInt(Order.MANAGER_CODE, order.getManager().getCode());
+		if (order.getClient() != null) {
+			e.putInt(Order.CLIENT_CODE, order.getClient().getCode());
+			if (order.getClient().getType() != null) {
+				e.putString(Client.TYPE_CODE, order.getClient().getType().getCode());
+			}
+			e.putString(Client.SHORT_NAME, order.getClient().getDescr());
+			e.putString(Client.FULL_NAME, order.getClient().getFullName());
+		}
+		e.commit();
 		positionsAdapter.clear();
 		super.onDestroy();
 	}
@@ -457,8 +475,13 @@ public class TraderActivity extends Activity {
 	}
 
 	public void showOrder(View view) {
-		Toast.makeText(getApplication(), order.displayOrder(),
-				Toast.LENGTH_SHORT).show();
+		
+//		Toast.makeText(getApplication(), order.displayOrder(),
+//				Toast.LENGTH_SHORT).show();
+		Intent managersIntent = new Intent(
+				"ru.alkise.trader.ManagersActivity");
+		startActivityForResult(managersIntent,
+				MANAGERS_OK);
 	}
 
 	// Add postion button click
@@ -659,7 +682,7 @@ public class TraderActivity extends Activity {
 				String fileName = System.currentTimeMillis() + ".xml";
 				file = new File(directory, fileName);
 				os = new FileOutputStream(file);
-				String xmlText = order.getXmlText();
+				String xmlText = XmlOrderGenerator.getXmlText(order);
 				os.write(xmlText.getBytes());
 				os.flush();
 				Intent intent = new Intent();

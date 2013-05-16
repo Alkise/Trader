@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.alkise.trader.adapter.FindingGoodsAdapter;
+import ru.alkise.trader.db.mssql.SQLConnectionFactory;
 import ru.alkise.trader.model.Goods;
-import ru.alkise.trader.model.OrderType;
-import ru.alkise.trader.sql.SQLConnectionFactory;
+import ru.alkise.trader.model.DocumentType;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -22,7 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class GoodsActivity extends Activity {
-	private OrderType docType;
+	private DocumentType docType;
 	private TextView lblPositionName;
 	private String searchingString;
 	private ListView goodsList;
@@ -38,7 +38,7 @@ public class GoodsActivity extends Activity {
 
 		activity = this;
 
-		docType = (OrderType) getIntent().getSerializableExtra("docType");
+		docType = (DocumentType) getIntent().getSerializableExtra("docType");
 		searchingString = getIntent().getStringExtra("positionName");
 
 		progressDialog = new ProgressDialog(this);
@@ -113,7 +113,7 @@ public class GoodsActivity extends Activity {
 				String demandQuery = "SELECT SC14.CODE, SC14.DESCR, 1 FROM SC14 WHERE SC14.DESCR LIKE ?";
 
 				PreparedStatement pstmt = connection
-						.prepareStatement(docType == OrderType.DEMAND ? demandQuery
+						.prepareStatement(docType == DocumentType.DEMAND ? demandQuery
 								: query);
 				pstmt.setString(1, "%" + searchingString + "%");
 

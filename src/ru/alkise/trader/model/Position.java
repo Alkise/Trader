@@ -8,18 +8,31 @@ public class Position implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	//GOODS ID
+	public static final String GOODS_CODE = "position_goods_code";
+	
+	//CURRENT COUNT
+	public static final String COUNT = "position_count";
+	
+	//FROM WAREHOUSE ID
+	public static final String FORM_WAREHOUSE_CODE = "position_from_warehouse_code";
+	
+	//TO WAREHOUSE ID
+	public static final String TO_WAREHOUSE_CODE = "position_to_warehouse_code";
+	
+	//TABLE NAME
+	public static final String TABLE_NAME = "position_table";
+	
 	private Goods goods;
 	private double count;
 	private Warehouse whFrom;
 	private Warehouse whTo;
-	private double maxCount;
 
 	public Position(Goods goods, double count, Warehouse whFrom, Warehouse whTo) {
 		this.goods = goods;
 		this.count = count;
 		this.whFrom = whFrom;
 		this.whTo = whTo;
-		maxCount = count;
 	}
 
 	public Goods getGoods() {
@@ -28,10 +41,6 @@ public class Position implements Serializable {
 
 	public void setGoods(Goods goods) {
 		this.goods = goods;
-	}
-	
-	public double getMaxCount() {
-		return maxCount;
 	}
 
 	public double getCount() {

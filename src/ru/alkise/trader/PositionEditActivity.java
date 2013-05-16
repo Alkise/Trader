@@ -3,7 +3,7 @@ package ru.alkise.trader;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.alkise.trader.model.OrderType;
+import ru.alkise.trader.model.DocumentType;
 import ru.alkise.trader.model.Position;
 import ru.alkise.trader.model.Warehouse;
 import ru.alkise.trader.model.Warehouses;
@@ -29,7 +29,7 @@ public class PositionEditActivity extends Activity {
 	private ImageButton btnApprove;
 	private ImageButton btnBack;
 	private ArrayAdapter<Warehouse> whToAdapter;
-	private OrderType docType;
+	private DocumentType docType;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class PositionEditActivity extends Activity {
 
 		activity = this;
 		data = getIntent();
-		docType = (OrderType) getIntent().getSerializableExtra("docType");
+		docType = (DocumentType) getIntent().getSerializableExtra("docType");
 		position = (Position) data.getSerializableExtra("position");
 
 		lblPosName = (TextView) findViewById(R.id.lblNomenclature);
@@ -80,8 +80,8 @@ public class PositionEditActivity extends Activity {
 				double newCount = Double.parseDouble(String.valueOf(editCount
 						.getText()));
 				if ((newCount >= 1.0)
-						&& ((docType == OrderType.DEMAND) || (newCount <= position
-								.getMaxCount()))) {
+						&& ((docType == DocumentType.DEMAND) || (newCount <= position
+								.getGoods().getCount()))) {
 					Intent intent = new Intent();
 					position.setCount(newCount);
 					position.setWhTo((Warehouse) spinnerWhTo.getSelectedItem());

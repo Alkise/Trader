@@ -8,6 +8,15 @@ public class Warehouse implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	//UNIQUE ID
+	public static final String ID = "_id";
+	
+	//WAREHOUSE NAME
+	public static final String NAME = "warehouse_name";
+	
+	//TABLE NAME
+	public static final String TABLE_NAME = "warehouse_table";
+	
 	private int code;
 	private String descr;
 

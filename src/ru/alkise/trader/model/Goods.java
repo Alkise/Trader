@@ -9,20 +9,26 @@ public class Goods implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-
+	//UNIQUE ID
+	public static final String CODE = "goods_code";
+	
+	//GOODS NAME
+	public static final String NAME = "goods_name";
+	
+	//GOODS REMAINS
+	public static final String REMAINS = "goods_remains";
+	
+	//TABLE NAME
+	public static final String TABLE_NAME = "goods_table";
+	
 	private int code;
 	private String descr;
 	private double count;
 
 	public Goods(int code, String descr, double count) {
-		this(code,descr);
-		this.count = count;
-	}
-	
-	public Goods(int code, String descr) {
-
 		this.code = code;
-		this.descr = descr.trim();
+		this.descr = descr;
+		this.count = count;
 	}
 
 	public int getCode() {

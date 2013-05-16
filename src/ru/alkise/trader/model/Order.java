@@ -1,33 +1,31 @@
 package ru.alkise.trader.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Order {
-
-	public static final String ORDER = "ORDER";
-	public static final String ORGANIZATION = "ORGANIZATION";
-	public static final String MANAGER = "MANAGER";
-	public static final String CLIENT = "CLIENT";
-	public static final String POSITIONS = "POSITITONS";
-	public static final String POSITION = "POSITION";
-	public static final String CODE = "CODE";
-	public static final String TYPE = "TYPE";
-	public static final String SHORT_NAME = "SHORT_NAME";
-	public static final String FULL_NAME = "FULL_NAME";
-	public static final String COUNT = "COUNT";
-	public static final String WAREHOUSE_FROM = "WAREHOUSE_FROM";
-	public static final String WAREHOUSE_TO = "WAREHOUSE_TO";
-	private static final String XML = "<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>";
-	private static final String START_OPEN_TAG = "<";
-	private static final String END_TAG = ">";
-	private static final String START_CLOSE_TAG = "</";
-	private static final String TAG_LEVEL_0 = "";
-	private static final String TAG_LEVEL_1 = "\t";
-	private static final String TAG_LEVEL_2 = "\t\t";
-	private static final String TAG_LEVEL_3 = "\t\t\t";
+public class Order implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
-	private OrderType orderType;
+	//ORDER TYPE ID
+	public static final String ORDER_TYPE_CODE = "order_document_type_code";
+	
+	//ORGANIZATION ID
+	public static final String ORGANIZATION_CODE = "order_organization_code";
+	
+	//MANAGER ID
+	public static final String MANAGER_CODE = "order_manager_code";
+	
+	//CLIENT ID
+	public static final String CLIENT_CODE = "order_client_code";
+	
+	//TABLE NAME
+	public static final String TABLE_NAME = "order_table";
+	
+	private DocumentType orderType;
 	private Organization organization;
 	private Manager manager;
 	private Client client;
@@ -35,14 +33,14 @@ public class Order {
 
 	public Order() {
 		positions = new ArrayList<Position>();
-		orderType = OrderType.CONSIGNMENT_NOTE;
+		orderType = DocumentType.CONSIGNMENT_NOTE;
 	}
 	
-	public OrderType getOrderType() {
+	public DocumentType getOrderType() {
 		return orderType;
 	}
 
-	public void setOrderType(OrderType orderType) {
+	public void setOrderType(DocumentType orderType) {
 		this.orderType = orderType;
 	}
 	
@@ -104,90 +102,6 @@ public class Order {
 			sb.append('\n');
 			sb.append(position.getWhFrom());
 		}
-		return sb.toString();
-	}
-	
-	private static String startTagWithoutNewLine(String tagLevel, String tag) {
-		return tagLevel + START_OPEN_TAG + tag + END_TAG;
-	}
-	
-	private static String startTag(String tagLevel, String tag) {
-		return startTagWithoutNewLine(tagLevel, tag) + '\n';
-	}
-
-	private static String endTag(String tagLevel, String tag) {
-		return tagLevel + START_CLOSE_TAG + tag + END_TAG + '\n';
-	}
-	
-	private static String fieldWithValue(String tagLevel, String field, String value) {
-		StringBuilder sb = new StringBuilder(startTagWithoutNewLine(tagLevel, field));
-		sb.append(value);
-		sb.append(endTag(TAG_LEVEL_0, field));
-		return sb.toString();
-	}
-
-	public String getXmlText() {
-		StringBuilder sb = new StringBuilder(XML);
-		sb.append('\n');
-//		<ORDER>
-		sb.append(startTag(TAG_LEVEL_0, ORDER));
-//			<TYPE>
-		sb.append(fieldWithValue(TAG_LEVEL_1, TYPE, String.valueOf(orderType.getCode())));
-//			</TYPE>
-//			<ORGANIZATION>
-		sb.append(startTag(TAG_LEVEL_1, ORGANIZATION));
-//				<CODE>
-		sb.append(fieldWithValue(TAG_LEVEL_2,CODE, String.valueOf(organization.getCode())));
-//				</CODE>
-		sb.append(endTag(TAG_LEVEL_1, ORGANIZATION));
-//			</ORGANIZATION>
-//			<MANAGER>
-		sb.append(startTag(TAG_LEVEL_1,MANAGER));
-//				<CODE>
-		sb.append(fieldWithValue(TAG_LEVEL_2, CODE, String.valueOf(manager.getCode())));
-//				</CODE>
-//			</MANAGER>
-		sb.append(endTag(TAG_LEVEL_1, MANAGER));
-//			<CLIENT>
-		sb.append(startTag(TAG_LEVEL_1,CLIENT));
-//				<CODE>
-		sb.append(fieldWithValue(TAG_LEVEL_2,CODE, String.valueOf(client.getCode())));
-//				</CODE>
-//				<TYPE>
-		sb.append(fieldWithValue(TAG_LEVEL_2, TYPE, (client.getType() != null ? client.getType().getCode() : "")));
-//				</TYPE>
-//				<SHORT_NAME>
-		sb.append(fieldWithValue(TAG_LEVEL_2, SHORT_NAME, client.getDescr()));
-//				</SHORT_NAME>
-//				<FULL_NAME>
-		sb.append(fieldWithValue(TAG_LEVEL_2, FULL_NAME, client.getFullName()));
-//				</FULL_NAME>
-//			</CLIENT>
-		sb.append(endTag(TAG_LEVEL_1, CLIENT));
-//			<POSITIONS>
-		sb.append(startTag(TAG_LEVEL_1, POSITIONS));
-		for(Position position : positions) {
-//				<POSITION>
-			sb.append(startTag(TAG_LEVEL_2, POSITION));
-//					<CODE>
-			sb.append(fieldWithValue(TAG_LEVEL_3, CODE, String.valueOf(position.getGoods().getCode())));
-//					</CODE>
-//					<COUNT>
-			sb.append(fieldWithValue(TAG_LEVEL_3, COUNT, String.valueOf(position.getCount())));
-//					</COUNT>
-//					<WAREHOUSE_TO>
-			sb.append(fieldWithValue(TAG_LEVEL_3, WAREHOUSE_TO, String.valueOf(position.getWhTo().getCode())));
-//					</WAREHOUSE_TO>
-//					<WAREHOUSE_FROM>
-			sb.append(fieldWithValue(TAG_LEVEL_3, WAREHOUSE_FROM, String.valueOf(position.getWhFrom().getCode())));
-//					</WAREHOUSE_FROM>
-//				</POSITION>
-			sb.append(endTag(TAG_LEVEL_2, POSITION));
-		}
-//			</POSITIONS>
-		sb.append(endTag(TAG_LEVEL_1, POSITIONS));
-//		</ORDER>
-		sb.append(endTag(TAG_LEVEL_0, ORDER));
 		return sb.toString();
 	}
 

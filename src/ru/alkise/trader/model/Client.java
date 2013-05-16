@@ -1,6 +1,28 @@
 package ru.alkise.trader.model;
 
-public class Client {
+import java.io.Serializable;
+
+public class Client implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	//UNIQUE ID
+	public static final String CODE = "client_code";
+	
+	//CLIENT SHORT NAME
+	public static final String SHORT_NAME = "client_short_name";
+	
+	//CLIENT FULL NAME
+	public static final String FULL_NAME = "client_full_name";
+	
+	//CLIENT TYPE
+	public static final String TYPE_CODE = "client_type_id";
+	
+	//TABLE NAME
+	public static final String TABLE_NAME = "client_table";
+	
 	private int code;
 	private String descr;
 	private String fullName;

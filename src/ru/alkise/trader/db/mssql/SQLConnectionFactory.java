@@ -1,4 +1,4 @@
-package ru.alkise.trader.sql;
+package ru.alkise.trader.db.mssql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

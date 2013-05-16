@@ -6,6 +6,15 @@ import java.util.Map;
 public enum ClientType {
 	_2F2("2F2", "Физ.лицо"), _2F3("2F3", "Юр.лицо"), _2F6("2F6", "ИП");
 
+	//CLIENT TYPE CODE IN MSSQL BASE
+	public static final String CODE = "client_type_code";
+	
+	//CLIENT TYPE DESCRIPTION
+	public static final String DESCRIPTION = "client_type_description";
+	
+	//TABLE NAME
+	public static final String TABLE_NAME = "client_type_table";
+	
 	private String code;
 	private String value;
 	private Map<String, ClientType> idToClientTypeMap;

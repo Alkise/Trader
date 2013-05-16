@@ -1,6 +1,22 @@
 package ru.alkise.trader.model;
 
-public class Organization {
+import java.io.Serializable;
+
+public class Organization implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	//UNIQUE ID
+	public static final String CODE = "organization_code";
+	
+	//ORGANIZATION NAME
+	public static final String NAME = "organization_name";
+	
+	//TABLE NAME
+	public static final String TABLE_NAME = "organization_table";
+	
 	private int code;
 	private String descr;
 

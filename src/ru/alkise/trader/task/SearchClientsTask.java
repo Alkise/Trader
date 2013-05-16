@@ -6,9 +6,9 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.alkise.trader.db.mssql.SQLConnectionFactory;
 import ru.alkise.trader.model.Client;
 import ru.alkise.trader.model.ClientType;
-import ru.alkise.trader.sql.SQLConnectionFactory;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 

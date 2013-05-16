@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.alkise.trader.adapter.RemainsAdapter;
+import ru.alkise.trader.db.mssql.SQLConnectionFactory;
 import ru.alkise.trader.model.Goods;
-import ru.alkise.trader.model.OrderType;
+import ru.alkise.trader.model.DocumentType;
 import ru.alkise.trader.model.Position;
 import ru.alkise.trader.model.Warehouses;
-import ru.alkise.trader.sql.SQLConnectionFactory;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -29,12 +29,13 @@ public class RemainsActivity extends Activity {
 	private ListView remainsList;
 	private Goods goods;
 	private int code;
+	private int whCode;
 	private RemainsAdapter remainsAdapter;
 	private Connection connection;
 	private Activity activity;
 	private ProgressDialog progressDialog;
 	private Intent data;
-	private OrderType docType;
+	private DocumentType docType;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +44,9 @@ public class RemainsActivity extends Activity {
 
 		activity = this;
 		data = new Intent();
-		docType = (OrderType) getIntent().getSerializableExtra("docType");
-		code = getIntent().getIntExtra("code", 0);
+		docType = (DocumentType) getIntent().getSerializableExtra("docType");
+		code = getIntent().getIntExtra("code", -1);
+		whCode = getIntent().getIntExtra("whCode", -1);
 
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setIndeterminate(false);
@@ -62,31 +64,22 @@ public class RemainsActivity extends Activity {
 							int pos, long arg3) {
 						data.putExtra("position",
 								(Position) adapter.getItemAtPosition(pos));
-						setResult(RESULT_OK, data);
-						finish();
+						returnResult();
 					}
 				});
 
 		codeLabel.setText(String.valueOf(code));
 	}
 
+	private void returnResult() {
+		setResult(RESULT_OK, data);
+		finish();
+	}
+
 	@Override
 	protected void onStart() {
 		super.onStart();
 		new RemainsSearchingTask().execute();
-	}
-
-	@Override
-	protected void onStop() {
-		try {
-			if (connection != null && !connection.isClosed()) {
-				connection.close();
-				Log.i("RemainsActivity", "Connection closed.");
-			}
-		} catch (Exception e) {
-			Log.e("RemainsActivity", e.getMessage());
-		}
-		super.onStop();
 	}
 
 	private class RemainsSearchingTask extends
@@ -102,36 +95,54 @@ public class RemainsActivity extends Activity {
 						+ "FROM RG46 "
 						+ "LEFT JOIN SC14 ON (SC14.ID = RG46.SP48) "
 						+ "LEFT JOIN SC12 ON (SC12.ID = RG46.SP47) "
-						+ "WHERE SC14.CODE LIKE ? "
+						+ "WHERE SC14.CODE = ? "
+						+ (whCode != -1 ? "AND SC12.CODE = ?" : "")
 						+ "AND RG46.PERIOD = (SELECT MAX(PERIOD) FROM RG46) "
 						+ "ORDER BY SC14.DESCR";
 
 				String demandQuery = "SELECT SC14.CODE, SC14.DESCR, 1, SC12.CODE "
 						+ "FROM SC14 "
 						+ "LEFT JOIN SC12 ON (SC12.ID = SC14.SP1225) "
-						+ "WHERE SC14.CODE = ? " + "ORDER BY SC14.DESCR ";
+						+ "WHERE SC14.CODE = ? "
+						+ (whCode != -1 ? "AND SC12.CODE = ?" : "")
+						+ "ORDER BY SC14.DESCR ";
 
 				PreparedStatement pstmt = connection
-						.prepareStatement(docType == OrderType.DEMAND ? demandQuery
+						.prepareStatement(docType == DocumentType.DEMAND ? demandQuery
 								: query);
 				pstmt.setInt(1, code);
-
-				positions = new ArrayList<Position>();
-
-				ResultSet rs = pstmt.executeQuery();
-				while (rs.next()) {
-					if (rs.isFirst()) {
-						goods = new Goods(rs.getInt(1), rs.getString(2));
-					}
-					positions
-							.add(new Position(goods, rs.getDouble(3),
-									Warehouses.INSTANCE.getWarehouseByCode(rs
-											.getInt(4)), Warehouses.INSTANCE
-											.getWarehouseByCode(rs.getInt(4))));
+				if (whCode != -1) {
+					pstmt.setInt(2, whCode);
 				}
 
-				remainsAdapter = new RemainsAdapter(activity,
-						R.layout.one_remain, positions);
+
+				ResultSet rs = pstmt.executeQuery();
+				
+				if (rs.getFetchSize() > 0) {
+					
+					positions = new ArrayList<Position>();
+					
+					while (rs.next()) {
+						
+						if (rs.isFirst()) {
+							goods = new Goods(rs.getInt(1), rs.getString(2),
+									rs.getDouble(3));
+						}
+						
+						positions.add(new Position(goods, rs.getDouble(3),
+								Warehouses.INSTANCE.getWarehouseByCode(rs
+										.getInt(4)), Warehouses.INSTANCE
+										.getWarehouseByCode(rs.getInt(4))));
+					}
+
+					if (positions.size() == 1) {
+						data.putExtra("position", positions.get(0));
+						returnResult();
+					}
+					
+					remainsAdapter = new RemainsAdapter(activity,
+							R.layout.one_remain, positions);
+				}
 			} catch (Exception e) {
 				Log.e("RemainsActivity.RemainsSearchTask", e.getMessage());
 			} finally {
@@ -149,6 +160,15 @@ public class RemainsActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Object result) {
+			try {
+				if (connection != null && !connection.isClosed()) {
+					connection.close();
+					Log.i("RemainsActivity", "Connection closed.");
+				}
+			} catch (Exception e) {
+				Log.e("RemainsActivity", e.getMessage());
+			}
+			
 			if (goods != null) {
 				descrLabel.setText(goods.getDescr().trim());
 			}
@@ -165,7 +185,6 @@ public class RemainsActivity extends Activity {
 		@Override
 		protected void onPreExecute() {
 			progressDialog.show();
-			positions = new ArrayList<Position>();
 		}
 	}
 }

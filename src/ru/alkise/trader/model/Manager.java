@@ -1,6 +1,22 @@
 package ru.alkise.trader.model;
 
-public class Manager {
+import java.io.Serializable;
+
+public class Manager implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	//UNIUQE ID
+	public static final String CODE = "manager_code";
+	
+	//MANAGER NAME
+	public static final String NAME = "manager_name";
+	
+	//TABLE_NAME
+	public static final String TABLE_NAME = "manager_table";
+
 	private int code;
 	private String descr;
 
