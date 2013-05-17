@@ -9,32 +9,35 @@ import java.util.List;
 import ru.alkise.trader.db.mssql.SQLConnectionFactory;
 import ru.alkise.trader.model.Manager;
 import ru.alkise.trader.model.Order;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class ManagerActivity extends Activity {
-	/*private Activity activity;
+public class ManagersActivity extends Activity {
+	private Activity activity;
 	private Connection connection;
 	private Intent data;
 	private int managerCode;
 	private ProgressDialog progressDialog;
 	private ListView managersList;
-	private ArrayAdapter<Manager> managersAdapter;*/
+	private TextView headingLabel;
+	private ArrayAdapter<Manager> managersAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.manager_layout);
+		setContentView(R.layout.selection_layout);
 
-		/*activity = this;
+		activity = this;
 		data = new Intent();
 
 		managerCode = getIntent().getIntExtra(Order.MANAGER_CODE, -1);
@@ -44,11 +47,23 @@ public class ManagerActivity extends Activity {
 		progressDialog.setCancelable(false);
 		progressDialog.setMessage(getString(R.string.searching));
 
-		managersList = (ListView) findViewById(R.id.listManagersManagerLayout);*/
+		headingLabel = (TextView) findViewById(R.id.lblHeadingSelectionLayout);
+		headingLabel.setText(getString(R.string.choose_manager));
+		
+		managersList = (ListView) findViewById(R.id.listManagersSelectionLayout);
+		managersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> adapter, View arg1, int pos,
+					long arg3) {
+				data.putExtra(Manager.TABLE_NAME, (Manager) adapter.getItemAtPosition(pos));
+				returnResult(data);
+			}
+		});
 	}
-/*
-	private void returnResult() {
-		setResult(RESULT_OK, data);
+
+	private void returnResult(Intent intent) {
+		setResult(RESULT_OK, intent);
 		finish();
 	}
 	
@@ -56,9 +71,9 @@ public class ManagerActivity extends Activity {
 	protected void onStart() {
 		new ManagerSearchTask().execute();
 		super.onStart();
-	}*/
+	}
 
-	/*private class ManagerSearchTask extends AsyncTask<Object, Object, Object> {
+	private class ManagerSearchTask extends AsyncTask<Object, Object, Object> {
 		private List<Manager> managers;
 
 		@Override
@@ -67,7 +82,7 @@ public class ManagerActivity extends Activity {
 				connection = SQLConnectionFactory.createTrade2000Connection();
 
 				String query = "SELECT CODE, DESCR FROM SC377 WHERE"
-						+ (managerCode != -1 ? " WHERE CODE = ?" : "")
+						+ (managerCode != -1 ? " CODE = ? AND" : "")
 						+ " SP1860 = 1 ORDER BY DESCR";
 
 				PreparedStatement pstmt = connection.prepareStatement(query);
@@ -85,9 +100,10 @@ public class ManagerActivity extends Activity {
 						managers.add(new Manager(rs.getInt(1), rs.getString(2)));
 					}
 					
-					if (managers.size() == 1) {
-						data.putExtra("manager", managers.get(0));
-						returnResult();
+					if (managers.size() == 1) 
+					{
+						data.putExtra(Manager.TABLE_NAME, managers.get(0));
+						returnResult(data);
 					}
 					
 					managersAdapter = new ArrayAdapter<Manager>(activity, android.R.layout.simple_list_item_1, managers);
@@ -131,5 +147,5 @@ public class ManagerActivity extends Activity {
 			progressDialog.dismiss();
 			super.onPostExecute(result);
 		}
-	}*/
+	}
 }

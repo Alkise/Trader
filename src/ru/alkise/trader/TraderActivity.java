@@ -6,17 +6,15 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 import ru.alkise.trader.adapter.NewPositionAdater;
 import ru.alkise.trader.db.mssql.SQLConnectionFactory;
 import ru.alkise.trader.model.Client;
 import ru.alkise.trader.model.ClientType;
+import ru.alkise.trader.model.DocumentType;
 import ru.alkise.trader.model.Manager;
 import ru.alkise.trader.model.Order;
-import ru.alkise.trader.model.DocumentType;
 import ru.alkise.trader.model.Organization;
 import ru.alkise.trader.model.Position;
 import ru.alkise.trader.model.Warehouse;
@@ -31,7 +29,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -41,35 +38,38 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class TraderActivity extends Activity {
 
 	private static final String DATABASE_NAME = "trader_ db";
-
+	public static final int REMAINS_OK = 1;
+	public static final int FIND_GOODS_OK = 2;
+	public static final int POSITION_EDIT_OK = 3;
+	public static final int MANAGERS_OK = 4;
+	public static final int ORGANIZATIONS_OK = 5;
+	
 	private SharedPreferences sp;
 	private Order order;
-
 	private DataLoaderTask dataLoaderTask;
 	private SearchClientsTask searchClientTask;
 	private ProgressDialog loadingDialog;
 	private ProgressDialog searchingDialog;
 	private ProgressDialog searchingRemainsDialog;
-	private Spinner organizationSpinner;
-	private Spinner managerSpinner;
 	private Spinner orderTypeSpinner;
 	private ListView positionsList;
 	private ImageButton findClientsBtn;
+	private Button btnManagers;
+	private Button btnOrganizations;
 	private EditText clientField;
 	private Activity activity;
 	private NewPositionAdater positionsAdapter;
@@ -77,10 +77,6 @@ public class TraderActivity extends Activity {
 	private ArrayAdapter<ClientType> clientTypeAdapter;
 	private ArrayAdapter<DocumentType> orderTypeAdapter;
 	private LayoutInflater inflater;
-	public static final int REMAINS_OK = 1;
-	public static final int FIND_GOODS_OK = 2;
-	public static final int POSITION_EDIT_OK = 3;
-	public static final int MANAGERS_OK = 4;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +91,6 @@ public class TraderActivity extends Activity {
 
 		inflater = LayoutInflater.from(this);
 
-		organizationSpinner = (Spinner) findViewById(R.id.organizationSpinner);
-		managerSpinner = (Spinner) findViewById(R.id.managerSpinner);
 		orderTypeSpinner = (Spinner) findViewById(R.id.spinnerOrderType);
 
 		positionsList = (ListView) findViewById(R.id.positionList);
@@ -210,6 +204,9 @@ public class TraderActivity extends Activity {
 
 		findClientsBtn = (ImageButton) findViewById(R.id.findClientsBtn);
 
+		btnManagers = (Button) findViewById(R.id.btnManagers);
+		btnOrganizations = (Button) findViewById(R.id.btnOrganizations);
+
 		clientField = (EditText) findViewById(R.id.clientField);
 		clientField.selectAll();
 
@@ -240,11 +237,35 @@ public class TraderActivity extends Activity {
 				ClientType.values());
 
 		dataLoaderTask.execute();
-		Log.i(Order.ORDER_TYPE_CODE, String.valueOf(sp.getInt(Order.ORDER_TYPE_CODE, -1)));
-		Log.i(Order.ORGANIZATION_CODE,
-				String.valueOf(sp.getInt(Order.ORGANIZATION_CODE, -1)));
-		Log.i(Order.MANAGER_CODE, String.valueOf(sp.getInt(Order.MANAGER_CODE, -1)));
-		Log.i(Order.CLIENT_CODE, String.valueOf(sp.getInt(Order.CLIENT_CODE, -1)));
+		Log.i(Order.ORDER_TYPE_CODE,
+				String.valueOf(sp.getInt(Order.ORDER_TYPE_CODE, -1)));
+		int orderTypeCode = sp.getInt(Order.ORDER_TYPE_CODE, -1);
+		int organizationCode = sp.getInt(Order.ORGANIZATION_CODE, -1);
+		int managerCode = sp.getInt(Order.MANAGER_CODE, -1);
+		Log.i(Order.ORGANIZATION_CODE, String.valueOf(organizationCode));
+		Log.i(Order.MANAGER_CODE, String.valueOf(managerCode));
+		Log.i(Order.CLIENT_CODE,
+				String.valueOf(sp.getInt(Order.CLIENT_CODE, -1)));
+
+		if (managerCode != -1) {
+			Intent managersIntent = new Intent(
+					"ru.alkise.trader.ManagersActivity");
+			managersIntent.putExtra(Order.MANAGER_CODE, managerCode);
+			startActivityForResult(managersIntent, MANAGERS_OK);
+		}
+
+		if (organizationCode != -1) {
+			Intent organizationIntent = new Intent(
+					"ru.alkise.trader.OrganizationsActivity");
+			organizationIntent.putExtra(Order.ORGANIZATION_CODE,
+					organizationCode);
+			startActivityForResult(organizationIntent, ORGANIZATIONS_OK);
+		}
+		
+		if (orderTypeCode != -1) {
+			orderTypeSpinner.setSelection(orderTypeAdapter
+					.getPosition(DocumentType.getTypeByCode(orderTypeCode)));
+		}
 	}
 
 	@Override
@@ -261,13 +282,18 @@ public class TraderActivity extends Activity {
 		if (order.getClient() != null) {
 			e.putInt(Order.CLIENT_CODE, order.getClient().getCode());
 			if (order.getClient().getType() != null) {
-				e.putString(Client.TYPE_CODE, order.getClient().getType().getCode());
+				e.putString(Client.TYPE_CODE, order.getClient().getType()
+						.getCode());
 			}
 			e.putString(Client.SHORT_NAME, order.getClient().getDescr());
 			e.putString(Client.FULL_NAME, order.getClient().getFullName());
 		}
 		e.commit();
-		positionsAdapter.clear();
+
+		if (positionsAdapter != null) {
+			positionsAdapter.clear();
+		}
+
 		super.onDestroy();
 	}
 
@@ -277,6 +303,18 @@ public class TraderActivity extends Activity {
 			Position receivedPosition = (Position) data
 					.getSerializableExtra("position");
 			switch (requestCode) {
+			case ORGANIZATIONS_OK:
+				Organization organization = (Organization) data
+						.getSerializableExtra(Organization.TABLE_NAME);
+				btnOrganizations.setText(organization.getDescr());
+				order.setOrganization(organization);
+				break;
+			case MANAGERS_OK:
+				Manager manager = (Manager) data
+						.getSerializableExtra(Manager.TABLE_NAME);
+				btnManagers.setText(manager.getDescr());
+				order.setManager(manager);
+				break;
 			case REMAINS_OK:
 			case FIND_GOODS_OK:
 				positionsAdapter.add(receivedPosition);
@@ -294,12 +332,6 @@ public class TraderActivity extends Activity {
 	}
 
 	protected class DataLoaderTask extends AsyncTask<Object, Object, Object> {
-		private List<Organization> organizations;
-		private ArrayAdapter<Organization> organizationAdapter;
-
-		private List<Manager> activeManagers;
-		private ArrayAdapter<Manager> managerAdapter;
-
 		private ProgressDialog dataLoadingDialog;
 
 		private Connection connection;
@@ -307,94 +339,14 @@ public class TraderActivity extends Activity {
 		@Override
 		protected Object doInBackground(Object... params) {
 			try {
-				// Loading organizations
-				connection = SQLConnectionFactory.createTrade2000Connection();
-				Statement stmt = connection.createStatement();
-
-				ResultSet rs = stmt
-						.executeQuery("SELECT CODE, DESCR FROM SC308");
-
-				organizations = new ArrayList<Organization>();
-				while (rs.next()) {
-					organizations.add(new Organization(rs.getInt(1), rs
-							.getString(2)));
-				}
-				organizationAdapter = new ArrayAdapter<Organization>(
-						getApplication(),
-						android.R.layout.simple_spinner_dropdown_item,
-						organizations) {
-
-					@Override
-					public View getDropDownView(int position, View convertView,
-							ViewGroup parent) {
-						View view = super.getDropDownView(position,
-								convertView, parent);
-						TextView textView = (TextView) view
-								.findViewById(android.R.id.text1);
-						textView.setTextColor(Color.DKGRAY);
-						return view;
-					}
-
-					@Override
-					public View getView(int position, View convertView,
-							ViewGroup parent) {
-						View view = super
-								.getView(position, convertView, parent);
-						TextView textView = (TextView) view
-								.findViewById(android.R.id.text1);
-						textView.setTextColor(Color.BLACK);
-						return view;
-					}
-
-				};
-
-				// Loading managers
-				PreparedStatement pstmt = connection
-						.prepareStatement("SELECT CODE, DESCR FROM SC377 WHERE SP1860 = ? ORDER BY DESCR");
-				pstmt.setInt(1, 1);
-
-				rs = pstmt.executeQuery();
-
-				activeManagers = new ArrayList<Manager>();
-				while (rs.next()) {
-					activeManagers.add(new Manager(rs.getInt(1), rs
-							.getString(2)));
-				}
-				managerAdapter = new ArrayAdapter<Manager>(getApplication(),
-						android.R.layout.simple_spinner_dropdown_item,
-						activeManagers) {
-
-					@Override
-					public View getDropDownView(int position, View convertView,
-							ViewGroup parent) {
-						View view = super.getDropDownView(position,
-								convertView, parent);
-						TextView textView = (TextView) view
-								.findViewById(android.R.id.text1);
-						textView.setTextColor(Color.DKGRAY);
-						return view;
-					}
-
-					@Override
-					public View getView(int position, View convertView,
-							ViewGroup parent) {
-						View view = super
-								.getView(position, convertView, parent);
-						TextView textView = (TextView) view
-								.findViewById(android.R.id.text1);
-						textView.setTextColor(Color.BLACK);
-						return view;
-					}
-
-				};
-
 				// Loading warehouses
-				pstmt = connection
+				connection = SQLConnectionFactory.createTrade2000Connection();
+				PreparedStatement pstmt = connection
 						.prepareStatement("SELECT CODE, DESCR FROM SC12 WHERE SP2505 = ? AND ISFOLDER = ? ORDER BY DESCR ");
 				pstmt.setInt(1, 0);
 				pstmt.setInt(2, 2);
 
-				rs = pstmt.executeQuery();
+				ResultSet rs = pstmt.executeQuery();
 
 				while (rs.next()) {
 					Warehouses.INSTANCE.addWarehouse(new Warehouse(
@@ -418,73 +370,29 @@ public class TraderActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Object result) {
-			if (organizationAdapter != null) {
-				organizationSpinner.setAdapter(organizationAdapter);
-				organizationSpinner
-						.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-							@Override
-							public void onItemSelected(AdapterView<?> adapter,
-									View arg1, int selectedPosition, long arg3) {
-								order.setOrganization((Organization) adapter
-										.getSelectedItem());
-							}
-
-							@Override
-							public void onNothingSelected(AdapterView<?> arg0) {
-								// TODO Auto-generated method stub
-
-							}
-						});
-
-				managerSpinner.setAdapter(managerAdapter);
-				managerSpinner
-						.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-							@Override
-							public void onItemSelected(AdapterView<?> adapter,
-									View arg1, int selectedPosition, long arg3) {
-								order.setManager((Manager) adapter
-										.getSelectedItem());
-							}
-
-							@Override
-							public void onNothingSelected(AdapterView<?> arg0) {
-								// TODO Auto-generated method stub
-
-							}
-						});
-
-				positionsAdapter = new NewPositionAdater(activity,
-						R.layout.new_pos_layout, order.getPositions());
-				positionsList.setAdapter(positionsAdapter);
-			}
 			loadingDialog.dismiss();
 			dataLoadingDialog.dismiss();
 			super.onPostExecute(result);
 		}
 	}
 
-	public void showMessage(String message) {
-		Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
+	public void onManagersButtonClick(View view) {
+		Intent managersIntent = new Intent("ru.alkise.trader.ManagersActivity");
+		startActivityForResult(managersIntent, MANAGERS_OK);
 	}
 
-	public void showWarehouses(View view) {
-		Toast.makeText(getApplication(), Warehouses.INSTANCE.printWarehouses(),
-				Toast.LENGTH_LONG).show();
+	public void onOrganizationsButtonClick(View view) {
+		Intent organizationsIntent = new Intent(
+				"ru.alkise.trader.OrganizationsActivity");
+		startActivityForResult(organizationsIntent, ORGANIZATIONS_OK);
 	}
 
 	public void showOrder(View view) {
-		
-//		Toast.makeText(getApplication(), order.displayOrder(),
-//				Toast.LENGTH_SHORT).show();
-		Intent managersIntent = new Intent(
-				"ru.alkise.trader.ManagersActivity");
-		startActivityForResult(managersIntent,
-				MANAGERS_OK);
+		Toast.makeText(getApplication(), order.displayOrder(),
+				Toast.LENGTH_SHORT).show();
 	}
 
-	// Add postion button click
+	// Add position button click
 	public void searchRemains(View view) {
 		final View remainsView = inflater.inflate(R.layout.remains, null);
 

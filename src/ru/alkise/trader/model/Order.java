@@ -23,7 +23,7 @@ public class Order implements Serializable {
 	public static final String CLIENT_CODE = "order_client_code";
 	
 	//TABLE NAME
-	public static final String TABLE_NAME = "order_table";
+	public static final String TABLE_NAME = "order";
 	
 	private DocumentType orderType;
 	private Organization organization;

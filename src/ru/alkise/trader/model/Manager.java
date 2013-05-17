@@ -15,7 +15,7 @@ public class Manager implements Serializable {
 	public static final String NAME = "manager_name";
 	
 	//TABLE_NAME
-	public static final String TABLE_NAME = "manager_table";
+	public static final String TABLE_NAME = "manager";
 
 	private int code;
 	private String descr;

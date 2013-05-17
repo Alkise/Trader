@@ -21,7 +21,7 @@ public class Position implements Serializable {
 	public static final String TO_WAREHOUSE_CODE = "position_to_warehouse_code";
 	
 	//TABLE NAME
-	public static final String TABLE_NAME = "position_table";
+	public static final String TABLE_NAME = "position";
 	
 	private Goods goods;
 	private double count;

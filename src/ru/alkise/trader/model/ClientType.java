@@ -13,7 +13,7 @@ public enum ClientType {
 	public static final String DESCRIPTION = "client_type_description";
 	
 	//TABLE NAME
-	public static final String TABLE_NAME = "client_type_table";
+	public static final String TABLE_NAME = "client_type";
 	
 	private String code;
 	private String value;

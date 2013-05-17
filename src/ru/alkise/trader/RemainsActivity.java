@@ -136,7 +136,7 @@ public class RemainsActivity extends Activity {
 					}
 
 					if (positions.size() == 1) {
-						data.putExtra("position", positions.get(0));
+						data.putExtra(Position.TABLE_NAME, positions.get(0));
 						returnResult();
 					}
 					

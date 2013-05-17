@@ -15,7 +15,7 @@ public class Warehouse implements Serializable {
 	public static final String NAME = "warehouse_name";
 	
 	//TABLE NAME
-	public static final String TABLE_NAME = "warehouse_table";
+	public static final String TABLE_NAME = "warehouse";
 	
 	private int code;
 	private String descr;

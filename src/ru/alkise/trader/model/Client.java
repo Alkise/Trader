@@ -21,7 +21,7 @@ public class Client implements Serializable {
 	public static final String TYPE_CODE = "client_type_id";
 	
 	//TABLE NAME
-	public static final String TABLE_NAME = "client_table";
+	public static final String TABLE_NAME = "client";
 	
 	private int code;
 	private String descr;

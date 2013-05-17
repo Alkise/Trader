@@ -15,7 +15,7 @@ public class Organization implements Serializable {
 	public static final String NAME = "organization_name";
 	
 	//TABLE NAME
-	public static final String TABLE_NAME = "organization_table";
+	public static final String TABLE_NAME = "organization";
 	
 	private int code;
 	private String descr;

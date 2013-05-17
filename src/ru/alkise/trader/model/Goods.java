@@ -19,7 +19,7 @@ public class Goods implements Serializable {
 	public static final String REMAINS = "goods_remains";
 	
 	//TABLE NAME
-	public static final String TABLE_NAME = "goods_table";
+	public static final String TABLE_NAME = "goods";
 	
 	private int code;
 	private String descr;

@@ -6,8 +6,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="type">Type</string>
     <string name="organization">Organization</string>
-    <string name="manager">Current manager:</string>
-    <string name="client">Current client:</string>
+    <string name="manager">Current manager</string>
+    <string name="client">Current client</string>
     <string name="nomenclature">Nomenclature</string>
     <string name="count">Count</string>
     <string name="warehouse">Warehouse</string>
@@ -49,5 +49,8 @@
     <string name="rests">Rests</string>
     <string name="remains_on">The remains on:</string>
     <string name="confirm_change_doc_type">The list of the chosen nomenclature will be cleared. To replace document type?</string>
+    <string name="choose_manager">Choose the manager</string>
+    <string name="choose_organization">Choose trade organization</string>
+    <string name="heading">Heading</string>
 
 </resources>

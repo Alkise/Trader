@@ -27,10 +27,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="ru.alkise.trader.ManagerActivity"
+            android:name="ru.alkise.trader.OrganizationsActivity"
             android:screenOrientation="portrait" >
             <intent-filter>
-                <action android:name="ru.alkise.trader.ManagerActivity" />
+                <action android:name="ru.alkise.trader.OrganizationsActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="ru.alkise.trader.ManagersActivity"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="ru.alkise.trader.ManagersActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
