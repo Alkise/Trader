@@ -93,7 +93,7 @@ public class PositionEditActivity extends Activity {
 					setResult(RESULT_OK, intent);
 					finish();
 				} else {
-					Toast.makeText(activity, "Count error", Toast.LENGTH_LONG)
+					Toast.makeText(activity, getString(R.string.inadmissible_quantity), Toast.LENGTH_LONG)
 							.show();
 				}
 			}

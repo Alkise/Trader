@@ -46,4 +46,6 @@ public interface OrderIntf extends Serializable {
 
 	String displayOrder();
 
+	boolean checkNewPosition(PositionIntf position);
+
 }

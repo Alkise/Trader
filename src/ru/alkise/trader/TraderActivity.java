@@ -75,7 +75,6 @@ public class TraderActivity extends Activity {
 	private SearchClientsTask searchClientTask;
 	private ProgressDialog loadingDialog;
 	private ProgressDialog searchingDialog;
-	private ProgressDialog searchingRemainsDialog;
 	private Spinner orderTypeSpinner;
 	private ListView positionsList;
 	private ImageButton findClientsBtn;
@@ -100,7 +99,7 @@ public class TraderActivity extends Activity {
 		activity = this;
 
 		inflater = LayoutInflater.from(this);
-		
+
 		dataSaver = new SharedPreferencesDataSaver(DATABASE_NAME, activity);
 
 		orderTypeSpinner = (Spinner) findViewById(R.id.spinnerOrderType);
@@ -121,14 +120,15 @@ public class TraderActivity extends Activity {
 							int pos, long arg3) {
 						Intent editIntent = new Intent(
 								"ru.alkise.trader.PositionEditActivity");
-						editIntent.putExtra(OrderIntf.ORDER_TYPE, order.getOrderDocumentType());
+						editIntent.putExtra(OrderIntf.ORDER_TYPE,
+								order.getOrderDocumentType());
 						editIntent.putExtra(PositionIntf.POSITION_CODE, pos);
 						editIntent.putExtra(PositionIntf.TABLE_NAME,
 								positionsAdapter.getItem(pos));
 						startActivityForResult(editIntent, POSITION_EDIT_OK);
 					}
 				});
-		
+
 		registerForContextMenu(positionsList);
 
 		orderTypeAdapter = new ArrayAdapter<DocumentType>(activity,
@@ -161,17 +161,11 @@ public class TraderActivity extends Activity {
 		loadingDialog.setIndeterminate(false);
 		loadingDialog.setCancelable(false);
 		loadingDialog.setMessage(getString(R.string.connecting));
-		loadingDialog.show();
 
 		searchingDialog = new ProgressDialog(this);
-		searchingDialog.setIndeterminate(true);
-		searchingDialog.setCancelable(true);
+		searchingDialog.setIndeterminate(false);
+		searchingDialog.setCancelable(false);
 		searchingDialog.setMessage(getString(R.string.searching));
-
-		searchingRemainsDialog = new ProgressDialog(this);
-		searchingRemainsDialog.setIndeterminate(true);
-		searchingRemainsDialog.setCancelable(true);
-		searchingRemainsDialog.setMessage(getString(R.string.searching));
 
 		dataLoaderTask = new DataLoaderTask();
 
@@ -209,19 +203,22 @@ public class TraderActivity extends Activity {
 				android.R.layout.simple_spinner_dropdown_item,
 				ClientType.values());
 
+		loadingDialog.show();
 		dataLoaderTask.execute();
 		order = dataSaver.load();
-		
-		orderTypeSpinner.setSelection(orderTypeAdapter.getPosition(order.getOrderDocumentType()));
-		
+
+		orderTypeSpinner.setSelection(orderTypeAdapter.getPosition(order
+				.getOrderDocumentType()));
+
 		if (order.getOrderOrganization() != null) {
-			btnOrganizations.setText(order.getOrderOrganization().getOrganizationName());
+			btnOrganizations.setText(order.getOrderOrganization()
+					.getOrganizationName());
 		}
-		
+
 		if (order.getOrderManager() != null) {
 			btnManagers.setText(order.getOrderManager().getManagerName());
 		}
-		
+
 		if (order.getOrderClient() != null) {
 			clientField.setText(order.getOrderClient().getClientFullName());
 			clientField.selectAll();
@@ -238,22 +235,25 @@ public class TraderActivity extends Activity {
 
 		super.onDestroy();
 	}
-	
+
 	@Override
-	public void onCreateContextMenu(android.view.ContextMenu menu, View v, android.view.ContextMenu.ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(android.view.ContextMenu menu, View v,
+			android.view.ContextMenu.ContextMenuInfo menuInfo) {
 		if (v.getId() == R.id.positionList) {
 			AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-			menu.setHeaderTitle(positionsAdapter.getItem(info.position).getPositionGoods().getGoodsName());
+			menu.setHeaderTitle(positionsAdapter.getItem(info.position)
+					.getPositionGoods().getGoodsName());
 			String[] menuItems = getResources().getStringArray(R.array.menu);
 			for (int i = 0; i < menuItems.length; i++) {
 				menu.add(Menu.NONE, i, i, menuItems[i]);
 			}
 		}
 	};
-	
+
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+		final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
+				.getMenuInfo();
 		int menuItemIndex = item.getItemId();
 		switch (menuItemIndex) {
 		case 0:
@@ -269,12 +269,10 @@ public class TraderActivity extends Activity {
 					new DialogInterface.OnClickListener() {
 
 						@Override
-						public void onClick(DialogInterface dialog,
-								int which) {
+						public void onClick(DialogInterface dialog, int which) {
 							System.out.println(which);
-							positionsAdapter
-									.remove(positionsAdapter
-											.getItem(info.position));
+							positionsAdapter.remove(positionsAdapter
+									.getItem(info.position));
 						}
 					});
 			alertDialogBuilder.setNegativeButton(
@@ -282,14 +280,12 @@ public class TraderActivity extends Activity {
 					new DialogInterface.OnClickListener() {
 
 						@Override
-						public void onClick(DialogInterface dialog,
-								int which) {
+						public void onClick(DialogInterface dialog, int which) {
 							dialog.cancel();
 						}
 					});
 
-			AlertDialog confirmationDialog = alertDialogBuilder
-					.create();
+			AlertDialog confirmationDialog = alertDialogBuilder.create();
 			confirmationDialog.show();
 			break;
 		case 1:
@@ -297,10 +293,10 @@ public class TraderActivity extends Activity {
 					"ru.alkise.trader.RemainsActivity");
 			remainsIntent.putExtra(OrderIntf.ORDER_TYPE,
 					DocumentType.CONSIGNMENT_NOTE);
-			remainsIntent.putExtra(GoodsIntf.GOODS_CODE, ((PositionIntf) positionsAdapter.getItem(info.position))
-					.getPositionGoods().getGoodsCode());
-			startActivityForResult(remainsIntent,
-					REMAINS_OK);
+			remainsIntent.putExtra(GoodsIntf.GOODS_CODE,
+					((PositionIntf) positionsAdapter.getItem(info.position))
+							.getPositionGoods().getGoodsCode());
+			startActivityForResult(remainsIntent, REMAINS_OK);
 			break;
 		}
 		return super.onContextItemSelected(item);
@@ -326,14 +322,20 @@ public class TraderActivity extends Activity {
 				break;
 			case REMAINS_OK:
 			case FIND_GOODS_OK:
-				positionsAdapter.add(receivedPosition);
+				if (order.checkNewPosition(receivedPosition)) {
+					positionsAdapter.add(receivedPosition);
+				} else {
+					Toast.makeText(activity, getString(R.string.dublicating_position), Toast.LENGTH_SHORT).show();
+				}
 				break;
 			case POSITION_EDIT_OK:
 				PositionIntf positionToModify = positionsAdapter.getItem(data
 						.getIntExtra(PositionIntf.POSITION_CODE, 0));
-				positionToModify.setPositionCount(data.getDoubleExtra(PositionIntf.POSITION_COUNT, 1.0));
-				positionToModify.setPositionToWarehouse((WarehouseIntf) data
-						.getSerializableExtra(PositionIntf.POSITION_TO_WAREHOUSE));
+				positionToModify.setPositionCount(data.getDoubleExtra(
+						PositionIntf.POSITION_COUNT, 1.0));
+				positionToModify
+						.setPositionToWarehouse((WarehouseIntf) data
+								.getSerializableExtra(PositionIntf.POSITION_TO_WAREHOUSE));
 				positionsAdapter.notifyDataSetChanged();
 				break;
 			}
@@ -385,11 +387,13 @@ public class TraderActivity extends Activity {
 		}
 	}
 
+	//Manager Button
 	public void onManagersButtonClick(View view) {
 		Intent managersIntent = new Intent("ru.alkise.trader.ManagersActivity");
 		startActivityForResult(managersIntent, MANAGERS_OK);
 	}
-
+	
+	//Organization button
 	public void onOrganizationsButtonClick(View view) {
 		Intent organizationsIntent = new Intent(
 				"ru.alkise.trader.OrganizationsActivity");
@@ -398,11 +402,11 @@ public class TraderActivity extends Activity {
 
 	public void showOrder(View view) {
 		StringBuilder builder = new StringBuilder();
-//		Map<String, String> params = Reflector.reflect(order);
-//		for (String string : params.keySet()) {
-//			builder.append(string + " : " + params.get(string));
-//			builder.append('\n');
-//		}
+		// Map<String, String> params = Reflector.reflect(order);
+		// for (String string : params.keySet()) {
+		// builder.append(string + " : " + params.get(string));
+		// builder.append('\n');
+		// }
 		builder.append(order.displayOrder());
 		Toast.makeText(getApplication(), builder.toString(), Toast.LENGTH_LONG)
 				.show();
@@ -426,7 +430,6 @@ public class TraderActivity extends Activity {
 
 					public void onClick(DialogInterface p1, int p2) {
 
-						searchingRemainsDialog.show();
 						String searchingText = String.valueOf(
 								((EditText) remainsView
 										.findViewById(R.id.requiredEdit))
@@ -445,15 +448,16 @@ public class TraderActivity extends Activity {
 											.trim());
 									Intent remainsIntent = new Intent(
 											"ru.alkise.trader.RemainsActivity");
-									remainsIntent.putExtra(OrderIntf.ORDER_TYPE,
+									remainsIntent.putExtra(
+											OrderIntf.ORDER_TYPE,
 											order.getOrderDocumentType());
-									remainsIntent.putExtra(GoodsIntf.GOODS_CODE, code);
+									remainsIntent.putExtra(
+											GoodsIntf.GOODS_CODE, code);
 									startActivityForResult(remainsIntent,
 											REMAINS_OK);
 								} catch (Exception e) {
 									Log.e("TraderActivity", e.getMessage());
 								}
-								searchingRemainsDialog.dismiss();
 
 							} else {
 								Intent goodsIntent = new Intent(
@@ -465,7 +469,6 @@ public class TraderActivity extends Activity {
 										searchingText);
 								startActivityForResult(goodsIntent,
 										FIND_GOODS_OK);
-								searchingRemainsDialog.dismiss();
 							}
 						} catch (Exception e) {
 							Log.e("Search Remains", e.getMessage());
@@ -485,8 +488,7 @@ public class TraderActivity extends Activity {
 		searchClientTask = new SearchClientsTask();
 		searchingDialog.show();
 		try {
-			searchClientTask.execute(clientField.getText(), searchingDialog,
-					activity);
+			searchClientTask.execute(clientField.getText(), searchingDialog);
 			clientAdapter = new ArrayAdapter<ClientIntf>(activity,
 					android.R.layout.simple_spinner_dropdown_item,
 					(List<ClientIntf>) searchClientTask.get());

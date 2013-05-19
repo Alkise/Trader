@@ -52,6 +52,8 @@
     <string name="choose_manager">Choose the manager</string>
     <string name="choose_organization">Choose trade organization</string>
     <string name="heading">Heading</string>
+    <string name="dublicating_position">Error: Dublicating position</string>
+    <string name="inadmissible_quantity">Error: Inadmissible quantity</string>
     
     <string-array name="menu">
         <item>Delete</item>

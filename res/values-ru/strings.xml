@@ -50,6 +50,8 @@
 	<string name="choose_manager">Выбор торгового представителя</string>
     <string name="choose_organization">Выбор торговой организации</string>
     <string name="heading">Заголовок</string>
+    <string name="dublicating_position">Ошибка: Дублирующая позиция</string>
+    <string name="inadmissible_quantity">Ошибка: Недопустимое количество</string>
     
     <string-array name="menu">
         <item>Удалить</item>

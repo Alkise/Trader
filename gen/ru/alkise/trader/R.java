@@ -174,8 +174,10 @@ public final class R {
         public static final int delete=0x7f05001b;
         public static final int delete_all_positions=0x7f05001c;
         public static final int delete_position=0x7f05001d;
+        public static final int dublicating_position=0x7f050033;
         public static final int heading=0x7f050032;
         public static final int hello_world=0x7f050002;
+        public static final int inadmissible_quantity=0x7f050034;
         public static final int loadManagers=0x7f05000d;
         public static final int loadOrganizations=0x7f05000e;
         public static final int manager=0x7f050005;

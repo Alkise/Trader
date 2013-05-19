@@ -18,7 +18,7 @@ public class Order implements OrderIntf {
 	static {
 		positions = new ArrayList<PositionIntf>();
 	}
-	
+
 	public Order() {
 		orderType = DocumentType.CONSIGNMENT_NOTE;
 	}
@@ -78,8 +78,25 @@ public class Order implements OrderIntf {
 	}
 
 	@Override
+	public boolean checkNewPosition(PositionIntf position) {
+		if ((positions != null) && position != null) {
+			for (PositionIntf pos : positions) {
+				if (pos.getPositionGoods().equals(position.getPositionGoods())) {
+					if (pos.getPositionFromWarehouse().equals(
+							position.getPositionFromWarehouse())) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+
+	@Override
 	public void addPosition(PositionIntf position) {
-		positions.add(position);
+		if (checkNewPosition(position)) {
+			positions.add(position);
+		}
 	}
 
 	@Override
@@ -99,7 +116,8 @@ public class Order implements OrderIntf {
 		sb.append('\n');
 		sb.append(manager.getManagerName());
 		sb.append('\n');
-		sb.append((client != null) ? client.getClientShortName() : "Клиент не выбран");
+		sb.append((client != null) ? client.getClientShortName()
+				: "Клиент не выбран");
 		for (PositionIntf position : positions) {
 			sb.append('\n');
 			sb.append(position.getPositionGoods().getGoodsCode());
