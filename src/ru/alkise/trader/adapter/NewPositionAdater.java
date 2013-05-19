@@ -3,8 +3,7 @@ package ru.alkise.trader.adapter;
 import java.util.List;
 
 import ru.alkise.trader.R;
-import ru.alkise.trader.model.Position;
-
+import ru.alkise.trader.model.PositionIntf;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +11,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class NewPositionAdater extends ArrayAdapter<Position> {
+public class NewPositionAdater extends ArrayAdapter<PositionIntf> {
 	private Context context;
 	private int layoutId;
 	private LayoutInflater inflater;
 	
 	public NewPositionAdater(Context context, int textViewResourceId,
-			List<Position> objects) {
+			List<PositionIntf> objects) {
 		super(context, textViewResourceId, objects);
 		this.context = context;
 		layoutId = textViewResourceId;
@@ -28,7 +27,7 @@ public class NewPositionAdater extends ArrayAdapter<Position> {
 	public View getView(int pos, View convertView, ViewGroup parent) {
 		View rowView = convertView;
 		ViewHolder holder;
-		Position position = getItem(pos);
+		PositionIntf position = getItem(pos);
 		
 		if (rowView == null) {
 			holder = new ViewHolder();
@@ -46,10 +45,10 @@ public class NewPositionAdater extends ArrayAdapter<Position> {
 			holder = (ViewHolder) rowView.getTag();
 		}
 		
-		holder.nameLabel.setText(position.getGoods().toString());
-		holder.countLabel.setText(String.valueOf(position.getCount()).trim());
-		holder.whToLabel.setText(position.getWhTo().getDescr().trim());
-		holder.whFromLabel.setText(position.getWhFrom().getDescr().trim());
+		holder.nameLabel.setText(position.getPositionGoods().toString());
+		holder.countLabel.setText(String.valueOf(position.getPositionCount()).trim());
+		holder.whToLabel.setText(position.getPositionToWarehouse().getWarehouseName().trim());
+		holder.whFromLabel.setText(position.getPositionFromWarehouse().getWarehouseName().trim());
 		
 		return rowView;
 	}

@@ -8,6 +8,9 @@
 package ru.alkise.trader;
 
 public final class R {
+    public static final class array {
+        public static final int menu=0x7f060000;
+    }
     public static final class attr {
     }
     public static final class dimen {
@@ -69,62 +72,62 @@ public final class R {
         public static final int upload_button=0x7f02002c;
     }
     public static final class id {
-        public static final int LabelPosCount=0x7f08001d;
-        public static final int LabelPosName=0x7f08001c;
-        public static final int LabelPosWhFrom=0x7f08001f;
-        public static final int LabelPosWhTo=0x7f08001e;
-        public static final int LinearLayout1=0x7f08001b;
-        public static final int RelativeLayout1=0x7f080022;
-        public static final int action_settings=0x7f080037;
-        public static final int btnAddPosition=0x7f08000a;
-        public static final int btnApprove=0x7f080028;
-        public static final int btnBack=0x7f080027;
-        public static final int btnManagers=0x7f080003;
-        public static final int btnOrganizations=0x7f080002;
-        public static final int btnTrash=0x7f08000b;
-        public static final int btnUpload=0x7f08000d;
-        public static final int clearClientBtn=0x7f080007;
-        public static final int clientField=0x7f080005;
-        public static final int clientFullNameEdit=0x7f080018;
-        public static final int clientFullNameView=0x7f080017;
-        public static final int clientShortNameEdit=0x7f080016;
-        public static final int clientShortNameView=0x7f080015;
-        public static final int clientTypeSpinner=0x7f08001a;
-        public static final int clientTypeView=0x7f080019;
-        public static final int editCount=0x7f080025;
-        public static final int findClientsBtn=0x7f080006;
-        public static final int lblFromWarehouse=0x7f080024;
-        public static final int lblGoodsCode=0x7f080031;
-        public static final int lblGoodsDescr=0x7f080033;
-        public static final int lblHeadingSelectionLayout=0x7f080035;
-        public static final int lblNomenclature=0x7f080023;
-        public static final int lblPositionName=0x7f080010;
-        public static final int lblRemainsOn=0x7f080030;
-        public static final int lblSearchBy=0x7f08000f;
-        public static final int lbl_count_goods_remain=0x7f080014;
-        public static final int lbl_count_one_remain=0x7f080021;
-        public static final int lbl_name_goods_remain=0x7f080013;
-        public static final int lbl_warehouse_one_remain=0x7f080020;
-        public static final int linearLayout1=0x7f080000;
-        public static final int linearLayout2=0x7f080004;
-        public static final int linearLayout3=0x7f080009;
-        public static final int listManagersSelectionLayout=0x7f080036;
-        public static final int listPositionNames=0x7f080012;
-        public static final int listRemains=0x7f080034;
-        public static final int newClientBtn=0x7f080008;
-        public static final int orderBtn=0x7f08000c;
-        public static final int paramGroup=0x7f08002d;
-        public static final int paramView=0x7f08002a;
-        public static final int positionList=0x7f08000e;
-        public static final int radioByCode=0x7f08002e;
-        public static final int radioByName=0x7f08002f;
-        public static final int remains_layout=0x7f080029;
-        public static final int requiredEdit=0x7f08002b;
-        public static final int searchByView=0x7f08002c;
-        public static final int separator=0x7f080011;
-        public static final int spinnerOrderType=0x7f080001;
-        public static final int spinnerWhTo=0x7f080026;
-        public static final int view1=0x7f080032;
+        public static final int LabelPosCount=0x7f09001d;
+        public static final int LabelPosName=0x7f09001c;
+        public static final int LabelPosWhFrom=0x7f09001f;
+        public static final int LabelPosWhTo=0x7f09001e;
+        public static final int LinearLayout1=0x7f09001b;
+        public static final int RelativeLayout1=0x7f090022;
+        public static final int action_settings=0x7f090037;
+        public static final int btnAddPosition=0x7f09000a;
+        public static final int btnApprove=0x7f090028;
+        public static final int btnBack=0x7f090027;
+        public static final int btnManagers=0x7f090003;
+        public static final int btnOrganizations=0x7f090002;
+        public static final int btnTrash=0x7f09000b;
+        public static final int btnUpload=0x7f09000d;
+        public static final int clearClientBtn=0x7f090007;
+        public static final int clientField=0x7f090005;
+        public static final int clientFullNameEdit=0x7f090018;
+        public static final int clientFullNameView=0x7f090017;
+        public static final int clientShortNameEdit=0x7f090016;
+        public static final int clientShortNameView=0x7f090015;
+        public static final int clientTypeSpinner=0x7f09001a;
+        public static final int clientTypeView=0x7f090019;
+        public static final int editCount=0x7f090025;
+        public static final int findClientsBtn=0x7f090006;
+        public static final int lblFromWarehouse=0x7f090024;
+        public static final int lblGoodsCode=0x7f090031;
+        public static final int lblGoodsDescr=0x7f090033;
+        public static final int lblHeadingSelectionLayout=0x7f090035;
+        public static final int lblNomenclature=0x7f090023;
+        public static final int lblPositionName=0x7f090010;
+        public static final int lblRemainsOn=0x7f090030;
+        public static final int lblSearchBy=0x7f09000f;
+        public static final int lbl_count_goods_remain=0x7f090014;
+        public static final int lbl_count_one_remain=0x7f090021;
+        public static final int lbl_name_goods_remain=0x7f090013;
+        public static final int lbl_warehouse_one_remain=0x7f090020;
+        public static final int linearLayout1=0x7f090000;
+        public static final int linearLayout2=0x7f090004;
+        public static final int linearLayout3=0x7f090009;
+        public static final int listManagersSelectionLayout=0x7f090036;
+        public static final int listPositionNames=0x7f090012;
+        public static final int listRemains=0x7f090034;
+        public static final int newClientBtn=0x7f090008;
+        public static final int orderBtn=0x7f09000c;
+        public static final int paramGroup=0x7f09002d;
+        public static final int paramView=0x7f09002a;
+        public static final int positionList=0x7f09000e;
+        public static final int radioByCode=0x7f09002e;
+        public static final int radioByName=0x7f09002f;
+        public static final int remains_layout=0x7f090029;
+        public static final int requiredEdit=0x7f09002b;
+        public static final int searchByView=0x7f09002c;
+        public static final int separator=0x7f090011;
+        public static final int spinnerOrderType=0x7f090001;
+        public static final int spinnerWhTo=0x7f090026;
+        public static final int view1=0x7f090032;
     }
     public static final class layout {
         public static final int activity_trader=0x7f030000;
@@ -140,7 +143,7 @@ public final class R {
         public static final int settings_layout=0x7f03000a;
     }
     public static final class menu {
-        public static final int trader=0x7f070000;
+        public static final int trader=0x7f080000;
     }
     public static final class string {
         public static final int action_settings=0x7f050001;
@@ -217,11 +220,11 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f060000;
+        public static final int AppBaseTheme=0x7f070000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f060001;
-        public static final int ButtonStyle=0x7f060002;
+        public static final int AppTheme=0x7f070001;
+        public static final int ButtonStyle=0x7f070002;
     }
 }

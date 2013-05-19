@@ -7,8 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.alkise.trader.db.mssql.SQLConnectionFactory;
-import ru.alkise.trader.model.Order;
-import ru.alkise.trader.model.Organization;
+import ru.alkise.trader.model.OrderIntf;
+import ru.alkise.trader.model.OrganizationIntf;
+import ru.alkise.trader.model.factory.OrganizationFactory;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -30,7 +31,7 @@ public class OrganizationsActivity extends Activity {
 	private ProgressDialog progressDialog;
 	private ListView organizationsList;
 	private TextView headingLabel;
-	private ArrayAdapter<Organization> organizationsAdapter;
+	private ArrayAdapter<OrganizationIntf> organizationsAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class OrganizationsActivity extends Activity {
 		activity = this;
 		data = new Intent();
 
-		organizationCode = getIntent().getIntExtra(Order.ORGANIZATION_CODE, -1);
+		organizationCode = getIntent().getIntExtra(OrderIntf.ORDER_ORGANIZATION, -1);
 
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setIndeterminate(false);
@@ -57,8 +58,8 @@ public class OrganizationsActivity extends Activity {
 					@Override
 					public void onItemClick(AdapterView<?> adapter, View arg1,
 							int pos, long arg3) {
-						data.putExtra(Organization.TABLE_NAME,
-								(Organization) adapter.getItemAtPosition(pos));
+						data.putExtra(OrganizationIntf.TABLE_NAME,
+								(OrganizationIntf) adapter.getItemAtPosition(pos));
 						returnResult(data);
 					}
 				});
@@ -77,7 +78,7 @@ public class OrganizationsActivity extends Activity {
 
 	private class OrganizationsSearchTask extends
 			AsyncTask<Object, Object, Object> {
-		private List<Organization> organizations;
+		private List<OrganizationIntf> organizations;
 
 		@Override
 		protected Object doInBackground(Object... params) {
@@ -96,20 +97,20 @@ public class OrganizationsActivity extends Activity {
 
 				if (rs.getFetchSize() > 0) {
 
-					organizations = new ArrayList<Organization>();
+					organizations = new ArrayList<OrganizationIntf>();
 
 					while (rs.next()) {
-						organizations.add(new Organization(rs.getInt(1), rs
+						organizations.add(OrganizationFactory.createOrganization(rs.getInt(1), rs
 								.getString(2)));
 					}
 
 					if (organizations.size() == 1) {
-						data.putExtra(Organization.TABLE_NAME,
+						data.putExtra(OrganizationIntf.TABLE_NAME,
 								organizations.get(0));
 						returnResult(data);
 					}
 
-					organizationsAdapter = new ArrayAdapter<Organization>(
+					organizationsAdapter = new ArrayAdapter<OrganizationIntf>(
 							activity, android.R.layout.simple_list_item_1,
 							organizations);
 				}

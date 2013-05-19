@@ -1,81 +1,88 @@
 package ru.alkise.trader.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Order implements Serializable {
+public class Order implements OrderIntf {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	//ORDER TYPE ID
-	public static final String ORDER_TYPE_CODE = "order_document_type_code";
-	
-	//ORGANIZATION ID
-	public static final String ORGANIZATION_CODE = "order_organization_code";
-	
-	//MANAGER ID
-	public static final String MANAGER_CODE = "order_manager_code";
-	
-	//CLIENT ID
-	public static final String CLIENT_CODE = "order_client_code";
-	
-	//TABLE NAME
-	public static final String TABLE_NAME = "order";
-	
-	private DocumentType orderType;
-	private Organization organization;
-	private Manager manager;
-	private Client client;
-	private List<Position> positions;
 
-	public Order() {
-		positions = new ArrayList<Position>();
-		orderType = DocumentType.CONSIGNMENT_NOTE;
+	private DocumentType orderType;
+	private OrganizationIntf organization;
+	private ManagerIntf manager;
+	private ClientIntf client;
+	private static List<PositionIntf> positions;
+
+	static {
+		positions = new ArrayList<PositionIntf>();
 	}
 	
-	public DocumentType getOrderType() {
+	public Order() {
+		orderType = DocumentType.CONSIGNMENT_NOTE;
+	}
+
+	public Order(DocumentType orderType, OrganizationIntf organization,
+			ManagerIntf manager, ClientIntf client, List<PositionIntf> positions) {
+		this.orderType = orderType;
+		this.organization = organization;
+		this.manager = manager;
+		this.client = client;
+		Order.positions = positions;
+	}
+
+	@Override
+	public DocumentType getOrderDocumentType() {
 		return orderType;
 	}
 
-	public void setOrderType(DocumentType orderType) {
+	@Override
+	public void setOrderDocumentType(DocumentType orderType) {
 		this.orderType = orderType;
 	}
-	
-	public void setOrganization(Organization organization) {
+
+	@Override
+	public void setOrderOrganization(OrganizationIntf organization) {
 		this.organization = organization;
 	}
 
-	public Organization getOrganization() {
+	@Override
+	public OrganizationIntf getOrderOrganization() {
 		return organization;
 	}
 
-	public void setManager(Manager manager) {
+	@Override
+	public void setOrderManager(ManagerIntf manager) {
 		this.manager = manager;
 	}
 
-	public Manager getManager() {
+	@Override
+	public ManagerIntf getOrderManager() {
 		return manager;
 	}
 
-	public void setClient(Client client) {
+	@Override
+	public void setOrderClient(ClientIntf client) {
 		this.client = client;
 	}
 
-	public Client getClient() {
+	@Override
+	public ClientIntf getOrderClient() {
 		return client;
 	}
 
-	public List<Position> getPositions() {
+	@Override
+	public List<PositionIntf> getOrderPositions() {
 		return positions;
 	}
 
-	public void addPosition(Position position) {
+	@Override
+	public void addPosition(PositionIntf position) {
 		positions.add(position);
 	}
 
+	@Override
 	public boolean checkOrder() {
 		if (client != null && positions.size() > 0) {
 			return true;
@@ -83,26 +90,26 @@ public class Order implements Serializable {
 		return false;
 	}
 
+	@Override
 	public String displayOrder() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(orderType.getCode());
+		sb.append(orderType.getDocumentTypeCode());
 		sb.append('\n');
-		sb.append(organization.getDescr());
+		sb.append(organization.getOrganizationName());
 		sb.append('\n');
-		sb.append(manager.getDescr());
+		sb.append(manager.getManagerName());
 		sb.append('\n');
-		sb.append((client != null) ? client.getDescr() : "Клиент не выбран");
-		for (Position position : positions) {
+		sb.append((client != null) ? client.getClientShortName() : "Клиент не выбран");
+		for (PositionIntf position : positions) {
 			sb.append('\n');
-			sb.append(position.getGoods().getCode());
+			sb.append(position.getPositionGoods().getGoodsCode());
 			sb.append('\n');
-			sb.append(position.getCount());
+			sb.append(position.getPositionCount());
 			sb.append('\n');
-			sb.append(position.getWhTo());
+			sb.append(position.getPositionToWarehouse());
 			sb.append('\n');
-			sb.append(position.getWhFrom());
+			sb.append(position.getPositionFromWarehouse());
 		}
 		return sb.toString();
 	}
-
 }

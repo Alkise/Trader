@@ -1,21 +1,11 @@
 package ru.alkise.trader.model;
 
-import java.io.Serializable;
 
-public class Warehouse implements Serializable {
+public class Warehouse implements WarehouseIntf {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	//UNIQUE ID
-	public static final String ID = "_id";
-	
-	//WAREHOUSE NAME
-	public static final String NAME = "warehouse_name";
-	
-	//TABLE NAME
-	public static final String TABLE_NAME = "warehouse";
 	
 	private int code;
 	private String descr;
@@ -25,19 +15,23 @@ public class Warehouse implements Serializable {
 		this.descr = descr.trim();
 	}
 
-	public int getCode() {
+	@Override
+	public int getWarehouseCode() {
 		return code;
 	}
 
-	public void setCode(int code) {
+	@Override
+	public void setWarehouseCode(int code) {
 		this.code = code;
 	}
 
-	public String getDescr() {
+	@Override
+	public String getWarehouseName() {
 		return descr;
 	}
 
-	public void setDescr(String descr) {
+	@Override
+	public void setWarehouseName(String descr) {
 		this.descr = descr.trim();
 	}
 
@@ -48,13 +42,13 @@ public class Warehouse implements Serializable {
 	
 	@Override
 	public int hashCode() {
-		return getCode();
+		return getWarehouseCode();
 	}
 	
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Warehouse) {
-			return ((Warehouse) o).getCode() == code;
+		if (o instanceof WarehouseIntf) {
+			return ((WarehouseIntf) o).getWarehouseCode() == code;
 		}
 		return false;
 	}

@@ -51,4 +51,9 @@
     <string name="choose_organization">Выбор торговой организации</string>
     <string name="heading">Заголовок</string>
     
+    <string-array name="menu">
+        <item>Удалить</item>
+        <item>Остатки</item>
+    </string-array>
+    
 </resources>

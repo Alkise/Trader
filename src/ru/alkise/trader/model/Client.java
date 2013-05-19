@@ -1,33 +1,21 @@
 package ru.alkise.trader.model;
 
-import java.io.Serializable;
 
-public class Client implements Serializable {
+public class Client implements ClientIntf {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	//UNIQUE ID
-	public static final String CODE = "client_code";
-	
-	//CLIENT SHORT NAME
-	public static final String SHORT_NAME = "client_short_name";
-	
-	//CLIENT FULL NAME
-	public static final String FULL_NAME = "client_full_name";
-	
-	//CLIENT TYPE
-	public static final String TYPE_CODE = "client_type_id";
-	
-	//TABLE NAME
-	public static final String TABLE_NAME = "client";
 	
 	private int code;
 	private String descr;
 	private String fullName;
 	private ClientType type;
 
+	public Client(int code, String descr, String fullName) {
+		this(code, descr, fullName, null);
+	}
+	
 	public Client(int code, String descr, String fullName,
 			ClientType type) {
 
@@ -37,35 +25,43 @@ public class Client implements Serializable {
 		this.type = type;
 	}
 
-	public int getCode() {
+	@Override
+	public int getClientCode() {
 		return code;
 	}
-
-	public void setCode(int code) {
+	
+	@Override
+	public void setClientCode(int code) {
 		this.code = code;
 	}
-
-	public String getDescr() {
+	
+	@Override
+	public String getClientShortName() {
 		return descr;
 	}
 
-	public void setDescr(String descr) {
+	@Override
+	public void setClientShortName(String descr) {
 		this.descr = descr.trim();
 	}
 
-	public String getFullName() {
+	@Override
+	public String getClientFullName() {
 		return fullName;
 	}
 
-	public void setFullName(String fullName) {
+	@Override
+	public void setClientFullName(String fullName) {
 		this.fullName = fullName.trim();
 	}
 
-	public ClientType getType() {
+	@Override
+	public ClientType getClientType() {
 		return type;
 	}
 
-	public void setType(ClientType type) {
+	@Override
+	public void setClientType(ClientType type) {
 		this.type = type;
 	}
 
@@ -76,14 +72,14 @@ public class Client implements Serializable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Client) {
-			return ((Client) o).getCode() == code;
+		if (o instanceof ClientIntf) {
+			return ((ClientIntf) o).getClientCode() == code;
 		}
 		return false;
 	}
 
 	@Override
 	public String toString() {
-		return fullName.trim();
+		return fullName;
 	}
 }

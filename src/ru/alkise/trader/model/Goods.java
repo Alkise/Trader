@@ -1,25 +1,11 @@
 package ru.alkise.trader.model;
 
-import java.io.Serializable;
 
-public class Goods implements Serializable {
-
+public class Goods implements GoodsIntf {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	//UNIQUE ID
-	public static final String CODE = "goods_code";
-	
-	//GOODS NAME
-	public static final String NAME = "goods_name";
-	
-	//GOODS REMAINS
-	public static final String REMAINS = "goods_remains";
-	
-	//TABLE NAME
-	public static final String TABLE_NAME = "goods";
 	
 	private int code;
 	private String descr;
@@ -27,31 +13,37 @@ public class Goods implements Serializable {
 
 	public Goods(int code, String descr, double count) {
 		this.code = code;
-		this.descr = descr;
+		this.descr = descr.trim();
 		this.count = count;
 	}
 
-	public int getCode() {
+	@Override
+	public int getGoodsCode() {
 		return code;
 	}
 
-	public void setCode(int code) {
+	@Override
+	public void setGoodsCode(int code) {
 		this.code = code;
 	}
 
-	public String getDescr() {
+	@Override
+	public String getGoodsName() {
 		return descr;
 	}
 
-	public void setDescr(String descr) {
+	@Override
+	public void setGoodsName(String descr) {
 		this.descr = descr.trim();
 	}
 
-	public double getCount() {
+	@Override
+	public double getGoodsRemains() {
 		return count;
 	}
 
-	public void setCount(double count) {
+	@Override
+	public void setGoodsRemains(double count) {
 		this.count = count;
 	}
 
@@ -62,8 +54,8 @@ public class Goods implements Serializable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Goods) {
-			return ((Goods) o).getCode() == code;
+		if (o instanceof GoodsIntf) {
+			return ((GoodsIntf) o).getGoodsCode() == code;
 		}
 		return false;
 	}

@@ -2,12 +2,12 @@ package ru.alkise.trader.xml;
 
 import java.util.List;
 
-import ru.alkise.trader.model.Client;
-import ru.alkise.trader.model.Manager;
-import ru.alkise.trader.model.Order;
+import ru.alkise.trader.model.ClientIntf;
 import ru.alkise.trader.model.DocumentType;
-import ru.alkise.trader.model.Organization;
-import ru.alkise.trader.model.Position;
+import ru.alkise.trader.model.ManagerIntf;
+import ru.alkise.trader.model.OrderIntf;
+import ru.alkise.trader.model.OrganizationIntf;
+import ru.alkise.trader.model.PositionIntf;
 
 public class XmlOrderGenerator {
 	public static final String ORDER = "ORDER";
@@ -51,66 +51,66 @@ public class XmlOrderGenerator {
 		return sb.toString();
 	}
 
-	public static String getXmlText(Order order) {
-		DocumentType orderType = order.getOrderType();
-		Organization organization = order.getOrganization();
-		Manager manager = order.getManager();
-		Client client = order.getClient();
-		List<Position> positions = order.getPositions();
+	public static String getXmlText(OrderIntf order) {
+		DocumentType orderType = order.getOrderDocumentType();
+		OrganizationIntf organization = order.getOrderOrganization();
+		ManagerIntf manager = order.getOrderManager();
+		ClientIntf client = order.getOrderClient();
+		List<PositionIntf> positions = order.getOrderPositions();
 		
 		StringBuilder sb = new StringBuilder(XML);
 		sb.append('\n');
 //		<ORDER>
 		sb.append(startTag(TAG_LEVEL_0, ORDER));
 //			<TYPE>
-		sb.append(fieldWithValue(TAG_LEVEL_1, TYPE, String.valueOf(orderType.getCode())));
+		sb.append(fieldWithValue(TAG_LEVEL_1, TYPE, String.valueOf(orderType.getDocumentTypeCode())));
 //			</TYPE>
 //			<ORGANIZATION>
 		sb.append(startTag(TAG_LEVEL_1, ORGANIZATION));
 //				<CODE>
-		sb.append(fieldWithValue(TAG_LEVEL_2,CODE, String.valueOf(organization.getCode())));
+		sb.append(fieldWithValue(TAG_LEVEL_2,CODE, String.valueOf(organization.getOrganizationCode())));
 //				</CODE>
 		sb.append(endTag(TAG_LEVEL_1, ORGANIZATION));
 //			</ORGANIZATION>
 //			<MANAGER>
 		sb.append(startTag(TAG_LEVEL_1,MANAGER));
 //				<CODE>
-		sb.append(fieldWithValue(TAG_LEVEL_2, CODE, String.valueOf(manager.getCode())));
+		sb.append(fieldWithValue(TAG_LEVEL_2, CODE, String.valueOf(manager.getManagerCode())));
 //				</CODE>
 //			</MANAGER>
 		sb.append(endTag(TAG_LEVEL_1, MANAGER));
 //			<CLIENT>
 		sb.append(startTag(TAG_LEVEL_1,CLIENT));
 //				<CODE>
-		sb.append(fieldWithValue(TAG_LEVEL_2,CODE, String.valueOf(client.getCode())));
+		sb.append(fieldWithValue(TAG_LEVEL_2,CODE, String.valueOf(client.getClientCode())));
 //				</CODE>
 //				<TYPE>
-		sb.append(fieldWithValue(TAG_LEVEL_2, TYPE, (client.getType() != null ? client.getType().getCode() : "")));
+		sb.append(fieldWithValue(TAG_LEVEL_2, TYPE, (client.getClientType() != null ? client.getClientType().getClientTypeCode() : "")));
 //				</TYPE>
 //				<SHORT_NAME>
-		sb.append(fieldWithValue(TAG_LEVEL_2, SHORT_NAME, client.getDescr()));
+		sb.append(fieldWithValue(TAG_LEVEL_2, SHORT_NAME, client.getClientShortName()));
 //				</SHORT_NAME>
 //				<FULL_NAME>
-		sb.append(fieldWithValue(TAG_LEVEL_2, FULL_NAME, client.getFullName()));
+		sb.append(fieldWithValue(TAG_LEVEL_2, FULL_NAME, client.getClientFullName()));
 //				</FULL_NAME>
 //			</CLIENT>
 		sb.append(endTag(TAG_LEVEL_1, CLIENT));
 //			<POSITIONS>
 		sb.append(startTag(TAG_LEVEL_1, POSITIONS));
-		for(Position position : positions) {
+		for(PositionIntf position : positions) {
 //				<POSITION>
 			sb.append(startTag(TAG_LEVEL_2, POSITION));
 //					<CODE>
-			sb.append(fieldWithValue(TAG_LEVEL_3, CODE, String.valueOf(position.getGoods().getCode())));
+			sb.append(fieldWithValue(TAG_LEVEL_3, CODE, String.valueOf(position.getPositionGoods().getGoodsCode())));
 //					</CODE>
 //					<COUNT>
-			sb.append(fieldWithValue(TAG_LEVEL_3, COUNT, String.valueOf(position.getCount())));
+			sb.append(fieldWithValue(TAG_LEVEL_3, COUNT, String.valueOf(position.getPositionCount())));
 //					</COUNT>
 //					<WAREHOUSE_TO>
-			sb.append(fieldWithValue(TAG_LEVEL_3, WAREHOUSE_TO, String.valueOf(position.getWhTo().getCode())));
+			sb.append(fieldWithValue(TAG_LEVEL_3, WAREHOUSE_TO, String.valueOf(position.getPositionToWarehouse().getWarehouseCode())));
 //					</WAREHOUSE_TO>
 //					<WAREHOUSE_FROM>
-			sb.append(fieldWithValue(TAG_LEVEL_3, WAREHOUSE_FROM, String.valueOf(position.getWhFrom().getCode())));
+			sb.append(fieldWithValue(TAG_LEVEL_3, WAREHOUSE_FROM, String.valueOf(position.getPositionFromWarehouse().getWarehouseCode())));
 //					</WAREHOUSE_FROM>
 //				</POSITION>
 			sb.append(endTag(TAG_LEVEL_2, POSITION));

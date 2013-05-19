@@ -20,7 +20,7 @@
             android:id="@+id/spinnerOrderType"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="20"
+            android:layout_weight="100"
             android:gravity="center"
             android:layout_marginBottom="4dip"
             android:layout_marginLeft="4dip"
@@ -196,7 +196,7 @@
             android:onClick="uploadTo1C"
             android:scaleType="fitXY"
             android:src="@drawable/upload_button" />
-
+        
     </LinearLayout>
 
     <ListView

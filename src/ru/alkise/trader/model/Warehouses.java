@@ -8,31 +8,31 @@ import java.util.Map.Entry;
 public enum Warehouses {
 	INSTANCE;
 	
-	private Map<Integer, Warehouse> warehouses;
+	private Map<Integer, WarehouseIntf> warehouses;
 	
 	{
-		warehouses = new LinkedHashMap<Integer, Warehouse>();
+		warehouses = new LinkedHashMap<Integer, WarehouseIntf>();
 	}
 	
-	public void addWarehouse(Warehouse warehouse) {
-		warehouses.put(warehouse.getCode(), warehouse);
+	public void addWarehouse(WarehouseIntf warehouse) {
+		warehouses.put(warehouse.getWarehouseCode(), warehouse);
 	}
 	
-	public Warehouse getWarehouseByCode(int code) {
+	public WarehouseIntf getWarehouseByCode(int code) {
 		return warehouses.get(code);
 	}
 	
-	public Collection<Warehouse> getWarehousesList() {
+	public Collection<WarehouseIntf> getWarehousesList() {
 		return warehouses.values();
 	}
 	
-	public Map<Integer, Warehouse> getWarehouses() {
+	public Map<Integer, WarehouseIntf> getWarehouses() {
 		return warehouses;
 	}
 	
 	public String printWarehouses() {
 		StringBuilder sb = new StringBuilder();
-		for (Entry<Integer, Warehouse> entry : warehouses.entrySet()) {
+		for (Entry<Integer, WarehouseIntf> entry : warehouses.entrySet()) {
 			sb.append(entry.getValue().toString());
 			sb.append('\n');
 		}

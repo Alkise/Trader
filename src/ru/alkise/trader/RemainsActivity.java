@@ -8,10 +8,13 @@ import java.util.List;
 
 import ru.alkise.trader.adapter.RemainsAdapter;
 import ru.alkise.trader.db.mssql.SQLConnectionFactory;
-import ru.alkise.trader.model.Goods;
 import ru.alkise.trader.model.DocumentType;
-import ru.alkise.trader.model.Position;
+import ru.alkise.trader.model.GoodsIntf;
+import ru.alkise.trader.model.OrderIntf;
+import ru.alkise.trader.model.PositionIntf;
 import ru.alkise.trader.model.Warehouses;
+import ru.alkise.trader.model.factory.GoodsFactory;
+import ru.alkise.trader.model.factory.PositionFactory;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -20,6 +23,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,10 +31,10 @@ public class RemainsActivity extends Activity {
 	private TextView codeLabel;
 	private TextView descrLabel;
 	private ListView remainsList;
-	private Goods goods;
+	private GoodsIntf goods;
 	private int code;
 	private int whCode;
-	private RemainsAdapter remainsAdapter;
+	private ArrayAdapter<PositionIntf> remainsAdapter;
 	private Connection connection;
 	private Activity activity;
 	private ProgressDialog progressDialog;
@@ -44,9 +48,9 @@ public class RemainsActivity extends Activity {
 
 		activity = this;
 		data = new Intent();
-		docType = (DocumentType) getIntent().getSerializableExtra("docType");
-		code = getIntent().getIntExtra("code", -1);
-		whCode = getIntent().getIntExtra("whCode", -1);
+		docType = (DocumentType) getIntent().getSerializableExtra(OrderIntf.ORDER_TYPE);
+		code = getIntent().getIntExtra(GoodsIntf.GOODS_CODE, -1);
+		whCode = getIntent().getIntExtra(PositionIntf.POSITION_FROM_WAREHOUSE, -1);
 
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setIndeterminate(false);
@@ -62,8 +66,8 @@ public class RemainsActivity extends Activity {
 					@Override
 					public void onItemClick(AdapterView<?> adapter, View arg1,
 							int pos, long arg3) {
-						data.putExtra("position",
-								(Position) adapter.getItemAtPosition(pos));
+						data.putExtra(PositionIntf.TABLE_NAME,
+								(PositionIntf) adapter.getItemAtPosition(pos));
 						returnResult();
 					}
 				});
@@ -84,7 +88,7 @@ public class RemainsActivity extends Activity {
 
 	private class RemainsSearchingTask extends
 			AsyncTask<Object, Object, Object> {
-		private List<Position> positions;
+		private List<PositionIntf> positions;
 
 		@Override
 		protected Object doInBackground(Object... params) {
@@ -120,23 +124,23 @@ public class RemainsActivity extends Activity {
 				
 				if (rs.getFetchSize() > 0) {
 					
-					positions = new ArrayList<Position>();
+					positions = new ArrayList<PositionIntf>();
 					
 					while (rs.next()) {
 						
 						if (rs.isFirst()) {
-							goods = new Goods(rs.getInt(1), rs.getString(2),
+							goods = GoodsFactory.createGoods(rs.getInt(1), rs.getString(2),
 									rs.getDouble(3));
 						}
 						
-						positions.add(new Position(goods, rs.getDouble(3),
+						positions.add(PositionFactory.createPosition(goods, rs.getDouble(3),
 								Warehouses.INSTANCE.getWarehouseByCode(rs
 										.getInt(4)), Warehouses.INSTANCE
 										.getWarehouseByCode(rs.getInt(4))));
 					}
 
 					if (positions.size() == 1) {
-						data.putExtra(Position.TABLE_NAME, positions.get(0));
+						data.putExtra(PositionIntf.TABLE_NAME, positions.get(0));
 						returnResult();
 					}
 					
@@ -170,7 +174,7 @@ public class RemainsActivity extends Activity {
 			}
 			
 			if (goods != null) {
-				descrLabel.setText(goods.getDescr().trim());
+				descrLabel.setText(goods.getGoodsName().trim());
 			}
 
 			if (remainsAdapter != null) {

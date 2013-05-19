@@ -8,8 +8,10 @@ import java.util.List;
 
 import ru.alkise.trader.adapter.FindingGoodsAdapter;
 import ru.alkise.trader.db.mssql.SQLConnectionFactory;
-import ru.alkise.trader.model.Goods;
 import ru.alkise.trader.model.DocumentType;
+import ru.alkise.trader.model.GoodsIntf;
+import ru.alkise.trader.model.OrderIntf;
+import ru.alkise.trader.model.factory.GoodsFactory;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -18,6 +20,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,7 +29,7 @@ public class GoodsActivity extends Activity {
 	private TextView lblPositionName;
 	private String searchingString;
 	private ListView goodsList;
-	private FindingGoodsAdapter goodsAdapter;
+	private ArrayAdapter<GoodsIntf> goodsAdapter;
 	private ProgressDialog progressDialog;
 	private Activity activity;
 	private Connection connection;
@@ -38,8 +41,8 @@ public class GoodsActivity extends Activity {
 
 		activity = this;
 
-		docType = (DocumentType) getIntent().getSerializableExtra("docType");
-		searchingString = getIntent().getStringExtra("positionName");
+		docType = (DocumentType) getIntent().getSerializableExtra(OrderIntf.ORDER_TYPE);
+		searchingString = getIntent().getStringExtra(GoodsIntf.GOODS_NAME);
 
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setIndeterminate(false);
@@ -56,9 +59,10 @@ public class GoodsActivity extends Activity {
 			public void onItemClick(AdapterView<?> adapter, View arg1, int pos,
 					long arg3) {
 				Intent intent = new Intent("ru.alkise.trader.RemainsActivity");
-				int code = ((Goods) adapter.getItemAtPosition(pos)).getCode();
-				intent.putExtra("docType", docType);
-				intent.putExtra("code", code);
+				int code = ((GoodsIntf) adapter.getItemAtPosition(pos))
+						.getGoodsCode();
+				intent.putExtra(OrderIntf.ORDER_TYPE, docType);
+				intent.putExtra(GoodsIntf.GOODS_CODE, code);
 				startActivityForResult(intent, 1);
 			}
 		});
@@ -96,7 +100,7 @@ public class GoodsActivity extends Activity {
 
 	private class GoodsSearchTask extends AsyncTask<Object, Object, Object> {
 
-		private List<Goods> goods;
+		private List<GoodsIntf> goods;
 
 		@Override
 		protected Object doInBackground(Object... params) {
@@ -119,11 +123,11 @@ public class GoodsActivity extends Activity {
 
 				ResultSet rs = pstmt.executeQuery();
 
-				goods = new ArrayList<Goods>();
+				goods = new ArrayList<GoodsIntf>();
 
 				while (rs.next()) {
-					goods.add(new Goods(rs.getInt(1), rs.getString(2), rs
-							.getDouble(3)));
+					goods.add(GoodsFactory.createGoods(rs.getInt(1),
+							rs.getString(2), rs.getDouble(3)));
 				}
 
 				goodsAdapter = new FindingGoodsAdapter(activity,
@@ -155,7 +159,7 @@ public class GoodsActivity extends Activity {
 		@Override
 		protected void onPreExecute() {
 			progressDialog.show();
-			goods = new ArrayList<Goods>();
+			goods = new ArrayList<GoodsIntf>();
 		}
 
 	}

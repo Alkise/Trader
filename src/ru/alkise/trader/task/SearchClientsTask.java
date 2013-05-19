@@ -7,16 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.alkise.trader.db.mssql.SQLConnectionFactory;
-import ru.alkise.trader.model.Client;
+import ru.alkise.trader.model.ClientIntf;
 import ru.alkise.trader.model.ClientType;
+import ru.alkise.trader.model.factory.ClientFactory;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
-public class SearchClientsTask extends AsyncTask<Object, List<Client>, Object> {
+public class SearchClientsTask extends AsyncTask<Object, List<ClientIntf>, Object> {
 	private Connection connection;
 	private String searchingString;
 	private ProgressDialog searchingDialog;
-	private List<Client> clients;
+	private List<ClientIntf> clients;
 	private static String[] parents = { "   2MA   ", "   2M8   ", "   5EY   ",
 			"   2MC   " };
 
@@ -28,7 +29,7 @@ public class SearchClientsTask extends AsyncTask<Object, List<Client>, Object> {
 
 			searchingDialog = (ProgressDialog) params[1];
 
-			clients = new ArrayList<Client>();
+			clients = new ArrayList<ClientIntf>();
 
 			if (searchingString.length() >= 3 && connection != null) {
 
@@ -44,8 +45,8 @@ public class SearchClientsTask extends AsyncTask<Object, List<Client>, Object> {
 				ResultSet rs = pstmt.executeQuery();
 
 				while (rs.next()) {
-					clients.add(new Client(rs.getInt(1), rs
-							.getString(2), rs.getString(3), ClientType._2F2.getClientTypeById(rs.getString(4))));
+					clients.add(ClientFactory.createClient(rs.getInt(1), rs
+							.getString(2), rs.getString(3), ClientType.getClientTypeById(rs.getString(4))));
 				}
 			}
 		} catch (Exception e) {

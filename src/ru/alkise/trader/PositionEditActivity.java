@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.alkise.trader.model.DocumentType;
-import ru.alkise.trader.model.Position;
-import ru.alkise.trader.model.Warehouse;
+import ru.alkise.trader.model.Order;
+import ru.alkise.trader.model.PositionIntf;
+import ru.alkise.trader.model.WarehouseIntf;
 import ru.alkise.trader.model.Warehouses;
 import android.app.Activity;
 import android.content.Intent;
@@ -21,14 +22,14 @@ import android.widget.Toast;
 public class PositionEditActivity extends Activity {
 	private Activity activity;
 	private Intent data;
-	private Position position;
+	private PositionIntf position;
 	private TextView lblPosName;
 	private TextView lblWhFrom;
 	private EditText editCount;
 	private Spinner spinnerWhTo;
 	private ImageButton btnApprove;
 	private ImageButton btnBack;
-	private ArrayAdapter<Warehouse> whToAdapter;
+	private ArrayAdapter<WarehouseIntf> whToAdapter;
 	private DocumentType docType;
 
 	@Override
@@ -38,8 +39,8 @@ public class PositionEditActivity extends Activity {
 
 		activity = this;
 		data = getIntent();
-		docType = (DocumentType) getIntent().getSerializableExtra("docType");
-		position = (Position) data.getSerializableExtra("position");
+		docType = (DocumentType) getIntent().getSerializableExtra(Order.ORDER_TYPE);
+		position = (PositionIntf) data.getSerializableExtra(PositionIntf.TABLE_NAME);
 
 		lblPosName = (TextView) findViewById(R.id.lblNomenclature);
 		lblWhFrom = (TextView) findViewById(R.id.lblFromWarehouse);
@@ -51,18 +52,18 @@ public class PositionEditActivity extends Activity {
 		btnBack = (ImageButton) findViewById(R.id.btnBack);
 
 		if (position != null) {
-			lblPosName.setText(position.getGoods().getDescr());
-			lblWhFrom.setText(position.getWhFrom().getDescr());
-			editCount.setText(String.valueOf(position.getCount()));
+			lblPosName.setText(position.getPositionGoods().getGoodsName());
+			lblWhFrom.setText(position.getPositionFromWarehouse().getWarehouseName());
+			editCount.setText(String.valueOf(position.getPositionCount()));
 			editCount.selectAll();
 		}
 
-		List<Warehouse> warehouses = new ArrayList<Warehouse>(
+		List<WarehouseIntf> warehouses = new ArrayList<WarehouseIntf>(
 				Warehouses.INSTANCE.getWarehousesList());
-		whToAdapter = new ArrayAdapter<Warehouse>(this,
+		whToAdapter = new ArrayAdapter<WarehouseIntf>(this,
 				android.R.layout.simple_spinner_dropdown_item, warehouses);
 		spinnerWhTo.setAdapter(whToAdapter);
-		spinnerWhTo.setSelection(whToAdapter.getPosition(position.getWhTo()));
+		spinnerWhTo.setSelection(whToAdapter.getPosition(position.getPositionToWarehouse()));
 
 		btnBack.setOnClickListener(new View.OnClickListener() {
 
@@ -81,14 +82,14 @@ public class PositionEditActivity extends Activity {
 						.getText()));
 				if ((newCount >= 1.0)
 						&& ((docType == DocumentType.DEMAND) || (newCount <= position
-								.getGoods().getCount()))) {
+								.getPositionGoods().getGoodsRemains()))) {
 					Intent intent = new Intent();
-					position.setCount(newCount);
-					position.setWhTo((Warehouse) spinnerWhTo.getSelectedItem());
-					intent.putExtra("pos", data.getIntExtra("pos", 0));
-					intent.putExtra("whTo",
-							(Warehouse) spinnerWhTo.getSelectedItem());
-					intent.putExtra("count", newCount);
+					position.setPositionCount(newCount);
+					position.setPositionToWarehouse((WarehouseIntf) spinnerWhTo.getSelectedItem());
+					intent.putExtra(PositionIntf.POSITION_CODE, data.getIntExtra(PositionIntf.POSITION_CODE, 0));
+					intent.putExtra(PositionIntf.POSITION_TO_WAREHOUSE,
+							(WarehouseIntf) spinnerWhTo.getSelectedItem());
+					intent.putExtra(PositionIntf.POSITION_COUNT, newCount);
 					setResult(RESULT_OK, intent);
 					finish();
 				} else {

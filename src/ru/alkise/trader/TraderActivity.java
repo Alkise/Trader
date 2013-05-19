@@ -10,25 +10,28 @@ import java.util.List;
 
 import ru.alkise.trader.adapter.NewPositionAdater;
 import ru.alkise.trader.db.mssql.SQLConnectionFactory;
-import ru.alkise.trader.model.Client;
+import ru.alkise.trader.model.ClientIntf;
 import ru.alkise.trader.model.ClientType;
 import ru.alkise.trader.model.DocumentType;
-import ru.alkise.trader.model.Manager;
-import ru.alkise.trader.model.Order;
-import ru.alkise.trader.model.Organization;
-import ru.alkise.trader.model.Position;
-import ru.alkise.trader.model.Warehouse;
+import ru.alkise.trader.model.GoodsIntf;
+import ru.alkise.trader.model.ManagerIntf;
+import ru.alkise.trader.model.OrderIntf;
+import ru.alkise.trader.model.OrganizationIntf;
+import ru.alkise.trader.model.PositionIntf;
+import ru.alkise.trader.model.WarehouseIntf;
 import ru.alkise.trader.model.Warehouses;
+import ru.alkise.trader.model.factory.ClientFactory;
+import ru.alkise.trader.model.factory.OrderFactory;
+import ru.alkise.trader.model.factory.WarehouseFactory;
+import ru.alkise.trader.model.store.DataSaverIntf;
+import ru.alkise.trader.model.store.SharedPreferencesDataSaver;
 import ru.alkise.trader.task.SearchClientsTask;
 import ru.alkise.trader.xml.XmlOrderGenerator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,6 +40,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -49,17 +54,23 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+//Calling GoodsActivity
+//sending parameters
+//parameter: OrderIntf.ORDER_TYPE value: order.getOrderDocumentType())
+//parameter: GoodsIntf.GOODS_NAME value: searchingText
+//received parameters
+//PositionIntf.TABLE_NAME value: PositionIntf
 public class TraderActivity extends Activity {
 
-	private static final String DATABASE_NAME = "trader_ db";
+	private static final String DATABASE_NAME = "trader_db";
 	public static final int REMAINS_OK = 1;
 	public static final int FIND_GOODS_OK = 2;
 	public static final int POSITION_EDIT_OK = 3;
 	public static final int MANAGERS_OK = 4;
 	public static final int ORGANIZATIONS_OK = 5;
-	
-	private SharedPreferences sp;
-	private Order order;
+	public static final int UPLOAD_OK = 0;
+
+	private OrderIntf order;
 	private DataLoaderTask dataLoaderTask;
 	private SearchClientsTask searchClientTask;
 	private ProgressDialog loadingDialog;
@@ -72,73 +83,35 @@ public class TraderActivity extends Activity {
 	private Button btnOrganizations;
 	private EditText clientField;
 	private Activity activity;
-	private NewPositionAdater positionsAdapter;
-	private ArrayAdapter<Client> clientAdapter;
+	private ArrayAdapter<PositionIntf> positionsAdapter;
+	private ArrayAdapter<ClientIntf> clientAdapter;
 	private ArrayAdapter<ClientType> clientTypeAdapter;
 	private ArrayAdapter<DocumentType> orderTypeAdapter;
 	private LayoutInflater inflater;
+	private DataSaverIntf dataSaver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_trader);
 
-		sp = getSharedPreferences(DATABASE_NAME, Context.MODE_PRIVATE);
-
-		order = new Order();
+		order = OrderFactory.createOrder();
 
 		activity = this;
 
 		inflater = LayoutInflater.from(this);
+		
+		dataSaver = new SharedPreferencesDataSaver(DATABASE_NAME, activity);
 
 		orderTypeSpinner = (Spinner) findViewById(R.id.spinnerOrderType);
+
+		positionsAdapter = new NewPositionAdater(activity,
+				R.layout.new_pos_layout, order.getOrderPositions());
 
 		positionsList = (ListView) findViewById(R.id.positionList);
 		positionsList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-		positionsList
-				.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
-					@Override
-					public boolean onItemLongClick(AdapterView<?> adapter,
-							View arg1, final int pos, long arg3) {
-						AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-								activity);
-						alertDialogBuilder.setMessage(activity
-								.getString(R.string.delete_position)
-								+ " "
-								+ ((Position) positionsAdapter.getItem(pos))
-										.getGoods().getDescr() + " ?");
-						alertDialogBuilder.setPositiveButton(
-								activity.getString(R.string.delete),
-								new DialogInterface.OnClickListener() {
-
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										System.out.println(which);
-										positionsAdapter
-												.remove(positionsAdapter
-														.getItem(pos));
-									}
-								});
-						alertDialogBuilder.setNegativeButton(
-								activity.getString(R.string.cancel),
-								new DialogInterface.OnClickListener() {
-
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										dialog.cancel();
-									}
-								});
-
-						AlertDialog confirmationDialog = alertDialogBuilder
-								.create();
-						confirmationDialog.show();
-						return false;
-					}
-				});
+		positionsList.setAdapter(positionsAdapter);
 
 		positionsList
 				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -148,13 +121,15 @@ public class TraderActivity extends Activity {
 							int pos, long arg3) {
 						Intent editIntent = new Intent(
 								"ru.alkise.trader.PositionEditActivity");
-						editIntent.putExtra("docType", order.getOrderType());
-						editIntent.putExtra("pos", pos);
-						editIntent.putExtra("position",
+						editIntent.putExtra(OrderIntf.ORDER_TYPE, order.getOrderDocumentType());
+						editIntent.putExtra(PositionIntf.POSITION_CODE, pos);
+						editIntent.putExtra(PositionIntf.TABLE_NAME,
 								positionsAdapter.getItem(pos));
 						startActivityForResult(editIntent, POSITION_EDIT_OK);
 					}
 				});
+		
+		registerForContextMenu(positionsList);
 
 		orderTypeAdapter = new ArrayAdapter<DocumentType>(activity,
 				android.R.layout.simple_spinner_dropdown_item,
@@ -169,7 +144,7 @@ public class TraderActivity extends Activity {
 					@Override
 					public void onItemSelected(AdapterView<?> adapter,
 							View arg1, int pos, long arg3) {
-						order.setOrderType((DocumentType) adapter
+						order.setOrderDocumentType((DocumentType) adapter
 								.getItemAtPosition(pos));
 						if ((positionsAdapter != null)
 								&& (!positionsAdapter.isEmpty())) {
@@ -179,8 +154,6 @@ public class TraderActivity extends Activity {
 
 					@Override
 					public void onNothingSelected(AdapterView<?> arg0) {
-						// TODO Auto-generated method stub
-
 					}
 				});
 
@@ -237,58 +210,27 @@ public class TraderActivity extends Activity {
 				ClientType.values());
 
 		dataLoaderTask.execute();
-		Log.i(Order.ORDER_TYPE_CODE,
-				String.valueOf(sp.getInt(Order.ORDER_TYPE_CODE, -1)));
-		int orderTypeCode = sp.getInt(Order.ORDER_TYPE_CODE, -1);
-		int organizationCode = sp.getInt(Order.ORGANIZATION_CODE, -1);
-		int managerCode = sp.getInt(Order.MANAGER_CODE, -1);
-		Log.i(Order.ORGANIZATION_CODE, String.valueOf(organizationCode));
-		Log.i(Order.MANAGER_CODE, String.valueOf(managerCode));
-		Log.i(Order.CLIENT_CODE,
-				String.valueOf(sp.getInt(Order.CLIENT_CODE, -1)));
-
-		if (managerCode != -1) {
-			Intent managersIntent = new Intent(
-					"ru.alkise.trader.ManagersActivity");
-			managersIntent.putExtra(Order.MANAGER_CODE, managerCode);
-			startActivityForResult(managersIntent, MANAGERS_OK);
-		}
-
-		if (organizationCode != -1) {
-			Intent organizationIntent = new Intent(
-					"ru.alkise.trader.OrganizationsActivity");
-			organizationIntent.putExtra(Order.ORGANIZATION_CODE,
-					organizationCode);
-			startActivityForResult(organizationIntent, ORGANIZATIONS_OK);
+		order = dataSaver.load();
+		
+		orderTypeSpinner.setSelection(orderTypeAdapter.getPosition(order.getOrderDocumentType()));
+		
+		if (order.getOrderOrganization() != null) {
+			btnOrganizations.setText(order.getOrderOrganization().getOrganizationName());
 		}
 		
-		if (orderTypeCode != -1) {
-			orderTypeSpinner.setSelection(orderTypeAdapter
-					.getPosition(DocumentType.getTypeByCode(orderTypeCode)));
+		if (order.getOrderManager() != null) {
+			btnManagers.setText(order.getOrderManager().getManagerName());
 		}
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
+		
+		if (order.getOrderClient() != null) {
+			clientField.setText(order.getOrderClient().getClientFullName());
+			clientField.selectAll();
+		}
 	}
 
 	@Override
 	protected void onDestroy() {
-		Editor e = sp.edit();
-		e.putInt(Order.ORDER_TYPE_CODE, order.getOrderType().getCode());
-		e.putInt(Order.ORGANIZATION_CODE, order.getOrganization().getCode());
-		e.putInt(Order.MANAGER_CODE, order.getManager().getCode());
-		if (order.getClient() != null) {
-			e.putInt(Order.CLIENT_CODE, order.getClient().getCode());
-			if (order.getClient().getType() != null) {
-				e.putString(Client.TYPE_CODE, order.getClient().getType()
-						.getCode());
-			}
-			e.putString(Client.SHORT_NAME, order.getClient().getDescr());
-			e.putString(Client.FULL_NAME, order.getClient().getFullName());
-		}
-		e.commit();
+		dataSaver.store(order);
 
 		if (positionsAdapter != null) {
 			positionsAdapter.clear();
@@ -296,35 +238,102 @@ public class TraderActivity extends Activity {
 
 		super.onDestroy();
 	}
+	
+	@Override
+	public void onCreateContextMenu(android.view.ContextMenu menu, View v, android.view.ContextMenu.ContextMenuInfo menuInfo) {
+		if (v.getId() == R.id.positionList) {
+			AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+			menu.setHeaderTitle(positionsAdapter.getItem(info.position).getPositionGoods().getGoodsName());
+			String[] menuItems = getResources().getStringArray(R.array.menu);
+			for (int i = 0; i < menuItems.length; i++) {
+				menu.add(Menu.NONE, i, i, menuItems[i]);
+			}
+		}
+	};
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+		int menuItemIndex = item.getItemId();
+		switch (menuItemIndex) {
+		case 0:
+			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+					activity);
+			alertDialogBuilder.setMessage(activity
+					.getString(R.string.delete_position)
+					+ " "
+					+ ((PositionIntf) positionsAdapter.getItem(info.position))
+							.getPositionGoods().getGoodsName() + " ?");
+			alertDialogBuilder.setPositiveButton(
+					activity.getString(R.string.delete),
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog,
+								int which) {
+							System.out.println(which);
+							positionsAdapter
+									.remove(positionsAdapter
+											.getItem(info.position));
+						}
+					});
+			alertDialogBuilder.setNegativeButton(
+					activity.getString(R.string.cancel),
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog,
+								int which) {
+							dialog.cancel();
+						}
+					});
+
+			AlertDialog confirmationDialog = alertDialogBuilder
+					.create();
+			confirmationDialog.show();
+			break;
+		case 1:
+			Intent remainsIntent = new Intent(
+					"ru.alkise.trader.RemainsActivity");
+			remainsIntent.putExtra(OrderIntf.ORDER_TYPE,
+					DocumentType.CONSIGNMENT_NOTE);
+			remainsIntent.putExtra(GoodsIntf.GOODS_CODE, ((PositionIntf) positionsAdapter.getItem(info.position))
+					.getPositionGoods().getGoodsCode());
+			startActivityForResult(remainsIntent,
+					REMAINS_OK);
+			break;
+		}
+		return super.onContextItemSelected(item);
+	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
-			Position receivedPosition = (Position) data
-					.getSerializableExtra("position");
+			PositionIntf receivedPosition = (PositionIntf) data
+					.getSerializableExtra(PositionIntf.TABLE_NAME);
 			switch (requestCode) {
 			case ORGANIZATIONS_OK:
-				Organization organization = (Organization) data
-						.getSerializableExtra(Organization.TABLE_NAME);
-				btnOrganizations.setText(organization.getDescr());
-				order.setOrganization(organization);
+				OrganizationIntf organization = (OrganizationIntf) data
+						.getSerializableExtra(OrganizationIntf.TABLE_NAME);
+				btnOrganizations.setText(organization.getOrganizationName());
+				order.setOrderOrganization(organization);
 				break;
 			case MANAGERS_OK:
-				Manager manager = (Manager) data
-						.getSerializableExtra(Manager.TABLE_NAME);
-				btnManagers.setText(manager.getDescr());
-				order.setManager(manager);
+				ManagerIntf manager = (ManagerIntf) data
+						.getSerializableExtra(ManagerIntf.TABLE_NAME);
+				btnManagers.setText(manager.getManagerName());
+				order.setOrderManager(manager);
 				break;
 			case REMAINS_OK:
 			case FIND_GOODS_OK:
 				positionsAdapter.add(receivedPosition);
 				break;
 			case POSITION_EDIT_OK:
-				Position positionToModify = positionsAdapter.getItem(data
-						.getIntExtra("pos", 0));
-				positionToModify.setCount(data.getDoubleExtra("count", 1.0));
-				positionToModify.setWhTo((Warehouse) data
-						.getSerializableExtra("whTo"));
+				PositionIntf positionToModify = positionsAdapter.getItem(data
+						.getIntExtra(PositionIntf.POSITION_CODE, 0));
+				positionToModify.setPositionCount(data.getDoubleExtra(PositionIntf.POSITION_COUNT, 1.0));
+				positionToModify.setPositionToWarehouse((WarehouseIntf) data
+						.getSerializableExtra(PositionIntf.POSITION_TO_WAREHOUSE));
 				positionsAdapter.notifyDataSetChanged();
 				break;
 			}
@@ -349,8 +358,8 @@ public class TraderActivity extends Activity {
 				ResultSet rs = pstmt.executeQuery();
 
 				while (rs.next()) {
-					Warehouses.INSTANCE.addWarehouse(new Warehouse(
-							rs.getInt(1), rs.getString(2)));
+					Warehouses.INSTANCE.addWarehouse(WarehouseFactory
+							.createWarehouse(rs.getInt(1), rs.getString(2)));
 				}
 
 			} catch (Exception e) {
@@ -388,8 +397,15 @@ public class TraderActivity extends Activity {
 	}
 
 	public void showOrder(View view) {
-		Toast.makeText(getApplication(), order.displayOrder(),
-				Toast.LENGTH_SHORT).show();
+		StringBuilder builder = new StringBuilder();
+//		Map<String, String> params = Reflector.reflect(order);
+//		for (String string : params.keySet()) {
+//			builder.append(string + " : " + params.get(string));
+//			builder.append('\n');
+//		}
+		builder.append(order.displayOrder());
+		Toast.makeText(getApplication(), builder.toString(), Toast.LENGTH_LONG)
+				.show();
 	}
 
 	// Add position button click
@@ -429,9 +445,9 @@ public class TraderActivity extends Activity {
 											.trim());
 									Intent remainsIntent = new Intent(
 											"ru.alkise.trader.RemainsActivity");
-									remainsIntent.putExtra("docType",
-											order.getOrderType());
-									remainsIntent.putExtra("code", code);
+									remainsIntent.putExtra(OrderIntf.ORDER_TYPE,
+											order.getOrderDocumentType());
+									remainsIntent.putExtra(GoodsIntf.GOODS_CODE, code);
 									startActivityForResult(remainsIntent,
 											REMAINS_OK);
 								} catch (Exception e) {
@@ -443,9 +459,9 @@ public class TraderActivity extends Activity {
 								Intent goodsIntent = new Intent(
 										"ru.alkise.trader.GoodsActivity");
 
-								goodsIntent.putExtra("docType",
-										order.getOrderType());
-								goodsIntent.putExtra("positionName",
+								goodsIntent.putExtra(OrderIntf.ORDER_TYPE,
+										order.getOrderDocumentType());
+								goodsIntent.putExtra(GoodsIntf.GOODS_NAME,
 										searchingText);
 								startActivityForResult(goodsIntent,
 										FIND_GOODS_OK);
@@ -471,9 +487,9 @@ public class TraderActivity extends Activity {
 		try {
 			searchClientTask.execute(clientField.getText(), searchingDialog,
 					activity);
-			clientAdapter = new ArrayAdapter<Client>(activity,
+			clientAdapter = new ArrayAdapter<ClientIntf>(activity,
 					android.R.layout.simple_spinner_dropdown_item,
-					(List<Client>) searchClientTask.get());
+					(List<ClientIntf>) searchClientTask.get());
 			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
 					activity);
 			alertDialogBuilder.setAdapter(clientAdapter,
@@ -481,8 +497,8 @@ public class TraderActivity extends Activity {
 
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							Client client = clientAdapter.getItem(which);
-							order.setClient(client);
+							ClientIntf client = clientAdapter.getItem(which);
+							order.setOrderClient(client);
 							((EditText) activity.findViewById(R.id.clientField))
 									.setText(client.toString());
 						}
@@ -552,9 +568,9 @@ public class TraderActivity extends Activity {
 								.findViewById(R.id.clientShortNameEdit);
 						EditText clientFullNameEdit = (EditText) newClientView
 								.findViewById(R.id.clientFullNameEdit);
-						order.setClient(new Client(-1, (clientShortNameEdit
-								.getText()).toString(), (clientFullNameEdit
-								.getText()).toString(),
+						order.setOrderClient(ClientFactory.createClient(-1,
+								(clientShortNameEdit.getText()).toString(),
+								(clientFullNameEdit.getText()).toString(),
 								(ClientType) clientTypeSpinner
 										.getSelectedItem()));
 						EditText clientEdit = (EditText) activity
@@ -604,7 +620,7 @@ public class TraderActivity extends Activity {
 				intent.putExtra("smb_domain", "SHOP.DOMKAFEL.RU");
 				intent.putExtra("local_file1", file.getAbsolutePath());
 				intent.putExtra("remote_folder", "/Orders");
-				startActivityForResult(intent, 4);
+				startActivityForResult(intent, UPLOAD_OK);
 			} catch (Exception e) {
 				Log.e("XML Serialization error", e.getMessage());
 			} finally {
@@ -631,7 +647,7 @@ public class TraderActivity extends Activity {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						order.setClient(null);
+						order.setOrderClient(null);
 						clientField.setText(activity
 								.getString(R.string.client_not_selected));
 						clientField.selectAll();

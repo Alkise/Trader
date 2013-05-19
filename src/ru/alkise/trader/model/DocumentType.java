@@ -6,13 +6,13 @@ public enum DocumentType {
 	DEMAND(0, "Заявка"), CONSIGNMENT_NOTE(1, "Накладная");
 
 	// UNIQUE ID
-	public static final String CODE = "document_type_code";
+	public static final String DOCUMENT_TYPE_CODE = "DocumentTypeCode";
 
 	// ORDER TYPE DESCRIPTION
-	public static final String DESCRIPTION = "document_type_description";
+	public static final String DOCUMENT_TYPE_DESCRIPTION = "DocumentTypeDescription";
 
 	// TABLE NAME
-	public static final String TABLE_NAME = "document_type";
+	public static final String TABLE_NAME = "DocumentType";
 
 	private static SparseArray<DocumentType> codeToTypeMapping;
 	
@@ -27,7 +27,7 @@ public enum DocumentType {
 	private static void initMap() {
 		codeToTypeMapping = new SparseArray<DocumentType>();
 		for (DocumentType type : values()) {
-			codeToTypeMapping.append(type.getCode(), type);
+			codeToTypeMapping.append(type.getDocumentTypeCode(), type);
 		}
 	}
 
@@ -39,11 +39,11 @@ public enum DocumentType {
 		this.name = name;
 	}
 
-	public int getCode() {
+	public int getDocumentTypeCode() {
 		return code;
 	}
 
-	public String getName() {
+	public String getDocumentTypeDescription() {
 		return name;
 	}
 

@@ -7,8 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.alkise.trader.db.mssql.SQLConnectionFactory;
-import ru.alkise.trader.model.Manager;
-import ru.alkise.trader.model.Order;
+import ru.alkise.trader.model.ManagerIntf;
+import ru.alkise.trader.model.OrderIntf;
+import ru.alkise.trader.model.factory.ManagerFactory;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -30,7 +31,7 @@ public class ManagersActivity extends Activity {
 	private ProgressDialog progressDialog;
 	private ListView managersList;
 	private TextView headingLabel;
-	private ArrayAdapter<Manager> managersAdapter;
+	private ArrayAdapter<ManagerIntf> managersAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class ManagersActivity extends Activity {
 		activity = this;
 		data = new Intent();
 
-		managerCode = getIntent().getIntExtra(Order.MANAGER_CODE, -1);
+		managerCode = getIntent().getIntExtra(OrderIntf.ORDER_MANAGER, -1);
 
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setIndeterminate(false);
@@ -56,7 +57,7 @@ public class ManagersActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View arg1, int pos,
 					long arg3) {
-				data.putExtra(Manager.TABLE_NAME, (Manager) adapter.getItemAtPosition(pos));
+				data.putExtra(ManagerIntf.TABLE_NAME, (ManagerIntf) adapter.getItemAtPosition(pos));
 				returnResult(data);
 			}
 		});
@@ -74,7 +75,7 @@ public class ManagersActivity extends Activity {
 	}
 
 	private class ManagerSearchTask extends AsyncTask<Object, Object, Object> {
-		private List<Manager> managers;
+		private List<ManagerIntf> managers;
 
 		@Override
 		protected Object doInBackground(Object... params) {
@@ -94,19 +95,19 @@ public class ManagersActivity extends Activity {
 
 				if (rs.getFetchSize() > 0) {
 					
-					managers = new ArrayList<Manager>();
+					managers = new ArrayList<ManagerIntf>();
 
 					while (rs.next()) {
-						managers.add(new Manager(rs.getInt(1), rs.getString(2)));
+						managers.add(ManagerFactory.createManager(rs.getInt(1), rs.getString(2)));
 					}
 					
 					if (managers.size() == 1) 
 					{
-						data.putExtra(Manager.TABLE_NAME, managers.get(0));
+						data.putExtra(ManagerIntf.TABLE_NAME, managers.get(0));
 						returnResult(data);
 					}
 					
-					managersAdapter = new ArrayAdapter<Manager>(activity, android.R.layout.simple_list_item_1, managers);
+					managersAdapter = new ArrayAdapter<ManagerIntf>(activity, android.R.layout.simple_list_item_1, managers);
 				}
 			} catch (Exception e) {
 				Toast.makeText(activity, e.getMessage(), Toast.LENGTH_SHORT)

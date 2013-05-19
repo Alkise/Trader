@@ -52,5 +52,10 @@
     <string name="choose_manager">Choose the manager</string>
     <string name="choose_organization">Choose trade organization</string>
     <string name="heading">Heading</string>
+    
+    <string-array name="menu">
+        <item>Delete</item>
+        <item>Remains</item>
+    </string-array>
 
 </resources>

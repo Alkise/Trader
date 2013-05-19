@@ -1,61 +1,55 @@
 package ru.alkise.trader.model;
 
-import java.io.Serializable;
 
-public class Organization implements Serializable {
+public class Organization implements OrganizationIntf{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	//UNIQUE ID
-	public static final String CODE = "organization_code";
-	
-	//ORGANIZATION NAME
-	public static final String NAME = "organization_name";
-	
-	//TABLE NAME
-	public static final String TABLE_NAME = "organization";
-	
-	private int code;
-	private String descr;
+	private int organizationCode;
+	private String organizationName;
 
 	public Organization(int code, String descr) {
-		this.code = code;
-		this.descr = descr.trim();
+		this.organizationCode = code;
+		this.organizationName = descr.trim();
 	}
 
-	public int getCode() {
-		return code;
+	@Override
+	public int getOrganizationCode() {
+		return organizationCode;
 	}
 
-	public void setCode(int code) {
-		this.code = code;
+	@Override
+	public void setOrganizationCode(int code) {
+		this.organizationCode = code;
 	}
 
-	public String getDescr() {
-		return descr;
+	@Override
+	public String getOrganizationName() {
+		return organizationName;
 	}
 
-	public void setDescr(String descr) {
-		this.descr = descr.trim();
+	@Override
+	public void setOrganizationName(String descr) {
+		this.organizationName = descr.trim();
 	}
 
 	@Override
 	public int hashCode() {
-		return code;
+		return organizationCode;
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Organization) {
-			return ((Organization) o).getCode() == code;
+		if (o instanceof OrganizationIntf) {
+			return ((OrganizationIntf) o).getOrganizationCode() == organizationCode;
 		}
 		return false;
 	}
 
 	@Override
 	public String toString() {
-		return descr;
+		return organizationName;
 	}
 }

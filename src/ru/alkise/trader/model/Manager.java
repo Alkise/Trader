@@ -1,22 +1,12 @@
 package ru.alkise.trader.model;
 
-import java.io.Serializable;
 
-public class Manager implements Serializable {
+public class Manager implements ManagerIntf {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	//UNIUQE ID
-	public static final String CODE = "manager_code";
-	
-	//MANAGER NAME
-	public static final String NAME = "manager_name";
-	
-	//TABLE_NAME
-	public static final String TABLE_NAME = "manager";
-
 	private int code;
 	private String descr;
 
@@ -24,24 +14,24 @@ public class Manager implements Serializable {
 		this.code = code;
 		this.descr = descr.trim();
 	}
-
-	public int getCode() {
+	
+	@Override
+	public int getManagerCode() {
 		return code;
 	}
 
-	public String getStringCode() {
-		return String.valueOf(code);
-	}
-
-	public void setCode(int code) {
+	@Override
+	public void setManagerCode(int code) {
 		this.code = code;
 	}
 
-	public String getDescr() {
+	@Override
+	public String getManagerName() {
 		return descr;
 	}
-
-	public void setDescr(String descr) {
+	
+	@Override
+	public void setManagerName(String descr) {
 		this.descr = descr.trim();
 	}
 
@@ -52,8 +42,8 @@ public class Manager implements Serializable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Manager) {
-			return ((Manager) o).getCode() == code;
+		if (o instanceof ManagerIntf) {
+			return ((ManagerIntf) o).getManagerCode() == code;
 		}
 		return false;
 	}
