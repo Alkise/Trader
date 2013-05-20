@@ -3,6 +3,10 @@
     android:id="@+id/LinearLayout1"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="@dimen/element_vertical_margin"
+    android:paddingLeft="@dimen/element_horizontal_margin"
+    android:paddingRight="@dimen/element_horizontal_margin"
+    android:paddingTop="@dimen/element_vertical_margin"
     android:orientation="vertical" >
 
     <TextView
@@ -18,7 +22,7 @@
 
         <TextView
             android:id="@+id/LabelPosCount"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
@@ -27,19 +31,19 @@
 
         <TextView
             android:id="@+id/LabelPosWhTo"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="left"
             android:text="@string/warehouse"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:id="@+id/LabelPosWhFrom"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="left"
             android:text="@string/warehouse"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 

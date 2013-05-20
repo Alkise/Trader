@@ -22,11 +22,11 @@
             android:layout_height="match_parent"
             android:layout_weight="100"
             android:gravity="center"
-            android:layout_marginBottom="4dip"
-            android:layout_marginLeft="4dip"
-            android:layout_marginRight="4dip"
-            android:layout_marginTop="4dip"
             android:padding="0dip"
+            android:paddingBottom="@dimen/element_vertical_margin"
+            android:paddingLeft="@dimen/element_horizontal_margin"
+            android:paddingRight="@dimen/element_horizontal_margin"
+            android:paddingTop="@dimen/element_vertical_margin"
             android:prompt="@string/type" />
 
         <Button
@@ -39,10 +39,10 @@
             android:gravity="center"
             android:onClick="onOrganizationsButtonClick"
             android:padding="0dip"
-            android:layout_marginBottom="4dip"
-            android:layout_marginLeft="4dip"
-            android:layout_marginRight="4dip"
-            android:layout_marginTop="4dip"
+            android:paddingBottom="@dimen/element_vertical_margin"
+            android:paddingLeft="@dimen/element_horizontal_margin"
+            android:paddingRight="@dimen/element_horizontal_margin"
+            android:paddingTop="@dimen/element_vertical_margin"
             android:text="@string/organization"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -51,18 +51,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:padding="0dip"
-            android:layout_marginBottom="4dip"
-            android:layout_marginLeft="4dip"
-            android:layout_marginRight="4dip"
-            android:layout_marginTop="4dip"
             android:background="@android:color/transparent"
             android:drawableLeft="@drawable/manager_button"
+            android:gravity="center"
             android:onClick="onManagersButtonClick"
+            android:padding="0dip"
+            android:paddingBottom="@dimen/element_vertical_margin"
+            android:paddingLeft="@dimen/element_horizontal_margin"
+            android:paddingRight="@dimen/element_horizontal_margin"
+            android:paddingTop="@dimen/element_vertical_margin"
             android:text="@string/manager"
             android:textAppearance="?android:attr/textAppearanceSmall" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -81,6 +80,10 @@
             android:focusable="true"
             android:gravity="bottom|center"
             android:inputType="none"
+            android:paddingBottom="@dimen/element_vertical_margin"
+            android:paddingLeft="@dimen/element_horizontal_margin"
+            android:paddingRight="@dimen/element_horizontal_margin"
+            android:paddingTop="@dimen/element_vertical_margin"
             android:selectAllOnFocus="true"
             android:text="@string/client_not_selected" >
 
@@ -91,14 +94,14 @@
             android:id="@+id/findClientsBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dip"
-            android:layout_marginLeft="4dip"
-            android:layout_marginRight="4dip"
-            android:layout_marginTop="4dip"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:contentDescription="@string/search"
             android:onClick="findClients"
+            android:paddingBottom="@dimen/element_vertical_margin"
+            android:paddingLeft="@dimen/element_horizontal_margin"
+            android:paddingRight="@dimen/element_horizontal_margin"
+            android:paddingTop="@dimen/element_vertical_margin"
             android:scaleType="fitXY"
             android:src="@drawable/search_client_button" />
 
@@ -107,28 +110,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginBottom="4dip"
-            android:layout_marginLeft="4dip"
-            android:layout_marginRight="4dip"
-            android:layout_marginTop="4dip"
             android:background="@android:color/transparent"
             android:contentDescription="@string/clear"
-            android:scaleType="fitXY"
             android:onClick="clearClient"
+            android:paddingBottom="@dimen/element_vertical_margin"
+            android:paddingLeft="@dimen/element_horizontal_margin"
+            android:paddingRight="@dimen/element_horizontal_margin"
+            android:paddingTop="@dimen/element_vertical_margin"
+            android:scaleType="fitXY"
             android:src="@drawable/delete_button" />
 
         <ImageButton
             android:id="@+id/newClientBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dip"
-            android:layout_marginLeft="4dip"
-            android:layout_marginRight="4dip"
-            android:layout_marginTop="4dip"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:contentDescription="@string/create"
             android:onClick="onCreateNewClientClick"
+            android:paddingBottom="@dimen/element_vertical_margin"
+            android:paddingLeft="@dimen/element_horizontal_margin"
+            android:paddingRight="@dimen/element_horizontal_margin"
+            android:paddingTop="@dimen/element_vertical_margin"
             android:scaleType="fitXY"
             android:src="@drawable/add_client_button" />
     </LinearLayout>
@@ -145,13 +148,13 @@
             android:id="@+id/btnAddPosition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dip"
-            android:layout_marginRight="4dip"
-            android:layout_marginTop="4dip"
-            android:layout_marginBottom="4dip"
             android:background="@android:color/transparent"
             android:contentDescription="@string/addPosition"
             android:onClick="searchRemains"
+            android:paddingBottom="@dimen/element_vertical_margin"
+            android:paddingLeft="@dimen/element_horizontal_margin"
+            android:paddingRight="@dimen/element_horizontal_margin"
+            android:paddingTop="@dimen/element_vertical_margin"
             android:scaleType="fitXY"
             android:src="@drawable/add_position_button" />
 
@@ -159,13 +162,13 @@
             android:id="@+id/btnTrash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dip"
-            android:layout_marginRight="4dip"
-            android:layout_marginTop="4dip"
-            android:layout_marginBottom="4dip"
             android:background="@android:color/transparent"
             android:contentDescription="@string/clear"
             android:onClick="onTrashButtonClick"
+            android:paddingBottom="@dimen/element_vertical_margin"
+            android:paddingLeft="@dimen/element_horizontal_margin"
+            android:paddingRight="@dimen/element_horizontal_margin"
+            android:paddingTop="@dimen/element_vertical_margin"
             android:scaleType="fitXY"
             android:src="@drawable/trash_button" />
 
@@ -173,13 +176,13 @@
             android:id="@+id/orderBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dip"
-            android:layout_marginLeft="4dip"
-            android:layout_marginRight="4dip"
-            android:layout_marginTop="4dip"
             android:background="@android:color/transparent"
             android:contentDescription="@string/order"
             android:onClick="showOrder"
+            android:paddingBottom="@dimen/element_vertical_margin"
+            android:paddingLeft="@dimen/element_horizontal_margin"
+            android:paddingRight="@dimen/element_horizontal_margin"
+            android:paddingTop="@dimen/element_vertical_margin"
             android:scaleType="fitXY"
             android:src="@drawable/order_button" />
 
@@ -187,16 +190,15 @@
             android:id="@+id/btnUpload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dip"
-            android:layout_marginRight="4dip"
-            android:layout_marginTop="4dip"
-            android:layout_marginBottom="4dip"
             android:background="@android:color/transparent"
             android:contentDescription="@string/upload"
             android:onClick="uploadTo1C"
+            android:paddingBottom="@dimen/element_vertical_margin"
+            android:paddingLeft="@dimen/element_horizontal_margin"
+            android:paddingRight="@dimen/element_horizontal_margin"
+            android:paddingTop="@dimen/element_vertical_margin"
             android:scaleType="fitXY"
             android:src="@drawable/upload_button" />
-        
     </LinearLayout>
 
     <ListView
@@ -206,7 +208,11 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/linearLayout3" >
+        android:layout_below="@+id/linearLayout3"
+        android:paddingBottom="@dimen/element_vertical_margin"
+        android:paddingLeft="@dimen/element_horizontal_margin"
+        android:paddingRight="@dimen/element_horizontal_margin"
+        android:paddingTop="@dimen/element_vertical_margin" >
     </ListView>
 
 </RelativeLayout>

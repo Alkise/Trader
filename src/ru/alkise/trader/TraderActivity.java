@@ -204,7 +204,7 @@ public class TraderActivity extends Activity {
 				ClientType.values());
 
 		loadingDialog.show();
-		dataLoaderTask.execute();
+
 		order = dataSaver.load();
 
 		orderTypeSpinner.setSelection(orderTypeAdapter.getPosition(order
@@ -223,6 +223,9 @@ public class TraderActivity extends Activity {
 			clientField.setText(order.getOrderClient().getClientFullName());
 			clientField.selectAll();
 		}
+
+		dataLoaderTask.execute();
+
 	}
 
 	@Override
@@ -325,7 +328,9 @@ public class TraderActivity extends Activity {
 				if (order.checkNewPosition(receivedPosition)) {
 					positionsAdapter.add(receivedPosition);
 				} else {
-					Toast.makeText(activity, getString(R.string.dublicating_position), Toast.LENGTH_SHORT).show();
+					Toast.makeText(activity,
+							getString(R.string.dublicating_position),
+							Toast.LENGTH_SHORT).show();
 				}
 				break;
 			case POSITION_EDIT_OK:
@@ -387,13 +392,13 @@ public class TraderActivity extends Activity {
 		}
 	}
 
-	//Manager Button
+	// Manager Button
 	public void onManagersButtonClick(View view) {
 		Intent managersIntent = new Intent("ru.alkise.trader.ManagersActivity");
 		startActivityForResult(managersIntent, MANAGERS_OK);
 	}
-	
-	//Organization button
+
+	// Organization button
 	public void onOrganizationsButtonClick(View view) {
 		Intent organizationsIntent = new Intent(
 				"ru.alkise.trader.OrganizationsActivity");

@@ -139,10 +139,10 @@ public class RemainsActivity extends Activity {
 										.getWarehouseByCode(rs.getInt(4))));
 					}
 
-					if (positions.size() == 1) {
-						data.putExtra(PositionIntf.TABLE_NAME, positions.get(0));
-						returnResult();
-					}
+//					if (positions.size() == 1) {
+//						data.putExtra(PositionIntf.TABLE_NAME, positions.get(0));
+//						returnResult();
+//					}
 					
 					remainsAdapter = new RemainsAdapter(activity,
 							R.layout.one_remain, positions);

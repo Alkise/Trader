@@ -8,7 +8,7 @@
     <string name="manager">Менеджер</string>
     <string name="client">Клиент</string>
     <string name="nomenclature">Номенклатура</string>
-    <string name="count">Количество</string>
+    <string name="count">Количество:</string>
     <string name="warehouse">Склад</string>
     <string name="btnNewClient">Добавить</string>
     <string name="client_not_selected">Клиент не выбран</string>

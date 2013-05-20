@@ -23,6 +23,8 @@ public final class R {
          */
         public static final int activity_horizontal_margin=0x7f040000;
         public static final int activity_vertical_margin=0x7f040001;
+        public static final int element_horizontal_margin=0x7f040002;
+        public static final int element_vertical_margin=0x7f040003;
     }
     public static final class drawable {
         public static final int add=0x7f020000;
@@ -78,7 +80,7 @@ public final class R {
         public static final int LabelPosWhTo=0x7f09001e;
         public static final int LinearLayout1=0x7f09001b;
         public static final int RelativeLayout1=0x7f090022;
-        public static final int action_settings=0x7f090037;
+        public static final int action_settings=0x7f090036;
         public static final int btnAddPosition=0x7f09000a;
         public static final int btnApprove=0x7f090028;
         public static final int btnBack=0x7f090027;
@@ -98,8 +100,8 @@ public final class R {
         public static final int findClientsBtn=0x7f090006;
         public static final int lblFromWarehouse=0x7f090024;
         public static final int lblGoodsCode=0x7f090031;
-        public static final int lblGoodsDescr=0x7f090033;
-        public static final int lblHeadingSelectionLayout=0x7f090035;
+        public static final int lblGoodsDescr=0x7f090032;
+        public static final int lblHeadingSelectionLayout=0x7f090034;
         public static final int lblNomenclature=0x7f090023;
         public static final int lblPositionName=0x7f090010;
         public static final int lblRemainsOn=0x7f090030;
@@ -111,9 +113,9 @@ public final class R {
         public static final int linearLayout1=0x7f090000;
         public static final int linearLayout2=0x7f090004;
         public static final int linearLayout3=0x7f090009;
-        public static final int listManagersSelectionLayout=0x7f090036;
+        public static final int listManagersSelectionLayout=0x7f090035;
         public static final int listPositionNames=0x7f090012;
-        public static final int listRemains=0x7f090034;
+        public static final int listRemains=0x7f090033;
         public static final int newClientBtn=0x7f090008;
         public static final int orderBtn=0x7f09000c;
         public static final int paramGroup=0x7f09002d;
@@ -127,7 +129,6 @@ public final class R {
         public static final int separator=0x7f090011;
         public static final int spinnerOrderType=0x7f090001;
         public static final int spinnerWhTo=0x7f090026;
-        public static final int view1=0x7f090032;
     }
     public static final class layout {
         public static final int activity_trader=0x7f030000;
