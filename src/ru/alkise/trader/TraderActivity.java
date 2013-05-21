@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.List;
 
 import ru.alkise.trader.adapter.NewPositionAdater;
@@ -73,7 +73,6 @@ public class TraderActivity extends Activity {
 	private OrderIntf order;
 	private DataLoaderTask dataLoaderTask;
 	private SearchClientsTask searchClientTask;
-	private ProgressDialog loadingDialog;
 	private ProgressDialog searchingDialog;
 	private Spinner orderTypeSpinner;
 	private ListView positionsList;
@@ -157,11 +156,6 @@ public class TraderActivity extends Activity {
 					}
 				});
 
-		loadingDialog = new ProgressDialog(this);
-		loadingDialog.setIndeterminate(false);
-		loadingDialog.setCancelable(false);
-		loadingDialog.setMessage(getString(R.string.connecting));
-
 		searchingDialog = new ProgressDialog(this);
 		searchingDialog.setIndeterminate(false);
 		searchingDialog.setCancelable(false);
@@ -202,8 +196,6 @@ public class TraderActivity extends Activity {
 		clientTypeAdapter = new ArrayAdapter<ClientType>(this,
 				android.R.layout.simple_spinner_dropdown_item,
 				ClientType.values());
-
-		loadingDialog.show();
 
 		order = dataSaver.load();
 
@@ -347,6 +339,7 @@ public class TraderActivity extends Activity {
 		}
 	}
 
+	//Loading warehouses from 1c db
 	protected class DataLoaderTask extends AsyncTask<Object, Object, Object> {
 		private ProgressDialog dataLoadingDialog;
 
@@ -357,12 +350,8 @@ public class TraderActivity extends Activity {
 			try {
 				// Loading warehouses
 				connection = SQLConnectionFactory.createTrade2000Connection();
-				PreparedStatement pstmt = connection
-						.prepareStatement("SELECT CODE, DESCR FROM SC12 WHERE SP2505 = ? AND ISFOLDER = ? ORDER BY DESCR ");
-				pstmt.setInt(1, 0);
-				pstmt.setInt(2, 2);
-
-				ResultSet rs = pstmt.executeQuery();
+				Statement stmt = connection.createStatement();
+				ResultSet rs = stmt.executeQuery("SELECT CODE, DESCR FROM SC12 WHERE SP2505 = 0 AND ISFOLDER = 2 ORDER BY DESCR");
 
 				while (rs.next()) {
 					Warehouses.INSTANCE.addWarehouse(WarehouseFactory
@@ -386,7 +375,6 @@ public class TraderActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Object result) {
-			loadingDialog.dismiss();
 			dataLoadingDialog.dismiss();
 			super.onPostExecute(result);
 		}
@@ -671,5 +659,10 @@ public class TraderActivity extends Activity {
 
 		AlertDialog clearClientConfirmationDialog = alertDialogBuilder.create();
 		clearClientConfirmationDialog.show();
+	}
+	
+	public void openSettings(View view) {
+		Intent settingsItent = new Intent("ru.alkise.trader.SettingsActivity");
+		startActivity(settingsItent);
 	}
 }

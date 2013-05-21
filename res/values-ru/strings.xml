@@ -2,6 +2,12 @@
 <resources>
 
     <string name="app_name">Trader</string>
+    <string name="uploads">Выгрузка</string>
+    <string name="warehouses">Склады</string>
+    <string name="clients">Клиенты</string>
+    <string name="manangers">Менеджеры</string>
+    <string name="remains">Остатки</string>
+    <string name="organizations">Организации</string>
     <string name="action_settings">Настройки</string>
     <string name="type">Тип</string>
     <string name="organization">Организация</string>
@@ -47,15 +53,44 @@
     <string name="rests">Остаток</string>
     <string name="remains_on">Остатки по:</string>
     <string name="confirm_change_doc_type">Список выбранной номенклатуры будет очищен. Изменить тип документа?</string>
-	<string name="choose_manager">Выбор торгового представителя</string>
+    <string name="choose_manager">Выбор торгового представителя</string>
     <string name="choose_organization">Выбор торговой организации</string>
     <string name="heading">Заголовок</string>
     <string name="dublicating_position">Ошибка: Дублирующая позиция</string>
     <string name="inadmissible_quantity">Ошибка: Недопустимое количество</string>
+    <string name="settings">Настройки</string>
+
+    <!-- SQL server -->
+    <string name="host">Сервер</string>
+    <string name="port">Порт</string>
+    <string name="user">Пользователь</string>
+    <string name="password">Пароль</string>
+    <string name="database">База данных</string>
+
+    <!-- Upload server -->
+    <string name="catalog">Каталог</string>
+    <string name="domain">Домен</string>
+
+    <!-- public fields -->
+    <string name="table_name">Таблица</string>
+    <string name="field_id">ID</string>
+    <string name="field_code">CODE</string>
+    <string name="field_descr">DESCR</string>
+    <string name="field_parent_id">ID родителя</string> <!-- warehouses, clients -->
+
+
+    <!-- warehouses -->
+    <string name="field_is_folder">isFolder</string>
+
+    <!-- managers -->
+    <string name="field_activity">isActive</string>
     
+    <!-- clients -->
+    <string name="field_client_type_id">Тип</string>
+
     <string-array name="menu">
         <item>Удалить</item>
         <item>Остатки</item>
     </string-array>
-    
+
 </resources>

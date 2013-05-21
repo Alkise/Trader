@@ -2,13 +2,19 @@
 <resources>
 
     <string name="app_name">Trader</string>
+    <string name="uploads">Upload</string>
+    <string name="warehouses">Warehouses</string>
+    <string name="clients">Clients</string>
+    <string name="manangers">Managers</string>
+    <string name="remains">Remains</string>
+    <string name="nomenclature">Nomenclature</string>
+    <string name="organizations">Organizations</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="type">Type</string>
     <string name="organization">Organization</string>
     <string name="manager">Current manager</string>
     <string name="client">Current client</string>
-    <string name="nomenclature">Nomenclature</string>
     <string name="count">Count:</string>
     <string name="warehouse">Warehouse</string>
     <string name="btnNewClient">Create new</string>
@@ -54,7 +60,47 @@
     <string name="heading">Heading</string>
     <string name="dublicating_position">Error: Dublicating position</string>
     <string name="inadmissible_quantity">Error: Inadmissible quantity</string>
-    
+    <string name="settings">Settings</string>
+
+    <!-- SQL server -->
+    <string name="host">Host</string>
+    <string name="port">Port</string>
+    <string name="user">User</string>
+    <string name="password">Password</string>
+    <string name="database">Database</string>
+
+    <!-- public fields -->
+    <string name="table_name">Table</string>
+    <string name="field_id">ID</string>
+    <string name="field_code">CODE</string>
+    <string name="field_descr">DESCR</string>
+    <string name="field_parent_id">Parent ID</string> <!-- warehouses, clients -->
+
+
+    <!-- Upload -->
+    <string name="domain">Domain</string>
+    <string name="catalog">Catalog</string>
+
+    <!-- warehouses -->
+    <string name="field_is_folder">Is folder</string>
+
+    <!-- managers -->
+    <string name="field_activity">isActive</string>
+
+    <!-- clients -->
+    <string name="field_client_type_id">Type</string>
+
+    <!-- nomenclature -->
+
+
+    <!-- remains -->
+    <string name="field_perion">Period</string>
+    <string name="field_nomeclature_id">Nomenclature</string>
+    <string name="field_warehouse_id">Warehouse</string>
+    <string name="field_remains">Remains</string>
+
+    <!-- organizations -->
+
     <string-array name="menu">
         <item>Delete</item>
         <item>Remains</item>
