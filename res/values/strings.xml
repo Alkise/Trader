@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Trader</string>
+    <string name="settings_1c">1C</string>
     <string name="uploads">Upload</string>
     <string name="warehouses">Warehouses</string>
     <string name="clients">Clients</string>
@@ -33,6 +34,9 @@
     <string name="selectClient">Select client</string>
     <string name="selectNomeclature">Choose the nomenclature</string>
     <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="dont_save">Don\'t save</string>
+    <string name="saving_question">Save settings before closing?</string>
     <string name="create">Create</string>
     <string name="delete">Delete</string>
     <string name="delete_all_positions">Delete all positions?</string>

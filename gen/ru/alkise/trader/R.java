@@ -86,7 +86,7 @@ public final class R {
         public static final int LabelPosWhTo=0x7f09001f;
         public static final int LinearLayout1=0x7f09001c;
         public static final int RelativeLayout1=0x7f090023;
-        public static final int action_settings=0x7f09009d;
+        public static final int action_settings=0x7f09009b;
         public static final int btnAddPosition=0x7f09000a;
         public static final int btnApprove=0x7f090029;
         public static final int btnBack=0x7f090028;
@@ -103,7 +103,6 @@ public final class R {
         public static final int clientShortNameView=0x7f090016;
         public static final int clientTypeSpinner=0x7f09001b;
         public static final int clientTypeView=0x7f09001a;
-        public static final int digitalClock1=0x7f09009c;
         public static final int editActivityTabManager=0x7f090075;
         public static final int editCatalogTabUpload=0x7f090058;
         public static final int editCodeTabClients=0x7f090092;
@@ -179,7 +178,6 @@ public final class R {
         public static final int tableNomenclature=0x7f090099;
         public static final int tableOrganizations=0x7f090059;
         public static final int tableRemains=0x7f09009a;
-        public static final int tableRow1=0x7f09009b;
         public static final int tableRowActivityTabManager=0x7f090073;
         public static final int tableRowCatalogTabUpload=0x7f090056;
         public static final int tableRowCodeTabClients=0x7f090090;
@@ -251,115 +249,118 @@ public final class R {
         public static final int remains_layout=0x7f030008;
         public static final int selection_layout=0x7f030009;
         public static final int settings_layout=0x7f03000a;
-        public static final int tab_manager_layout=0x7f03000b;
     }
     public static final class menu {
         public static final int trader=0x7f080000;
     }
     public static final class string {
-        public static final int action_settings=0x7f050008;
-        public static final int addPosition=0x7f050015;
+        public static final int action_settings=0x7f050009;
+        public static final int addPosition=0x7f050016;
         public static final int app_name=0x7f050000;
-        public static final int approve=0x7f050016;
-        public static final int back=0x7f050017;
-        public static final int btnNewClient=0x7f050010;
-        public static final int by_code_param=0x7f05002d;
-        public static final int by_name_param=0x7f05002e;
-        public static final int cancel=0x7f05001f;
+        public static final int approve=0x7f050017;
+        public static final int back=0x7f050018;
+        public static final int btnNewClient=0x7f050011;
+        public static final int by_code_param=0x7f050031;
+        public static final int by_name_param=0x7f050032;
+        public static final int cancel=0x7f050020;
         /**  Upload server 
          */
-        public static final int catalog=0x7f050047;
-        public static final int choose_manager=0x7f050036;
-        public static final int choose_organization=0x7f050037;
-        public static final int clear=0x7f050024;
-        public static final int clear_client_field=0x7f050025;
-        public static final int client=0x7f05000d;
-        public static final int client_full_name=0x7f050030;
-        public static final int client_not_selected=0x7f050011;
-        public static final int client_short_name=0x7f05002f;
-        public static final int client_type=0x7f050031;
-        public static final int clients=0x7f050003;
-        public static final int code=0x7f050032;
-        public static final int code_param=0x7f05002b;
-        public static final int confirm_change_doc_type=0x7f050035;
-        public static final int connecting=0x7f050012;
-        public static final int count=0x7f05000e;
-        public static final int create=0x7f050020;
-        public static final int database=0x7f050040;
-        public static final int dataloading=0x7f05001b;
-        public static final int delete=0x7f050021;
-        public static final int delete_all_positions=0x7f050022;
-        public static final int delete_position=0x7f050023;
+        public static final int catalog=0x7f05004b;
+        public static final int choose_manager=0x7f05003a;
+        public static final int choose_organization=0x7f05003b;
+        public static final int clear=0x7f050028;
+        public static final int clear_client_field=0x7f050029;
+        public static final int client=0x7f05000e;
+        public static final int client_full_name=0x7f050034;
+        public static final int client_not_selected=0x7f050012;
+        public static final int client_short_name=0x7f050033;
+        public static final int client_type=0x7f050035;
+        public static final int clients=0x7f050004;
+        public static final int code=0x7f050036;
+        public static final int code_param=0x7f05002f;
+        public static final int confirm_change_doc_type=0x7f050039;
+        public static final int connecting=0x7f050013;
+        public static final int count=0x7f05000f;
+        public static final int create=0x7f050024;
+        public static final int database=0x7f050044;
+        public static final int dataloading=0x7f05001c;
+        public static final int delete=0x7f050025;
+        public static final int delete_all_positions=0x7f050026;
+        public static final int delete_position=0x7f050027;
         /**  warehouses, clients 
  Upload 
          */
-        public static final int domain=0x7f050046;
-        public static final int dublicating_position=0x7f050039;
+        public static final int domain=0x7f05004a;
+        public static final int dont_save=0x7f050022;
+        public static final int dublicating_position=0x7f05003d;
         /**  managers 
  managers 
          */
-        public static final int field_activity=0x7f050049;
+        public static final int field_activity=0x7f05004d;
         /**  clients 
  clients 
          */
-        public static final int field_client_type_id=0x7f05004a;
-        public static final int field_code=0x7f050043;
-        public static final int field_descr=0x7f050044;
-        public static final int field_id=0x7f050042;
+        public static final int field_client_type_id=0x7f05004e;
+        public static final int field_code=0x7f050047;
+        public static final int field_descr=0x7f050048;
+        public static final int field_id=0x7f050046;
         /**  warehouses 
  warehouses, clients 
  warehouses 
          */
-        public static final int field_is_folder=0x7f050048;
-        public static final int field_nomeclature_id=0x7f05004c;
-        public static final int field_parent_id=0x7f050045;
+        public static final int field_is_folder=0x7f05004c;
+        public static final int field_nomeclature_id=0x7f050050;
+        public static final int field_parent_id=0x7f050049;
         /**  nomenclature 
  remains 
          */
-        public static final int field_perion=0x7f05004b;
-        public static final int field_remains=0x7f05004e;
-        public static final int field_warehouse_id=0x7f05004d;
-        public static final int heading=0x7f050038;
-        public static final int hello_world=0x7f050009;
+        public static final int field_perion=0x7f05004f;
+        public static final int field_remains=0x7f050052;
+        public static final int field_warehouse_id=0x7f050051;
+        public static final int heading=0x7f05003c;
+        public static final int hello_world=0x7f05000a;
         /**  SQL server 
  SQL server 
          */
-        public static final int host=0x7f05003c;
-        public static final int inadmissible_quantity=0x7f05003a;
-        public static final int loadManagers=0x7f050013;
-        public static final int loadOrganizations=0x7f050014;
-        public static final int manager=0x7f05000c;
-        public static final int manangers=0x7f050004;
-        public static final int name=0x7f050028;
-        public static final int name_param=0x7f05002c;
-        public static final int nomenclature=0x7f050006;
-        public static final int order=0x7f050026;
-        public static final int organization=0x7f05000b;
-        public static final int organizations=0x7f050007;
-        public static final int password=0x7f05003f;
-        public static final int port=0x7f05003d;
-        public static final int remains=0x7f050005;
-        public static final int remains_on=0x7f050034;
-        public static final int rests=0x7f050033;
-        public static final int search=0x7f050019;
-        public static final int search_by=0x7f05002a;
-        public static final int search_by_name=0x7f050027;
-        public static final int search_param=0x7f050029;
-        public static final int searching=0x7f05001c;
-        public static final int select=0x7f05001a;
-        public static final int selectClient=0x7f05001d;
-        public static final int selectNomeclature=0x7f05001e;
-        public static final int settings=0x7f05003b;
+        public static final int host=0x7f050040;
+        public static final int inadmissible_quantity=0x7f05003e;
+        public static final int loadManagers=0x7f050014;
+        public static final int loadOrganizations=0x7f050015;
+        public static final int manager=0x7f05000d;
+        public static final int manangers=0x7f050005;
+        public static final int name=0x7f05002c;
+        public static final int name_param=0x7f050030;
+        public static final int nomenclature=0x7f050007;
+        public static final int order=0x7f05002a;
+        public static final int organization=0x7f05000c;
+        public static final int organizations=0x7f050008;
+        public static final int password=0x7f050043;
+        public static final int port=0x7f050041;
+        public static final int remains=0x7f050006;
+        public static final int remains_on=0x7f050038;
+        public static final int rests=0x7f050037;
+        public static final int save=0x7f050021;
+        public static final int saving_question=0x7f050023;
+        public static final int search=0x7f05001a;
+        public static final int search_by=0x7f05002e;
+        public static final int search_by_name=0x7f05002b;
+        public static final int search_param=0x7f05002d;
+        public static final int searching=0x7f05001d;
+        public static final int select=0x7f05001b;
+        public static final int selectClient=0x7f05001e;
+        public static final int selectNomeclature=0x7f05001f;
+        public static final int settings=0x7f05003f;
+        public static final int settings_1c=0x7f050001;
         /**  public fields 
  public fields 
          */
-        public static final int table_name=0x7f050041;
-        public static final int type=0x7f05000a;
-        public static final int upload=0x7f050018;
-        public static final int uploads=0x7f050001;
-        public static final int user=0x7f05003e;
-        public static final int warehouse=0x7f05000f;
-        public static final int warehouses=0x7f050002;
+        public static final int table_name=0x7f050045;
+        public static final int type=0x7f05000b;
+        public static final int upload=0x7f050019;
+        public static final int uploads=0x7f050002;
+        public static final int user=0x7f050042;
+        public static final int warehouse=0x7f050010;
+        public static final int warehouses=0x7f050003;
     }
     public static final class style {
         /** 

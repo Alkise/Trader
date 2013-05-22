@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Trader</string>
+    <string name="settings_1c">1С</string>
     <string name="uploads">Выгрузка</string>
     <string name="warehouses">Склады</string>
     <string name="clients">Клиенты</string>
@@ -31,6 +32,9 @@
     <string name="selectClient">Выбор клиента</string>
     <string name="selectNomeclature">Выберите номенклатуру</string>
     <string name="cancel">Отмена</string>
+    <string name="save">Сохранить</string>
+    <string name="dont_save">Не сохранять</string>
+    <string name="saving_question">Сохранить настройки перед закрытием?</string>
     <string name="create">Создать</string>
     <string name="delete">Удалить</string>
     <string name="delete_all_positions">Удалить все позиции?</string>

@@ -254,11 +254,10 @@ public class TraderActivity extends Activity {
 		case 0:
 			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
 					activity);
-			alertDialogBuilder.setMessage(activity
-					.getString(R.string.delete_position)
-					+ " "
-					+ ((PositionIntf) positionsAdapter.getItem(info.position))
-							.getPositionGoods().getGoodsName() + " ?");
+			alertDialogBuilder.setTitle(R.string.delete_position);
+			alertDialogBuilder.setMessage(((PositionIntf) positionsAdapter
+					.getItem(info.position)).getPositionGoods().getGoodsName()
+					+ " ?");
 			alertDialogBuilder.setPositiveButton(
 					activity.getString(R.string.delete),
 					new DialogInterface.OnClickListener() {
@@ -339,7 +338,7 @@ public class TraderActivity extends Activity {
 		}
 	}
 
-	//Loading warehouses from 1c db
+	// Loading warehouses from 1c db
 	protected class DataLoaderTask extends AsyncTask<Object, Object, Object> {
 		private ProgressDialog dataLoadingDialog;
 
@@ -351,7 +350,8 @@ public class TraderActivity extends Activity {
 				// Loading warehouses
 				connection = SQLConnectionFactory.createTrade2000Connection();
 				Statement stmt = connection.createStatement();
-				ResultSet rs = stmt.executeQuery("SELECT CODE, DESCR FROM SC12 WHERE SP2505 = 0 AND ISFOLDER = 2 ORDER BY DESCR");
+				ResultSet rs = stmt
+						.executeQuery("SELECT CODE, DESCR FROM SC12 WHERE SP2505 = 0 AND ISFOLDER = 2 ORDER BY DESCR");
 
 				while (rs.next()) {
 					Warehouses.INSTANCE.addWarehouse(WarehouseFactory
@@ -660,7 +660,7 @@ public class TraderActivity extends Activity {
 		AlertDialog clearClientConfirmationDialog = alertDialogBuilder.create();
 		clearClientConfirmationDialog.show();
 	}
-	
+
 	public void openSettings(View view) {
 		Intent settingsItent = new Intent("ru.alkise.trader.SettingsActivity");
 		startActivity(settingsItent);
