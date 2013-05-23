@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Trader</string>
+    <string name="system">Система</string>
     <string name="settings_1c">1С</string>
     <string name="uploads">Выгрузка</string>
     <string name="warehouses">Склады</string>
@@ -36,6 +37,7 @@
     <string name="dont_save">Не сохранять</string>
     <string name="saving_question">Сохранить настройки перед закрытием?</string>
     <string name="create">Создать</string>
+    <string name="add">Добавить</string>
     <string name="delete">Удалить</string>
     <string name="delete_all_positions">Удалить все позиции?</string>
     <string name="delete_position">Удалить позицию:</string>
@@ -63,6 +65,12 @@
     <string name="dublicating_position">Ошибка: Дублирующая позиция</string>
     <string name="inadmissible_quantity">Ошибка: Недопустимое количество</string>
     <string name="settings">Настройки</string>
+    <string name="enter_password">Введите пароль</string>
+    <string name="enter">Вход</string>
+    <string name="ok">OK</string>
+    <string name="new_password">Новый пароль</string>
+    <string name="confirm_password">Подтверждение пароля</string>
+    <string name="apply">Применить</string>
 
     <!-- SQL server -->
     <string name="host">Сервер</string>
@@ -91,6 +99,11 @@
     
     <!-- clients -->
     <string name="field_client_type_id">Тип</string>
+    <string name="field_client_full_name">Полное имя</string>
+    <string name="allowed_groups">Разрешенные группы</string>
+    
+    <!-- remains -->
+    <string name="field_perion">Период</string>
 
     <string-array name="menu">
         <item>Удалить</item>

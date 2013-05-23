@@ -109,12 +109,13 @@ public class GoodsActivity extends Activity {
 
 				String query = "SELECT SC14.CODE, SC14.DESCR, SUM(RG46.SP49) AS 'COUNT' "
 						+ "FROM SC14 LEFT JOIN RG46 ON (RG46.SP48 = SC14.ID) "
-						+ "WHERE SC14.DESCR LIKE ? "
+						+ "WHERE SC14.SP135 = 1" 
+						+ "AND SC14.DESCR LIKE ? "
 						+ "AND RG46.PERIOD = (SELECT MAX(PERIOD) FROM RG46) "
 						+ "GROUP BY SC14.ID, SC14.CODE,SC14.CODE, SC14.DESCR "
 						+ "ORDER BY SC14.DESCR";
 
-				String demandQuery = "SELECT SC14.CODE, SC14.DESCR, 1 FROM SC14 WHERE SC14.DESCR LIKE ?";
+				String demandQuery = "SELECT SC14.CODE, SC14.DESCR, 1 FROM SC14 WHERE SC14.SP135 = 1 AND SC14.DESCR LIKE ?";
 
 				PreparedStatement pstmt = connection
 						.prepareStatement(docType == DocumentType.DEMAND ? demandQuery

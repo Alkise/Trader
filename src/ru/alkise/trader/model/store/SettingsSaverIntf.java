@@ -3,8 +3,10 @@ package ru.alkise.trader.model.store;
 import java.util.List;
 
 import android.widget.EditText;
+import android.widget.ListView;
 
 public interface SettingsSaverIntf {
+	public static final String SETTINGS_FILE_NAME = "settings_db";
 
 	// system params
 	public static final String PARAM_SETTINGS_PASSWORD = "param_settings_password";
@@ -36,8 +38,11 @@ public interface SettingsSaverIntf {
 	public static final String PARAM_CLIENT_ID = "param_client_id";
 	public static final String PARAM_CLIENT_CODE = "param_client_code";
 	public static final String PARAM_CLIENT_DESCR = "param_client_descr";
+	public static final String PARAM_CLIENT_FULL_NAME = "param_client_full_name";
+	public static final String PARAM_CLIENT_TYPE = "param_client_type";
 	public static final String PARAM_CLIENT_PARENT_ID = "param_client_parent_id";
 	public static final String PARAM_CLIENT_IS_ACTIVITY = "param_client_is_activity";
+	public static final String PARAM_CLIENT_ALLOWED_GROUPS = "param_client_allowed_groups";
 
 	// Warehouses
 	public static final String PARAM_WAREHOUSE_TABLE_NAME = "param_warehouse_table_name";
@@ -45,6 +50,7 @@ public interface SettingsSaverIntf {
 	public static final String PARAM_WAREHOUSE_CODE = "param_warehouse_code";
 	public static final String PARAM_WAREHOUSE_DESCR = "param_warehouse_descr";
 	public static final String PARAM_WAREHOUSE_OLD = "param_warehouse_old";
+	public static final String PARAM_WAREHOUSE_IS_FOLDER = "param_warehouse_is_folder";
 	public static final String PARAM_WAREHOUSE_PARENT_ID = "param_warehouse_parent_id";
 
 	// Organizations
@@ -65,6 +71,8 @@ public interface SettingsSaverIntf {
 	public static final String PARAM_NOMENCLATURE_ID = "param_nomenclature_id";
 	public static final String PARAM_NOMENCLATURE_CODE = "param_nomenclature_code";
 	public static final String PARAM_NOMENCLATURE_DESCR = "param_nomenclature_descr";
+	public static final String PARAM_NOMENCLATURE_WAREHOUSE = "param_nomenclature_warehouse";
+	public static final String PARAM_NOMENCLATURE_IS_ACTIVITY = "param_nomenclature_is_activity";
 	
 	boolean commit();
 	
@@ -83,5 +91,9 @@ public interface SettingsSaverIntf {
 	void loadStringParams(List<EditText> editTextList);
 	
 	void loadIntParams(List<EditText> editTextList);
+
+	void saveStringSetParams(ListView listView);
+
+	void loadStingSetParams(ListView listView);
 	
 }

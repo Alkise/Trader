@@ -9,12 +9,20 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 public class SettingsActivity extends Activity {
 	private SettingsSaverIntf settingsSaver;
 
+	private EditText allowedGroupEdit;
+	private ListView allowedClientGroupsView;
+	private ArrayAdapter<String> allowedClientGroupsAdapter;
 	private List<EditText> editStringList;
 	private List<EditText> editIntList;
 
@@ -22,6 +30,25 @@ public class SettingsActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.settings_layout);
+
+		allowedGroupEdit = (EditText) findViewById(R.id.editAllowedGroupsTabClients);
+		allowedClientGroupsView = (ListView) findViewById(R.id.listAllowedGroupsListTabClients);
+		allowedClientGroupsView
+				.setTag(SettingsSaverIntf.PARAM_CLIENT_ALLOWED_GROUPS);
+		allowedClientGroupsView
+				.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+					@Override
+					public boolean onItemLongClick(AdapterView<?> adapter,
+							View arg1, int pos, long arg3) {
+						allowedClientGroupsAdapter
+								.remove(allowedClientGroupsAdapter.getItem(pos));
+						return false;
+					}
+				});
+		allowedClientGroupsAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, new ArrayList<String>());
+		allowedClientGroupsView.setAdapter(allowedClientGroupsAdapter);
 
 		settingsSaver = new SharedPreferencesSettingsSaver(
 				getApplicationContext());
@@ -32,8 +59,14 @@ public class SettingsActivity extends Activity {
 		TabHost tabHost = (TabHost) findViewById(R.id.tabhost);
 		tabHost.setup();
 
-		// Server settings tab
-		TabHost.TabSpec spec = tabHost.newTabSpec("tagDB");
+		// System settings tab
+		TabHost.TabSpec spec = tabHost.newTabSpec("tagSystem");
+		spec.setContent(R.id.systemSettings);
+		spec.setIndicator(getString(R.string.system));
+		tabHost.addTab(spec);
+
+		// 1c server settings tab
+		spec = tabHost.newTabSpec("tagDB");
 		spec.setContent(R.id.tableDB);
 		spec.setIndicator(getString(R.string.settings_1c));
 		tabHost.addTab(spec);
@@ -124,6 +157,67 @@ public class SettingsActivity extends Activity {
 		bindStringParam(R.id.editActivityTabManager,
 				SettingsSaverIntf.PARAM_MANAGER_IS_ACTIVITY);
 
+		// Warehouses
+		bindStringParam(R.id.editTableNameTabWarehouses,
+				SettingsSaverIntf.PARAM_WAREHOUSE_TABLE_NAME);
+		bindStringParam(R.id.editIDTabWarehouses,
+				SettingsSaverIntf.PARAM_WAREHOUSE_ID);
+		bindStringParam(R.id.editCodeTabWarehouses,
+				SettingsSaverIntf.PARAM_WAREHOUSE_CODE);
+		bindStringParam(R.id.editDescrTabWarehouses,
+				SettingsSaverIntf.PARAM_WAREHOUSE_DESCR);
+		bindStringParam(R.id.editFolderTabWarehouses,
+				SettingsSaverIntf.PARAM_WAREHOUSE_IS_FOLDER);
+		bindStringParam(R.id.editOldTabWarehouses,
+				SettingsSaverIntf.PARAM_WAREHOUSE_OLD);
+		bindStringParam(R.id.editParentIDTabWarehouses,
+				SettingsSaverIntf.PARAM_CLIENT_PARENT_ID);
+
+		// Clients
+		bindStringParam(R.id.editTableNameTabClients,
+				SettingsSaverIntf.PARAM_CLIENT_TABLE_NAME);
+		bindStringParam(R.id.editIDTabClients,
+				SettingsSaverIntf.PARAM_CLIENT_ID);
+		bindStringParam(R.id.editCodeTabClients,
+				SettingsSaverIntf.PARAM_CLIENT_CODE);
+		bindStringParam(R.id.editDescrTabClients,
+				SettingsSaverIntf.PARAM_CLIENT_DESCR);
+		bindStringParam(R.id.editFullNameTabClients,
+				SettingsSaverIntf.PARAM_CLIENT_FULL_NAME);
+		bindStringParam(R.id.editTypeTabClients,
+				SettingsSaverIntf.PARAM_CLIENT_TYPE);
+		bindStringParam(R.id.editActivityTabClients,
+				SettingsSaverIntf.PARAM_CLIENT_IS_ACTIVITY);
+		bindStringParam(R.id.editParentIDTabClients,
+				SettingsSaverIntf.PARAM_CLIENT_PARENT_ID);
+		settingsSaver.loadStingSetParams(allowedClientGroupsView);
+
+		// Nomenclature
+		bindStringParam(R.id.editTableNameTabNomenclature,
+				SettingsSaverIntf.PARAM_NOMENCLATURE_TABLE_NAME);
+		bindStringParam(R.id.editIDTabNomenclature,
+				SettingsSaverIntf.PARAM_NOMENCLATURE_ID);
+		bindStringParam(R.id.editCodeTabNomenclature,
+				SettingsSaverIntf.PARAM_NOMENCLATURE_CODE);
+		bindStringParam(R.id.editDescrTabNomenclature,
+				SettingsSaverIntf.PARAM_NOMENCLATURE_DESCR);
+		bindStringParam(R.id.editWarehouseTabNomenclature,
+				SettingsSaverIntf.PARAM_NOMENCLATURE_WAREHOUSE);
+		bindStringParam(R.id.editActivityTabNomenclature,
+				SettingsSaverIntf.PARAM_NOMENCLATURE_IS_ACTIVITY);
+
+		// Remains
+		bindStringParam(R.id.editTableNameTabRemains,
+				SettingsSaverIntf.PARAM_REMAINS_TABLE_NAME);
+		bindStringParam(R.id.editNomenclatureTabRemains,
+				SettingsSaverIntf.PARAM_REMAINS_NOMENCLATURE);
+		bindStringParam(R.id.editWarehouseTabRemains,
+				SettingsSaverIntf.PARAM_REMAINS_WAREHOUSE);
+		bindStringParam(R.id.editPeriodTabRemains,
+				SettingsSaverIntf.PARAM_REMAINS_PERIOD);
+		bindStringParam(R.id.editCountTabRemains,
+				SettingsSaverIntf.PARAM_REMAINS_COUNT);
+
 		settingsSaver.loadIntParams(editIntList);
 		settingsSaver.loadStringParams(editStringList);
 	}
@@ -148,6 +242,13 @@ public class SettingsActivity extends Activity {
 		super.onBackPressed();
 	}
 
+	public void addAllowedGroup(View view) {
+		String newGroup = (String.valueOf(allowedGroupEdit.getText())).trim();
+		if (newGroup.length() > 0) {
+			allowedClientGroupsAdapter.add("   " + newGroup + "   ");
+		}
+	}
+
 	@Override
 	public void onBackPressed() {
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -160,6 +261,8 @@ public class SettingsActivity extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						settingsSaver.saveIntParams(editIntList);
 						settingsSaver.saveStringParams(editStringList);
+						settingsSaver
+								.saveStringSetParams(allowedClientGroupsView);
 
 						settingsSaver.commit();
 						dialog.cancel();
@@ -188,5 +291,22 @@ public class SettingsActivity extends Activity {
 		AlertDialog settingsDialog = alertDialogBuilder.create();
 
 		settingsDialog.show();
+	}
+
+	public void applyNewSettingsPassword(View view) {
+		EditText newPasswordEdit = (EditText) findViewById(R.id.editNewPasswordTabSystem);
+		EditText confirmNewPasswordEdit = (EditText) findViewById(R.id.editConfirmPasswordTabSystem);
+		String newPassword = String.valueOf(newPasswordEdit.getText()).trim();
+		String confirmNewPassword = String.valueOf(
+				confirmNewPasswordEdit.getText()).trim();
+		if (newPassword.equals(confirmNewPassword)) {
+			bindStringParam(R.id.editConfirmPasswordTabSystem,
+					SettingsSaverIntf.PARAM_SETTINGS_PASSWORD);
+			Toast.makeText(this, "New password saved",
+					Toast.LENGTH_SHORT).show();
+		} else {
+			Toast.makeText(this, "New password validation error",
+					Toast.LENGTH_SHORT).show();
+		}
 	}
 }

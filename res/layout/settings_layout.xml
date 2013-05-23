@@ -32,6 +32,66 @@
             android:layout_height="fill_parent" >
 
             <TableLayout
+                android:id="@+id/systemSettings"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:shrinkColumns="1"
+                android:stretchColumns="1" >
+
+                <TableRow
+                    android:id="@+id/tableRowNewPasswordTabSystem"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/textNewPasswordTabSystem"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/new_password" />
+
+                    <EditText
+                        android:id="@+id/editNewPasswordTabSystem"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword" >
+
+                        <requestFocus />
+                    </EditText>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRowConfirmPasswordTabSystem"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/textConfirmPasswordTabSystem"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/confirm_password" />
+
+                    <EditText
+                        android:id="@+id/editConfirmPasswordTabSystem"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRowApplyPasswordTabSystem"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <Button
+                        android:id="@+id/btnApplyPasswordTabSystem"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="applyNewSettingsPassword"
+                        android:text="@string/apply" />
+                </TableRow>
+            </TableLayout>
+
+            <TableLayout
                 android:id="@+id/tableDB"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -53,7 +113,10 @@
                         android:id="@+id/editHostTabDB"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="numberDecimal|text" />
+                        android:inputType="numberDecimal|text" >
+
+                        <requestFocus />
+                    </EditText>
                 </TableRow>
 
                 <TableRow
@@ -151,7 +214,10 @@
                         android:id="@+id/editHostTabUpload"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text" />
+                        android:inputType="text" >
+
+                        <requestFocus />
+                    </EditText>
                 </TableRow>
 
                 <TableRow
@@ -207,6 +273,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="text" />
                 </TableRow>
+
                 <TableRow
                     android:id="@+id/tableRowCatalogTabUpload"
                     android:layout_width="fill_parent"
@@ -232,6 +299,7 @@
                 android:layout_height="wrap_content"
                 android:shrinkColumns="1"
                 android:stretchColumns="1" >
+
                 <TableRow
                     android:id="@+id/tableRowTableNameTabOrganizations"
                     android:layout_width="fill_parent"
@@ -252,6 +320,7 @@
                         <requestFocus />
                     </EditText>
                 </TableRow>
+
                 <TableRow
                     android:id="@+id/tableRowIDTabOrganizations"
                     android:layout_width="fill_parent"
@@ -430,7 +499,10 @@
                         android:id="@+id/editTableNameTabWarehouses"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text" />
+                        android:inputType="text" >
+
+                        <requestFocus />
+                    </EditText>
                 </TableRow>
 
                 <TableRow
@@ -482,6 +554,24 @@
 
                     <EditText
                         android:id="@+id/editDescrTabWarehouses"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableOldRowTabWarehouses"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/textOldTabWarehouses"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/field_activity" />
+
+                    <EditText
+                        android:id="@+id/editOldTabWarehouses"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text" />
@@ -546,6 +636,7 @@
                         android:id="@+id/editTableNameTabClients"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
+                        android:layout_span="2"
                         android:inputType="text" >
 
                         <requestFocus />
@@ -567,6 +658,7 @@
                         android:id="@+id/editIDTabClients"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
+                        android:layout_span="2"
                         android:inputType="text" />
                 </TableRow>
 
@@ -585,6 +677,7 @@
                         android:id="@+id/editCodeTabClients"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
+                        android:layout_span="2"
                         android:inputType="text" />
                 </TableRow>
 
@@ -603,8 +696,29 @@
                         android:id="@+id/editDescrTabClients"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
+                        android:layout_span="2"
                         android:inputType="text" />
                 </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRowFullNameTabClients"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/textFullNameTabClients"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/field_client_full_name" />
+
+                    <EditText
+                        android:id="@+id/editFullNameTabClients"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_span="2"
+                        android:inputType="text" />
+                </TableRow>
+
                 <TableRow
                     android:id="@+id/tableRowTypeTabClients"
                     android:layout_width="fill_parent"
@@ -620,7 +734,84 @@
                         android:id="@+id/editTypeTabClients"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
+                        android:layout_span="2"
                         android:inputType="text" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRowActivityTabClients"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/textActivityTabClients"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/field_activity" />
+
+                    <EditText
+                        android:id="@+id/editActivityTabClients"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_span="2"
+                        android:inputType="text" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRowParentIDTabClients"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/textParentIDTabClients"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/field_parent_id" />
+
+                    <EditText
+                        android:id="@+id/editParentIDTabClients"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_span="2"
+                        android:inputType="text" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRowAllowedGroupsTabClients"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/textAllowedGroupsTabClients"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/allowed_groups" />
+
+                    <EditText
+                        android:id="@+id/editAllowedGroupsTabClients"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
+
+                    <Button
+                        android:id="@+id/buttonAllowedGroupsTabClients"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="addAllowedGroup"
+                        android:text="@string/add" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRowAllowedGroupsListTabClients"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent" >
+
+                    <ListView
+                        android:id="@+id/listAllowedGroupsListTabClients"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center"
+                        android:layout_span="3" />
                 </TableRow>
             </TableLayout>
 
@@ -630,6 +821,117 @@
                 android:layout_height="wrap_content"
                 android:shrinkColumns="1"
                 android:stretchColumns="1" >
+
+                <TableRow
+                    android:id="@+id/tableRowTableNameTabNomenclature"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/textTableNameTabNomenclature"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/table_name" />
+
+                    <EditText
+                        android:id="@+id/editTableNameTabNomenclature"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" >
+
+                        <requestFocus />
+                    </EditText>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRowIDTabNomenclature"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/textIDTabNomenclature"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/field_id" />
+
+                    <EditText
+                        android:id="@+id/editIDTabNomenclature"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRowCodeTabNomenclature"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/textCodeTabNomenclature"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/field_code" />
+
+                    <EditText
+                        android:id="@+id/editCodeTabNomenclature"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRowDescrTabNomenclature"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/textDescrTabNomenclature"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/field_descr" />
+
+                    <EditText
+                        android:id="@+id/editDescrTabNomenclature"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRowWarehouseTabNomenclature"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/textWarehouseTabNomenclature"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/warehouse" />
+
+                    <EditText
+                        android:id="@+id/editWarehouseTabNomenclature"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRowActivityTabNomenclature"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/textActivityTabNomenclature"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/field_activity" />
+
+                    <EditText
+                        android:id="@+id/editActivityTabNomenclature"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
+                </TableRow>
             </TableLayout>
 
             <TableLayout
@@ -638,6 +940,103 @@
                 android:layout_height="wrap_content"
                 android:shrinkColumns="1"
                 android:stretchColumns="1" >
+
+                <TableRow
+                    android:id="@+id/tableRowTableNameTabRemains"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/textTableNameTabRemains"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/table_name" />
+
+                    <EditText
+                        android:id="@+id/editTableNameTabRemains"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" >
+
+                        <requestFocus />
+                    </EditText>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRowNomenclatureTabRemains"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/textNomenclatureTabRemains"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/nomenclature" />
+
+                    <EditText
+                        android:id="@+id/editNomenclatureTabRemains"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" >
+                    </EditText>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRowWarehouseTabRemains"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/textWarehouseTabRemains"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/warehouse" />
+
+                    <EditText
+                        android:id="@+id/editWarehouseTabRemains"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" >
+                    </EditText>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRowPeriodTabRemains"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/textPeriodTabRemains"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/field_perion" />
+
+                    <EditText
+                        android:id="@+id/editPeriodTabRemains"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" >
+                    </EditText>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRowCountTabRemains"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/textCountTabRemains"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/count" />
+
+                    <EditText
+                        android:id="@+id/editCountTabRemains"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" >
+                    </EditText>
+                </TableRow>
             </TableLayout>
         </FrameLayout>
     </LinearLayout>

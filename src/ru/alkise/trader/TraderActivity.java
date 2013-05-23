@@ -24,19 +24,23 @@ import ru.alkise.trader.model.factory.ClientFactory;
 import ru.alkise.trader.model.factory.OrderFactory;
 import ru.alkise.trader.model.factory.WarehouseFactory;
 import ru.alkise.trader.model.store.DataSaverIntf;
+import ru.alkise.trader.model.store.SettingsSaverIntf;
 import ru.alkise.trader.model.store.SharedPreferencesDataSaver;
 import ru.alkise.trader.task.SearchClientsTask;
 import ru.alkise.trader.xml.XmlOrderGenerator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,11 +50,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -70,6 +74,7 @@ public class TraderActivity extends Activity {
 	public static final int ORGANIZATIONS_OK = 5;
 	public static final int UPLOAD_OK = 0;
 
+	private SharedPreferences settingsPreferences;
 	private OrderIntf order;
 	private DataLoaderTask dataLoaderTask;
 	private SearchClientsTask searchClientTask;
@@ -100,6 +105,8 @@ public class TraderActivity extends Activity {
 		inflater = LayoutInflater.from(this);
 
 		dataSaver = new SharedPreferencesDataSaver(DATABASE_NAME, activity);
+		settingsPreferences = getSharedPreferences(
+				SettingsSaverIntf.SETTINGS_FILE_NAME, Context.MODE_PRIVATE);
 
 		orderTypeSpinner = (Spinner) findViewById(R.id.spinnerOrderType);
 
@@ -409,6 +416,27 @@ public class TraderActivity extends Activity {
 	public void searchRemains(View view) {
 		final View remainsView = inflater.inflate(R.layout.remains, null);
 
+		final EditText searchingEditText = (EditText) remainsView
+				.findViewById(R.id.requiredEdit);
+		searchingEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+		final RadioButton codeButton = (RadioButton) remainsView
+				.findViewById(R.id.radioByCode);
+		codeButton
+				.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						if (buttonView.isChecked()) {
+							searchingEditText
+									.setInputType(InputType.TYPE_CLASS_NUMBER);
+						} else {
+							searchingEditText
+									.setInputType(InputType.TYPE_CLASS_TEXT);
+						}
+					}
+				});
+
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 		alertDialogBuilder.setView(remainsView);
 		alertDialogBuilder.setNegativeButton(getString(R.string.cancel),
@@ -429,13 +457,7 @@ public class TraderActivity extends Activity {
 										.getText()).trim();
 
 						try {
-							if ((((RadioButton) remainsView
-									.findViewById(((RadioGroup) remainsView
-											.findViewById(R.id.paramGroup))
-											.getCheckedRadioButtonId()))
-									.getText().equals(activity
-									.getString(R.string.by_code_param)))) {
-
+							if (codeButton.isChecked()) {
 								try {
 									int code = Integer.valueOf(searchingText
 											.trim());
@@ -661,7 +683,50 @@ public class TraderActivity extends Activity {
 		clearClientConfirmationDialog.show();
 	}
 
+	// Open settings
 	public void openSettings(View view) {
+		final String password = settingsPreferences.getString(
+				SettingsSaverIntf.PARAM_SETTINGS_PASSWORD, "").trim();
+		if (password.length() > 0) {
+			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+					activity);
+			final View passwordView = inflater.inflate(
+					R.layout.password_layout, null);
+			dialogBuilder.setView(passwordView);
+			dialogBuilder.setTitle(getString(R.string.enter_password));
+			dialogBuilder.setPositiveButton(getString(R.string.ok),
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							EditText passwordEdit = (EditText) passwordView
+									.findViewById(R.id.editPasswordDialog);
+							String enteredPassword = String
+									.valueOf(passwordEdit.getText());
+							if (password.equals(enteredPassword.trim())) {
+								openSettingsActivity();
+							} else {
+								Toast.makeText(activity, "Password incorrect", Toast.LENGTH_SHORT).show();
+							}
+						}
+					});
+			dialogBuilder.setNegativeButton(getString(R.string.cancel),
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.cancel();
+						}
+					});
+
+			AlertDialog passwordDialog = dialogBuilder.create();
+			passwordDialog.show();
+		} else {
+			openSettingsActivity();
+		}
+	}
+
+	private void openSettingsActivity() {
 		Intent settingsItent = new Intent("ru.alkise.trader.SettingsActivity");
 		startActivity(settingsItent);
 	}
